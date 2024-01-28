@@ -1,0 +1,278 @@
+
+<p-toolbar class="m-2">
+    <div class="p-toolbar-group-start">
+        <button pButton > Service Details</button>
+    </div>
+    <div class="p-toolbar-group-end">
+        <button pButton icon="pi pi-plus" (click)="showDialog()">Add New Service</button>
+    </div>
+</p-toolbar>
+
+<div class="card">
+    <p-table [value]="records" [(selection)]="selectedProducts" dataKey="code" [tableStyle]="{'min-width': '50rem'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
+                <th fd-table-cell>ID </th>
+                <th fd-table-cell>Selection</th>
+                <th fd-table-cell>LineIndex</th>
+                <th fd-table-cell>Del.Ind</th>
+                <!-- <th fd-table-cell>Service.No</th> -->
+                <th fd-table-cell>ShortText</th>
+                <th fd-table-cell>Quantity</th>
+                <!-- <th fd-table-cell>UnitOfMeasure</th> -->
+                <th fd-table-cell>GrossPrice</th>
+                <!-- <th fd-table-cell>Currency</th> -->
+                <th fd-table-cell>OverF.Percentage</th>
+                <th fd-table-cell>PriceChangedAllowed</th>
+                <th fd-table-cell>UnlimitedOverF</th>
+                <th fd-table-cell>PricePerUnitOfMeasurement</th>
+                <!-- <th fd-table-cell>Mat Group</th> -->
+                <!-- <th fd-table-cell>Service Type</th> -->
+                <th fd-table-cell>External.Service.No</th>
+                <th fd-table-cell>Net Value</th>
+                <th fd-table-cell>Service Text</th>
+                <th fd-table-cell>Line Text</th>
+                <!-- <th fd-table-cell>PerNo</th> -->
+                <th fd-table-cell>Formula</th>
+                <th fd-table-cell>Line Number</th>
+                <th fd-table-cell>Alt</th>
+                <th fd-table-cell>Bidder's Line</th>
+                <th fd-table-cell>Supp.Line</th>
+                <th fd-table-cell>Cstg Ls</th>
+                <th fd-table-cell>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-record>
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                </td>
+                <td><span>{{record.id}}</span></td>
+                <td><span>{{record.selectionCheckbox}}</span></td>
+                <td><span>{{record.lineIndex}}</span></td>
+                <td><span>{{record.deletionIndicator}}</span></td>
+                <td><span>{{record.shortText}}</span></td>
+                <td><span>{{record.quantity}}</span></td>
+                <td><span>{{record.grossPrice}}</span></td>
+                <td><span>{{record.overFulfilmentPercentage}}</span></td>
+                <td><span>{{record.priceChangedAllowed}}</span></td>
+                <td><span>{{record.UnlimitedOverFulfilment}}</span></td>
+                <td><span>{{record.pricePerUnitOfMeasurement}}</span></td>
+                <td><span>{{record.externalServiceNumber}}</span></td>
+                <td><span>{{record.netValue}}</span></td>
+                <td><span>{{record.serviceText}}</span></td>
+                <td><span>{{record.lineText}}</span></td>
+                <td><span>{{record.formula}}</span></td>
+                <td><span>{{record.lineNumber}}</span></td>
+                <td><span>{{record.alternatives}}</span></td>
+                <td><span>{{record.biddersLine}}</span></td>
+                <td><span>{{record.supplementaryLine}}</span></td>
+                <td><span>{{record.lotSizeForCostingIsOne}}</span></td>
+            </tr>
+            <!-- New Row -->
+            <!-- <tr *ngIf="isNewRecordVisible">
+                <td>
+                    <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                </td>
+                <p-inputNumber inputId="integeronly" [(ngModel)]="record.id"> </p-inputNumber>
+                <td><input type="checkbox" [(ngModel)]="record.selectionCheckbox"></td>
+                <td> <input id="lineIndex" name="lineIndex" type="number" [(ngModel)]="record.lineIndex"></td>
+                <td><input id="deletionIndicator" name="deletionIndicator" type="checkbox"
+                        [(ngModel)]="record.deletionIndicator"></td>
+                <td><input id="shortText" name="shortText" type="text" [(ngModel)]="record.shortText"></td>
+                <td><input id="quantity" name="quantity" type="number" [(ngModel)]="record.quantity"></td>
+                <td><input id="grossPrice" name="grossPrice" type="number" [(ngModel)]="record.grossPrice"></td>
+                <td><input id="overFulfilmentPercentage" name="overFulfilmentPercentage" type="number"
+                        [(ngModel)]="record.overFulfilmentPercentage"></td>
+                <td><input id="priceChangedAllowed" name="priceChangedAllowed" type="checkbox"
+                        [(ngModel)]="record.priceChangedAllowed"></td>
+                <td><input id="UnlimitedOverFulfilment" name="UnlimitedOverFulfilment" type="checkbox"
+                        [(ngModel)]="record.UnlimitedOverFulfilment"></td>
+                <td><input id="pricePerUnitOfMeasurement" name="pricePerUnitOfMeasurement" type="number"
+                        [(ngModel)]="record.pricePerUnitOfMeasurement"></td>
+                <td><input id="externalServiceNumber" name="externalServiceNumber" type="text"
+                        [(ngModel)]="record.externalServiceNumber"></td>
+                <td><input id="netValue" name="netValue" type="number" [(ngModel)]="record.netValue"></td>
+                <td><input id="serviceText" name="serviceText" type="text" [(ngModel)]="record.serviceText"></td>
+                <td><input id="lineText" name="lineText" type="text" [(ngModel)]="record.lineText"></td>
+                <td><input id="formula" name="formula" type="text" [(ngModel)]="record.formula"></td>
+                <td><input id="lineNumber" name="lineNumber" type="text" [(ngModel)]="record.lineNumber"></td>
+                <td><input id="alternatives" name="alternatives" type="text" [(ngModel)]="record.alternatives"></td>
+                <td><input id="biddersLine" name="biddersLine" type="checkbox" [(ngModel)]="record.biddersLine"></td>
+                <td><input id="supplementaryLine" name="supplementaryLine" type="checkbox"
+                        [(ngModel)]="record.supplementaryLine"></td>
+                <td><input id="lotSizeForCostingIsOne" name="lotSizeForCostingIsOne" type="checkbox"
+                        [(ngModel)]="record.lotSizeForCostingIsOne"></td>
+                <td>
+                    <div class="card flex justify-content-center">
+                        <p-dropdown [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" [showClear]="true"
+                            placeholder="Select a City"></p-dropdown>
+                    </div>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-success m-1" (click)="onSubmit(record)">Save</button>
+                </td>
+            </tr> -->
+        </ng-template>
+    </p-table>
+</div>
+
+
+<p-dialog header="Add Service" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
+    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
+        <div class="form-group">
+            <label for="id">Id:</label>
+            <div class="input-group">
+                <input id="id" name="id" type="number" required class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="selectionCheckbox">Selection:</label>
+            <div class="input-group">
+                <input id="selectionCheckbox" name="selectionCheckbox" type="checkbox" required 
+                    ngModel>
+            </div>
+        </div>
+        <!-- <div class="form-group">
+            <div class="card flex justify-content-center">
+                <p-dropdown [options]="cities" [(ngModel)]="selectedCity" optionLabel="name" [showClear]="true"
+                    placeholder="Select a City"></p-dropdown>
+            </div>
+        </div> -->
+
+        <div class="form-group">
+            <label for="lineIndex">Line Index:</label>
+            <div class="input-group">
+                <input id="lineIndex" name="lineIndex" type="number" required class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="deletionIndicator">Deletion Indicator:</label>
+            <div class="input-group">
+                <input id="deletionIndicator" name="deletionIndicator" type="checkbox" required 
+                    ngModel>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="shortText">Short Text:</label>
+            <div class="input-group">
+                <input id="shortText" name="shortText" type="text" class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <div class="input-group">
+                <input id="quantity" name="quantity" type="number" class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="grossPrice">Gross Price:</label>
+            <div class="input-group">
+                <input id="grossPrice" name="grossPrice" type="number" class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="overFulfilmentPercentage">OverFulfilmentPercentage:</label>
+            <div class="input-group">
+                <input id="overFulfilmentPercentage" name="overFulfilmentPercentage" type="number"
+                    class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="priceChangedAllowed">PriceChangedAllowed:</label>
+            <div class="input-group">
+                <input id="priceChangedAllowed" name="priceChangedAllowed" type="checkbox" required
+                     ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="UnlimitedOverFulfilment">UnlimitedOverFulfilment:</label>
+            <div class="input-group">
+                <input id="UnlimitedOverFulfilment" name="UnlimitedOverFulfilment" type="checkbox" required
+                    ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="pricePerUnitOfMeasurement">pricePerUnitOfMeasurement:</label>
+            <div class="input-group">
+                <input id="pricePerUnitOfMeasurement" name="pricePerUnitOfMeasurement" type="number"
+                    class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="externalServiceNumber">externalServiceNumber:</label>
+            <div class="input-group">
+                <input id="externalServiceNumber" name="externalServiceNumber" type="text" class="form-control"
+                    ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="netValue">netValue:</label>
+            <div class="input-group">
+                <input id="netValue" name="netValue" type="number" class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="serviceText">serviceText:</label>
+            <div class="input-group">
+                <!-- <input id="serviceText" name="serviceText" type="text" class="form-control" ngModel> -->
+                <textarea rows="5" cols="30" pInputTextarea name="serviceText" class="form-control" ngModel [autoResize]="true"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lineText">lineText:</label>
+            <div class="input-group">
+                <!-- <input id="lineText" name="lineText" type="text" class="form-control" ngModel> -->
+                
+                <textarea rows="5" cols="30" pInputTextarea name="lineText" class="form-control" ngModel [autoResize]="true"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="formula">formula:</label>
+            <div class="input-group">
+                <input id="formula" name="formula" type="text" class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lineNumber">lineNumber:</label>
+            <div class="input-group">
+                <input id="lineNumber" name="lineNumber" type="text" class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="alternatives">alternatives:</label>
+            <div class="input-group">
+                <input id="alternatives" name="alternatives" type="text" class="form-control" ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="biddersLine">biddersLine:</label>
+            <div class="input-group">
+                <input id="biddersLine" name="biddersLine" type="checkbox" required  ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="supplementaryLine">supplementaryLine:</label>
+            <div class="input-group">
+                <input id="supplementaryLine" name="supplementaryLine" type="checkbox" required 
+                    ngModel>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="lotSizeForCostingIsOne">lotSizeForCostingIsOne:</label>
+            <div class="input-group">
+                <input id="lotSizeForCostingIsOne" name="lotSizeForCostingIsOne" type="checkbox" required
+                     ngModel>
+            </div>
+        </div>
+        <div class=" text-center m-3">
+            <button pButton data-dismiss="modal" icon="pi pi-save" [disabled]="!f.valid">Add Service</button>
+        </div>
+    </form>
+</p-dialog>
+
+ 

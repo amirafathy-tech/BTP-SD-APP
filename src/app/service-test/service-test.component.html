@@ -1,0 +1,269 @@
+
+<div class="card">
+    <p-toast></p-toast>
+    <p-table [value]="products" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th fd-table-cell>ID </th>
+                <th fd-table-cell>Selection</th>
+                <th fd-table-cell>LineIndex</th>
+                <th fd-table-cell>Del.Ind</th>
+                <!-- <th fd-table-cell>Service.No</th> -->
+                <th fd-table-cell>ShortText</th>
+                <th fd-table-cell>Quantity</th>
+                <!-- <th fd-table-cell>UnitOfMeasure</th> -->
+                <th fd-table-cell>GrossPrice</th>
+                <!-- <th fd-table-cell>Currency</th> -->
+                <th fd-table-cell>OverF.Percentage</th>
+                <th fd-table-cell>PriceChangedAllowed</th>
+                <th fd-table-cell>UnlimitedOverF</th>
+                <th fd-table-cell>PricePerUnitOfMeasurement</th>
+                <!-- <th fd-table-cell>Mat Group</th> -->
+                <!-- <th fd-table-cell>Service Type</th> -->
+                <th fd-table-cell>External.Service.No</th>
+                <th fd-table-cell>Net Value</th>
+                <th fd-table-cell>Service Text</th>
+                <th fd-table-cell>Line Text</th>
+                <!-- <th fd-table-cell>PerNo</th> -->
+                <th fd-table-cell>Formula</th>
+                <th fd-table-cell>Line Number</th>
+                <th fd-table-cell>Alt</th>
+                <th fd-table-cell>Bidder's Line</th>
+                <th fd-table-cell>Supp.Line</th>
+                <th fd-table-cell>Cstg Ls</th>
+                <th fd-table-cell>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="product">
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="product.id">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.id}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="product.selectionCheckbox" required>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.selectionCheckbox}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <!-- <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <p-dropdown [options]="" appendTo="body" [(ngModel)]="product.inventoryStatus" [style]="{'width':'100%'}"></p-dropdown>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.inventoryStatus}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td> -->
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="product.lineIndex">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.lineIndex }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="product.deletionIndicator">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.deletionIndicator }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.shortText">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.shortText }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="product.quantity">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.quantity }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="product.grossPrice">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.grossPrice }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="product.overFulfilmentPercentage">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.overFulfilmentPercentage }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="product.priceChangedAllowed">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.priceChangedAllowed }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="product.UnlimitedOverFulfilment">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.UnlimitedOverFulfilment }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="product.pricePerUnitOfMeasurement">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.pricePerUnitOfMeasurement }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.externalServiceNumber">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.externalServiceNumber }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="product.netValue">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.netValue }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.serviceText">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.serviceText }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.lineText">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.lineText }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.formula">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.formula }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.lineNumber">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.lineNumber }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="product.alternatives">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.alternatives }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="product.biddersLine">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.biddersLine }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="product.supplementaryLine">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.supplementaryLine }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="product.lotSizeForCostingIsOne">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{product.lotSizeForCostingIsOne }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <div class="flex align-items-center justify-content-center gap-2">
+                        <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(product)" class="p-button-rounded p-button-text"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(product.id,product)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(product, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>
