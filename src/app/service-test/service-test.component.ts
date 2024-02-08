@@ -54,4 +54,9 @@ export class ServiceTestComponent {
         // this.products[index] = this.clonedProducts[product.id as string];
         // delete this.clonedProducts[product.id as string];
     }
+    newService: any = {};
+    addRow() {
+      this.products.push(this.newService);
+      this.newService = {}; // Reset newService object for the next row
+    }
 }

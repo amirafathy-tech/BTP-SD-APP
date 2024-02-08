@@ -1,0 +1,94 @@
+
+<!-- Service Master Data -->
+<div class="card">
+    <p-toast></p-toast>
+    <p-toolbar styleClass="mb-4 gap-2">
+        <ng-template pTemplate="left">
+            <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button> -->
+            <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-danger"></button> -->
+        </ng-template>
+        <ng-template pTemplate="right">
+            <button pButton label="Create" (click)="navigateAddServices()" class="m-2"></button>
+            <!-- <button pButton label="Edit" (click)="navigateAddServices()" [disabled]="!isEditButtonDisabled" class="m-2 edit-button"></button> -->
+            <button pButton label="Export" (click)="exportExcel()" icon="pi pi-upload" class="m-2"></button>
+            <button pButton pRipple label="Setting" icon="pi-ellipsis-v" class="m-2"></button>
+        </ng-template>
+    </p-toolbar>
+
+    <div class="table-container">
+        <div class="table-actions">
+            <p-multiSelect [options]="cols" [(ngModel)]="selectedColumns" optionLabel="header"
+                selectedItemsLabel="{0} columns selected" [style]="{'min-width': '200px'}"
+                placeholder="Choose Columns" (onChange)="onColumnSelectionChange()"></p-multiSelect>
+
+            <div class="field ">
+                <input pInputText type="text" (input)="dt.filterGlobal($event.target, 'contains')"
+                    placeholder="Search..."
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" />
+            </div>
+        </div>
+
+        <p-table #dt  [columns]="selectedColumns" [value]="serviceRecords" [reorderableColumns]="true" [rows]="10"
+            [globalFilterFields]="['code', 'description']"
+            [tableStyle]="{ 'min-width': '50rem' }" [rowHover]="true" dataKey="id"
+            [showCurrentPageReport]="true">
+
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <!-- <th style="width: 4rem">
+                    </th> -->
+                    <th pReorderableColumn *ngFor="let col of cols" pSortableColumn={{col.field}}  >
+                        {{col.header}}
+                        <p-sortIcon field={{col.field}} ></p-sortIcon>
+                        <p-columnFilter type="text" field={{col.field}} display="menu" class="ml-auto"></p-columnFilter>
+                    </th>
+                    <!-- <th pSortableColumn="code" pReorderableColumn  style="min-width:15rem">Service Number
+                        <p-sortIcon field="code" ></p-sortIcon>
+                        <p-columnFilter type="text" field="code" display="menu" class="ml-auto"></p-columnFilter>
+                    </th>
+                    <th pSortableColumn="description" pReorderableColumn style="min-width:10rem">Description
+                        <p-sortIcon field="description"></p-sortIcon>
+                        <p-columnFilter type="text" field="description" display="menu" class="ml-auto"></p-columnFilter>
+                    </th>
+                    <th pSortableColumn="lastChangeDate" pReorderableColumn >Last Change Date
+                        <p-sortIcon field="lastChangeDate"></p-sortIcon>
+                        <p-columnFilter type="date" field="lastChangeDate" display="menu"></p-columnFilter>
+                    </th>
+                    <th pSortableColumn="serviceType" pReorderableColumn  style="min-width:10rem">Service Type
+                        <p-sortIcon field="serviceType"></p-sortIcon>
+                    </th> -->
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-record>
+                <tr>
+                    <!-- <td>
+                        <p-tableCheckbox  [value]="record" (onChange)="updateSelectedProductIds($event, record.id)"></p-tableCheckbox>
+                    </td> -->
+                    <!-- <td>
+                        <p-checkbox [value]="record"
+                            (onChange)="onRecordSelectionChange($event, record)"></p-checkbox>
+                    </td> -->
+
+                    <td>{{ record.code }}</td>
+                    <!-- <td>{{ record.price | currency: 'USD' }}</td> -->
+                    <td>{{ record.description }}</td>
+                    <td>{{ record.lastChangeDate}}
+                    <td>
+                    <td>{{ record.serviceType }}</td>
+                    <td>
+                        <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                            (click)="editRecord(record)"></button>
+                        <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+                            (click)="editRecord(record)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+
+
+
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

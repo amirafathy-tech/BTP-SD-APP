@@ -1,0 +1,164 @@
+
+
+
+<form (ngSubmit)="onSubmit(f)" #f="ngForm" >
+    <div class="row m-2">
+        <div class="field col-12 md:col-4">
+
+            <label for="id">Service Number(ID):</label>
+            <input id="id" name="id" type="number" [(ngModel)]="selectedRecord.id" ngModel 
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+
+           <!--  <input id="id" name="id" type="number" ngModel [(ngModel)] ="selectedRecord.id" [ngModelOptions]="{standalone: true}"
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"> -->
+
+        </div>
+        <div class="field col-12 md:col-4">
+            <label for="code">Code:</label>
+
+            <input id="code" name="code" required type="text" [(ngModel)]="selectedRecord.code" ngModel 
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+
+        </div>
+        <div class="field col-12 md:col-4">
+            <label for="description">Description:</label>
+
+            <input id="description" name="description" required type="text" [(ngModel)]="selectedRecord.description" ngModel 
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+
+        </div>
+    </div>
+    <div class="row m-2">
+        <div class="field col-12 md:col-4">
+            <label for="shortTextChangeAllowed">Short Text Change Allowed:</label>
+            <div class="input-group">
+                <input id="shortTextChangeAllowed" name="shortTextChangeAllowed" type="checkbox" [(ngModel)]="selectedRecord.shortTextChangeAllowed" ngModel  >
+            </div>
+        </div>
+        <div class="field col-12 md:col-4">
+            <label for="deletionIndicator">Deletion Indicator:</label>
+            <div class="input-group">
+                <input id="deletionIndicator" name="deletionIndicator" type="checkbox" [(ngModel)]="selectedRecord.deletionIndicator" ngModel  >
+            </div>
+        </div>
+    </div>
+
+    <div class="row m-2">
+        <div class="field col-12 md:col-4">
+            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" [ngModelOptions]="{standalone: true}" optionLabel="code"
+                [filter]="true" filterBy="code" [showClear]="true" placeholder="Select a ServiceType">
+                <ng-template let-country pTemplate="item">
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ country.code }}::{{ country.description }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="field col-12 md:col-4">
+
+            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" [ngModelOptions]="{standalone: true}" optionLabel="code"
+                [filter]="true" filterBy="code" [showClear]="true" placeholder="Select an UnitOfMeasure">
+                <ng-template let-country pTemplate="item">
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ country.code }}::{{ country.description }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+    </div>
+
+    <h3>Control Data:</h3>
+    <hr>
+    <div class="row m-2">
+        <label for="numberToBeConverted">Conversion:</label>
+        <div class="field col-12 md:col-2">
+
+            <input id="numberToBeConverted" name="numberToBeConverted" required type="number" [(ngModel)]="selectedRecord.numberToBeConverted" ngModel  
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+        </div>
+        <div class="field col-12 md:col-3">
+            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" [ngModelOptions]="{standalone: true}" optionLabel="code"
+                [filter]="true" filterBy="code" [showClear]="true" placeholder="Select a Service Type">
+                <ng-template let-serviceType pTemplate="item">
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ serviceType.code }}::{{ serviceType.description }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+        <div class="field col-12 md:col-2">
+            <input id="convertedNumber" name="convertedNumber" required type="number" [(ngModel)]="selectedRecord.convertedNumber" ngModel 
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+        </div>
+        <div class="field col-12 md:col-3">
+            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" [ngModelOptions]="{standalone: true}" optionLabel="code"
+                [filter]="true" filterBy="code" [showClear]="true" placeholder="Select a Converted Service Type">
+                <ng-template let-serviceType pTemplate="item">
+                    <div class="flex align-items-center gap-2">
+                        <div>{{ serviceType.code }}::{{ serviceType.description }}</div>
+                    </div>
+                </ng-template>
+            </p-dropdown>
+        </div>
+    </div>
+    <div class="row m-2">
+        <div class="field col-12 md:col-4">
+            <label for="mainItem" >Main Item:</label>
+            <div class="input-group">
+                <input id="mainItem" name="mainItem" type="checkbox" [(ngModel)]="selectedRecord.mainItem" ngModel >
+            </div>
+        </div>
+    </div>
+    <div class="row m-2">
+
+        <div class="field col-12 md:col-4">
+            <label for="state">Formula:</label>
+            <select id="state"
+                class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                style="appearance: auto">
+                <option>Arizona</option>
+                <option>California</option>
+                <option>Florida</option>
+                <option>Ohio</option>
+                <option>Washington</option>
+            </select>
+        </div>
+        <div class="field col-12 md:col-4">
+            <label for="state">Material/Service Grp:</label>
+            <select id="state"
+                class="w-full text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round outline-none focus:border-primary"
+                style="appearance: auto">
+                <option>Arizona</option>
+                <option>California</option>
+                <option>Florida</option>
+                <option>Ohio</option>
+                <option>Washington</option>
+            </select>
+        </div>
+
+    </div>
+    <div class=" text-center m-3">
+        <!-- <button pButton data-dismiss="modal" icon="pi pi-save" [disabled]="!f.valid">Save</button> -->
+        <button pButton [disabled]="!f.valid">{{ editMode ?
+            'Update' : 'Add' }}
+        </button>
+    </div>
+    <p-messages position="top-left" *ngIf="addMessage" [(value)]="messageAdd" [enableService]="false"></p-messages>
+    
+    <p-messages position="top-left" *ngIf="updateMessage" [(value)]="messageUpdate" [enableService]="false"></p-messages>
+</form>
+
+<!-- <div class="row m-2">
+    <div class="card flex justify-content-center">
+        <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedCountry" optionLabel="formula" [filter]="true"
+            filterBy="formula" [showClear]="true" placeholder="Select a Formula">
+
+            <ng-template let-country pTemplate="item">
+                <div class="flex align-items-center gap-2">
+                    <div>{{ country.formula }}::{{ country.description }}</div>
+                </div>
+            </ng-template>
+        </p-dropdown>
+    </div>
+</div> -->
+

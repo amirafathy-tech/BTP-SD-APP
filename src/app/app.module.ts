@@ -1,5 +1,4 @@
 
-
 import { NgModule } from '@angular/core';
 import { BrowserModule, provideClientHydration } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -20,6 +19,14 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { MessagesModule } from 'primeng/messages';
 import { ToastModule } from 'primeng/toast';
+import { StepsModule } from 'primeng/steps';
+import { ChipModule } from 'primeng/chip';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { PaginatorModule } from 'primeng/paginator';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { CheckboxModule } from 'primeng/checkbox';
+import { AnimateModule } from 'primeng/animate';
+import { CardModule } from 'primeng/card';
 
 
 
@@ -30,6 +37,17 @@ import { ModelComponent } from './model/model.component';
 import { AddModelComponent } from './model/add-model/add-model.component';
 import { ServiceComponent } from './service/service.component';
 import { ServiceTestComponent } from './service-test/service-test.component';
+import { ServiceTypeComponent } from './service-type/service-type.component';
+import { FormulaComponent } from './formula/formula.component';
+import { CreateComponent } from './formula/create/create.component';
+import { ParameterComponent } from './formula/parameter/parameter.component';
+import { RelationComponent } from './formula/relation/relation.component';
+import { TestComponent } from './formula/test/test.component';
+import { ServiceMasterComponent } from './service-master/service-master.component';
+import { ServiceTypeEditComponent } from './service-type/service-type-edit/service-type-edit.component';
+import { ServiceMasterAddComponent } from './service-master/service-master-add/service-master-add.component';
+import { ServiceMasterFormComponent } from './service-master-form/service-master-form.component';
+import { FormulaService } from './formula/formula.service';
 
 @NgModule({
   declarations: [
@@ -38,7 +56,17 @@ import { ServiceTestComponent } from './service-test/service-test.component';
     ModelComponent,
     AddModelComponent,
     ServiceComponent,
-    ServiceTestComponent
+    ServiceTestComponent,
+    ServiceTypeComponent,
+    FormulaComponent,
+    CreateComponent,
+    ParameterComponent,
+    RelationComponent,
+    TestComponent,
+    ServiceMasterComponent,
+    ServiceTypeEditComponent,
+    ServiceMasterAddComponent,
+    ServiceMasterFormComponent
   ],
   imports: [
     FundamentalNgxCoreModule,
@@ -50,8 +78,8 @@ import { ServiceTestComponent } from './service-test/service-test.component';
     ReactiveFormsModule,
     HttpClientModule,
     CommonModule,
+    
 
-  
 
 ButtonModule,
 TableModule,
@@ -61,8 +89,14 @@ ToolbarModule,
 InputTextareaModule,
 MessagesModule,
 ToastModule,
-
-
+StepsModule,
+AnimateModule,
+CardModule,
+ChipModule,
+ConfirmDialogModule,
+PaginatorModule,
+MultiSelectModule,
+CheckboxModule,
 
     NgHttpLoaderModule.forRoot(),
   ],

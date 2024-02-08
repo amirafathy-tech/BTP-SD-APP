@@ -4,6 +4,9 @@
     <p-table [value]="products" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
         <ng-template pTemplate="header">
             <tr>
+                <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th>
                 <th fd-table-cell>ID </th>
                 <th fd-table-cell>Selection</th>
                 <th fd-table-cell>LineIndex</th>
@@ -36,6 +39,9 @@
         </ng-template>
         <ng-template pTemplate="body" let-product let-editing="editing" let-ri="rowIndex">
             <tr [pEditableRow]="product">
+                <td>
+                    <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                </td>
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
@@ -265,5 +271,87 @@
                 </td>
             </tr>
         </ng-template>
+
+        <ng-template pTemplate="footer">
+            <tr>
+                <td>
+                    <p-tableCheckbox [value]="newService"></p-tableCheckbox>
+                </td>
+                <td>
+                    <input pInputText type="number" [(ngModel)]="newService.id">
+                </td>
+                <td>
+                    <input pInputText type="checkbox" [(ngModel)]="newService.selectionCheckbox" required>
+                </td>
+                <td>
+                            <input pInputText type="number" [(ngModel)]="newService.lineIndex">
+                </td>
+                <td>
+                            <input pInputText type="checkbox" [(ngModel)]="newService.deletionIndicator">
+                </td>
+                <td>
+                            <input pInputText type="text" [(ngModel)]="newService.shortText">
+                </td>
+                <td>
+                            <input pInputText type="number" [(ngModel)]="newService.quantity">
+                </td>
+                <td>
+                            <input pInputText type="number" [(ngModel)]="newService.grossPrice">
+                </td>
+                <td>
+                            <input pInputText type="number" [(ngModel)]="newService.overFulfilmentPercentage">
+                </td>
+                <td>
+                            <input pInputText type="checkbox" [(ngModel)]="newService.priceChangedAllowed">
+                </td>
+                <td>
+                            <input pInputText type="checkbox" [(ngModel)]="newService.UnlimitedOverFulfilment">
+                </td>
+                <td>
+                            <input pInputText type="number" [(ngModel)]="newService.pricePerUnitOfMeasurement">
+                </td>
+                <td>
+                            <input pInputText type="text" [(ngModel)]="newService.externalServiceNumber">
+                </td>
+                <td>
+                            <input pInputText type="number" [(ngModel)]="newService.netValue">
+                </td>
+                <td>
+                            <input pInputText type="text" [(ngModel)]="newService.serviceText">
+                </td>
+                <td>
+                            <input pInputText type="text" [(ngModel)]="newService.lineText">
+                </td>
+                <td>
+                            <input pInputText type="text" [(ngModel)]="newService.formula">
+                </td>
+                <td>
+                            <input pInputText type="text" [(ngModel)]="newService.lineNumber">
+                </td>
+                <td>
+                            <input pInputText type="text" [(ngModel)]="newService.alternatives">
+                </td>
+                <td>
+                            <input pInputText type="checkbox" [(ngModel)]="newService.biddersLine">
+                </td>
+                <td>
+                            <input pInputText type="checkbox" [(ngModel)]="newService.supplementaryLine">
+                </td>
+                <td>
+                            <input pInputText type="checkbox" [(ngModel)]="newService.lotSizeForCostingIsOne">
+                     
+                </td>
+              <!-- <td>
+                <p-dropdown [options]="brands" [(ngModel)]="newService.brand" [filter]="true" [filterPlaceholder]="'Search'"
+                  [filterBy]="'value'" placeholder="Select Brand"></p-dropdown>
+              </td> -->
+             
+        
+              <td>
+                <button pButton type="button" icon="pi pi-plus" class="ui-button-info" label="Add" (click)="addRow()"
+                  [disabled]="!newService.id || !newService.selectionCheckbox || !newService.shortText"></button>
+              </td>
+            </tr>
+          </ng-template>
     </p-table>
 </div>

@@ -1,0 +1,16 @@
+<div class="row">
+    <div class="col">
+        <app-service-type-edit></app-service-type-edit>
+        <hr>
+        <ul class="list-group">
+            <a class="list-group-item" style="cursor: pointer" *ngFor="let record of records; " 
+           
+                (click)="onEditItem(record.serviceTypeCode)">
+                <span class="fw-bold">ID:</span> {{ record.serviceTypeCode}} -
+                 <span class="fw-bold">Code:</span> {{
+                record.code}} - <span class="fw-bold"> Description:</span> {{ record.description }}
+            </a>
+        </ul>
+    </div>
+</div>
+<!-- <ng-http-loader></ng-http-loader> -->

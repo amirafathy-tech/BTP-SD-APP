@@ -41,7 +41,7 @@ export class ModelComponent implements OnInit {
     private router: Router) {
   }
   navigateServices(){
-    this.router.navigate(['/service']);
+    this.router.navigate(['/serviceTest']);
   }
 
   // deleteRecord(index:number){
