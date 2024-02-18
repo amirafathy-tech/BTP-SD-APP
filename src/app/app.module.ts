@@ -27,6 +27,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AnimateModule } from 'primeng/animate';
 import { CardModule } from 'primeng/card';
+import { FieldsetModule } from 'primeng/fieldset';
 
 
 
@@ -46,7 +47,6 @@ import { TestComponent } from './formula/test/test.component';
 import { ServiceMasterComponent } from './service-master/service-master.component';
 import { ServiceTypeEditComponent } from './service-type/service-type-edit/service-type-edit.component';
 import { ServiceMasterAddComponent } from './service-master/service-master-add/service-master-add.component';
-import { ServiceMasterFormComponent } from './service-master-form/service-master-form.component';
 import { FormulaService } from './formula/formula.service';
 
 @NgModule({
@@ -66,7 +66,6 @@ import { FormulaService } from './formula/formula.service';
     ServiceMasterComponent,
     ServiceTypeEditComponent,
     ServiceMasterAddComponent,
-    ServiceMasterFormComponent
   ],
   imports: [
     FundamentalNgxCoreModule,
@@ -97,6 +96,7 @@ ConfirmDialogModule,
 PaginatorModule,
 MultiSelectModule,
 CheckboxModule,
+FieldsetModule,
 
     NgHttpLoaderModule.forRoot(),
   ],

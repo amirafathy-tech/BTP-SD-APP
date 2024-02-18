@@ -29,28 +29,86 @@ export class ServiceMasterComponent implements OnInit {
 
     editMode = false;
     isEditButtonDisabled: boolean = false;
-    selectedRecords: any[] = []; // Array to store selected records
+     // Array to store selected records
     selectedRecordCount: number = 0;
+
+    selectedRecordMap: { [key: string]: boolean } = {}; // Map to store selected state of each record
+
+    selectedRecords: any[] = [];
+    // onRecordSelectionChange(event: any, record: any) {
+    //     const checked = event.checked;
+
+    //     if (checked) {
+    //         this.selectedRecord = record
+    //         // Add the record to the selectedRecords array if it's not already present
+    //         if (!this.selectedRecords.includes(record)) {
+    //             this.selectedRecords.push(record);
+    //             console.log(this.selectedRecords);
+
+    //             this.selectedRecordCount++;
+    //         }
+    //     } else {
+    //         // Remove the record from the selectedRecords array
+    //         const index = this.selectedRecords.indexOf(record);
+    //         console.log(index)
+    //         if (index !== -1) {
+    //             this.selectedRecords.splice(index, 1);
+    //             console.log(this.selectedRecords);
+    //             this.selectedRecordCount--;
+    //         }
+    //     }
+    // }
+
+
     onRecordSelectionChange(event: any, record: any) {
         if (event.checked) {
-            // Add the record to the selectedRecords array
+            this.selectedRecord=record
+            console.log(this.selectedRecord);
+          console.log(record);
+
+          // Add the record to the selectedRecords array if it's not already present
+          if (!this.selectedRecords.includes(record)) {
             this.selectedRecords.push(record);
-            this.selectedRecordCount++;
+            console.log(this.selectedRecords);
+           // this.selectedRecordCount++;
+          }
         } else {
-            // Remove the record from the selectedRecords array
-            const index = this.selectedRecords.indexOf(record);
-            if (index !== -1) {
-                this.selectedRecords.splice(index, 1);
-                this.selectedRecordCount--;
-            }
-
+          // Remove the record from the selectedRecords array
+          const index = this.selectedRecords.indexOf(record);
+          if (index !== -1) {
+            this.selectedRecords.splice(index, 1);
+            console.log(this.selectedRecords);
+           // this.selectedRecordCount--;
+          }
         }
-        console.log(this.selectedRecords.length);
-        console.log(this.selectedRecordCount);
 
-        this.isEditButtonDisabled = this.selectedRecordCount == 1 && this.selectedRecords.length == 1;
-        //this.selectedRecordCount=0
-    }
+        // console.log(this.selectedRecords.length);
+        // console.log(this.selectedRecordCount);
+        //this.isEditButtonDisabled = this.selectedRecords.length == 1;
+      }
+
+    // onRecordSelectionChange(event: any, record: any) {
+    //     if (event.checked) {
+    //         console.log(record);
+
+    //         // Add the record to the selectedRecords array
+    //         this.selectedRecords.push(record);
+    //         this.selectedRecordCount++;
+    //     } else {
+    //         // Remove the record from the selectedRecords array
+    //         const index = this.selectedRecords.indexOf(record);
+    //         if (index !== -1) {
+    //             this.selectedRecords.splice(index, 1);
+    //             this.selectedRecordCount--;
+    //         }
+
+    //     }
+    //     console.log(this.selectedRecords.length);
+    //     console.log(this.selectedRecordCount);
+
+    //     this.isEditButtonDisabled = this.selectedRecordCount == 1 && this.selectedRecords.length == 1;
+    //     //this.selectedRecordCount=0
+    // }
 
     // onRecordSelectionChange(event: any, record: any) {
     //     // Check if at least one checkbox is selected
@@ -137,7 +195,7 @@ export class ServiceMasterComponent implements OnInit {
     onColumnSelectionChange() {
         // Update the selected columns when the selection changes
         this.selectedColumns = this.cols.filter(col => this.selectedColumns.includes(col));
-      }
+    }
 
     deleteSelectedProducts() {
         this.confirmationService.confirm({
@@ -151,7 +209,7 @@ export class ServiceMasterComponent implements OnInit {
             // }
         });
     }
-    
+
     // Service Master 
     editRecord(record: ServiceMaster) {
         const navigationExtras: NavigationExtras = {
@@ -163,19 +221,85 @@ export class ServiceMasterComponent implements OnInit {
         this.router.navigate(['/servicemaster-add'], navigationExtras);
     }
 
+    copyRecord(record: ServiceMaster) {
+        const navigationExtras: NavigationExtras = {
+            state: {
+                Record: record,
+                Copy: true
+            }
+        };
+        console.log(navigationExtras);
+        this.router.navigate(['/servicemaster-add'], navigationExtras);
+    }
+
+    navigateEditService() {
+        const navigationExtras: NavigationExtras = {
+            state: {
+                Record: this.selectedRecord,
+            }
+        };
+        console.log(navigationExtras);
+        if (this.selectedRecords.length > 0) {
+            this.router.navigate(['/servicemaster-add'], navigationExtras);
+        }
+    }
+
+    navigateCopyService() {
+        const navigationExtras: NavigationExtras = {
+            state: {
+                Record: this.selectedRecord,
+                Copy: true
+            }
+        };
+        console.log(navigationExtras);
+        if (this.selectedRecords.length > 0) {
+            this.router.navigate(['/servicemaster-add'], navigationExtras);
+        }
+    }
+
     navigateAddServices() {
+        // if(this.selectedRecords.length == 1){
         this.router.navigate(['/servicemaster-add']);
+        // }
+        // else{
+        //     console.log("more than one record");
+        //     console.log(this.selectedRecords.length);
+
+
+        // }
+
     }
 
     // Export Data to Excel Sheet
+    // exportExcel() {
+    //     import('xlsx').then((xlsx) => {
+    //         const worksheet = xlsx.utils.json_to_sheet(this.serviceRecords);
+    //         const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+    //         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+    //         this.saveAsExcelFile(excelBuffer, 'services');
+    //     });
+    // }
     exportExcel() {
         import('xlsx').then((xlsx) => {
-            const worksheet = xlsx.utils.json_to_sheet(this.serviceRecords);
+            console.log(this.selectedRecords.length);
+            console.log(this.selectedRecords);
+            const selectedRows = this.selectedRecords.length > 0 ? this.selectedRecords : this.serviceRecords;
+            const worksheet = xlsx.utils.json_to_sheet(selectedRows);
             const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
             const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
             this.saveAsExcelFile(excelBuffer, 'services');
         });
     }
+    // exportExcel() {
+    //     import('xlsx').then((xlsx) => {
+    //       const checkedRowsExist = Object.values(this.selectedRecordMap).some((value) => value === true);
+    //       const selectedRows = checkedRowsExist ? this.selectedRecords.filter((record) => this.selectedRecordMap[record.id]) : this.serviceRecords;
+    //       const worksheet = xlsx.utils.json_to_sheet(selectedRows);
+    //       const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
+    //       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+    //       this.saveAsExcelFile(excelBuffer, 'services');
+    //     });
+    //   }
     saveAsExcelFile(buffer: any, fileName: string): void {
         let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         let EXCEL_EXTENSION = '.xlsx';

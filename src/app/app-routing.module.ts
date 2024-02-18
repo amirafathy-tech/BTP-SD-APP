@@ -13,7 +13,6 @@ import { RelationComponent } from './formula/relation/relation.component';
 import { TestComponent } from './formula/test/test.component';
 import { ServiceMasterComponent } from './service-master/service-master.component';
 import { ServiceMasterAddComponent } from './service-master/service-master-add/service-master-add.component';
-import { ServiceMasterFormComponent } from './service-master-form/service-master-form.component';
 
 
 const routes: Routes = [
@@ -27,7 +26,6 @@ const routes: Routes = [
   
   { path: 'servicemaster', component: ServiceMasterComponent },
   { path: 'servicemaster-add', component: ServiceMasterAddComponent },
-  { path: 'servicemasterform', component: ServiceMasterFormComponent },
 //   {
 //     path: 'servicemaster', component: ServiceMasterComponent,
 //     children: [

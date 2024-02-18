@@ -33,6 +33,7 @@ export class AddModelComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     const value = form.value;
+    console.log(value)
     const newRecord = new ModelEntity(value.id, value.modelServSpec, value.blockingIndicator, value.serviceSelection, value.description,
       value.searchTerm, value.purchaseOrgnization, value.contract);
     this.modelService.addRecord(newRecord);

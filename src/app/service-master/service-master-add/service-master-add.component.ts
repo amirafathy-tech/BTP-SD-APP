@@ -56,12 +56,18 @@ export class ServiceMasterAddComponent implements OnInit {
 
     if (this.router.getCurrentNavigation()?.extras.state) {
       const state = this.router.getCurrentNavigation()?.extras.state?.['Record'];
+      const copyFlag = this.router.getCurrentNavigation()?.extras.state?.['Copy'];
       console.log(state);
-      if (state) {
+      console.log(copyFlag);
+      if (copyFlag) {
         this.selectedRecord = state;
         console.log(this.selectedRecord);
-        this.editMode = true;
+        //this.editMode = true;
         console.log(this.editMode);
+      }else{
+        this.selectedRecord = state;
+        this.editMode = true;
+        console.log(this.selectedRecord);
       }
     }
   }

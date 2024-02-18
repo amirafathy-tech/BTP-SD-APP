@@ -1,6 +1,42 @@
 
+<p-card  class="m-2">
+    <div class="row">
+    <div class="form-group col-6">
+        <label for="modelServSpec">Sh.Text:</label>
+        <div class="input-group">
+            <input id="modelServSpec" name="modelServSpec" required type="text" class="form-control" ngModel>
+        </div>
+    </div>
+  
+    <div class="form-group col-4">
+        <label for="blockingIndicator">TotalValue:</label>
+        <div class="input-group">
+           calculated
+        </div>
+    </div>
+    <div class="form-group col-2">
+        <label for="blockingIndicator">UOM:</label>
+        <div class="input-group">
+            Retrieved
+            <!-- <input id="blockingIndicator" name="blockingIndicator" type="checkbox" ngModel> -->
+        </div>
+    </div>
+</div>
+</p-card>
+<p-card  class="m-2">
+    <ng-template pTemplate="right">
+        <button pButton label="Create" size="small" icon="pi pi-plus"  class="m-2"></button>
+         <!-- <button pButton label="Edit" (click)="navigateAddServices()" [disabled]="!isEditButtonDisabled" class="m-2 edit-button"></button>  -->
+         <button pButton label="Edit" size="small"  class="m-2 edit-button"></button> 
+         <button pButton pRipple icon="pi pi-copy" class="p-button-rounded m-2 "
+        ></button>
+        <button pButton label="Export" size="small"  icon="pi pi-upload" class="m-2"></button>
+       
+    </ng-template>
+</p-card>
 <div class="card">
     <p-toast></p-toast>
+   
     <p-table [value]="products" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
         <ng-template pTemplate="header">
             <tr>
@@ -8,25 +44,26 @@
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
                 <th fd-table-cell>ID </th>
-                <th fd-table-cell>Selection</th>
-                <th fd-table-cell>LineIndex</th>
+                <!-- <th fd-table-cell>Selection</th> -->
+                <!-- <th fd-table-cell>LineIndex</th> -->
                 <th fd-table-cell>Del.Ind</th>
-                <!-- <th fd-table-cell>Service.No</th> -->
+                <th fd-table-cell>Service.No</th>
                 <th fd-table-cell>ShortText</th>
                 <th fd-table-cell>Quantity</th>
-                <!-- <th fd-table-cell>UnitOfMeasure</th> -->
+                <th fd-table-cell>UnitOfMeasure</th>
                 <th fd-table-cell>GrossPrice</th>
-                <!-- <th fd-table-cell>Currency</th> -->
+                <th fd-table-cell>Currency</th>
                 <th fd-table-cell>OverF.Percentage</th>
                 <th fd-table-cell>PriceChangedAllowed</th>
                 <th fd-table-cell>UnlimitedOverF</th>
                 <th fd-table-cell>PricePerUnitOfMeasurement</th>
-                <!-- <th fd-table-cell>Mat Group</th> -->
-                <!-- <th fd-table-cell>Service Type</th> -->
+                <th fd-table-cell>Mat Group</th>
+                <th fd-table-cell>Service Type</th>
                 <th fd-table-cell>External.Service.No</th>
                 <th fd-table-cell>Net Value</th>
                 <th fd-table-cell>Service Text</th>
                 <th fd-table-cell>Line Text</th>
+                <th fd-table-cell>Line Type</th>
                 <!-- <th fd-table-cell>PerNo</th> -->
                 <th fd-table-cell>Formula</th>
                 <th fd-table-cell>Line Number</th>
@@ -52,16 +89,17 @@
                         </ng-template>
                     </p-cellEditor>
                 </td>
-                <td>
+                <!-- <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
-                            <input pInputText type="checkbox" [(ngModel)]="product.selectionCheckbox" required>
+                            <input pInputText type="checkbox" [(ngModel)]="product.selectionCheckbox" required> 
+                          
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{product.selectionCheckbox}}
                         </ng-template>
                     </p-cellEditor>
-                </td>
+                </td> -->
                 <!-- <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
@@ -72,7 +110,7 @@
                         </ng-template>
                     </p-cellEditor>
                 </td> -->
-                <td>
+                <!-- <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
                             <input pInputText type="number" [(ngModel)]="product.lineIndex">
@@ -81,7 +119,7 @@
                             {{product.lineIndex }}
                         </ng-template>
                     </p-cellEditor>
-                </td>
+                </td> -->
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
@@ -92,6 +130,10 @@
                         </ng-template>
                     </p-cellEditor>
                 </td>
+                <td>
+                    service Number
+                </td>
+
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
@@ -113,6 +155,9 @@
                     </p-cellEditor>
                 </td>
                 <td>
+                    UOM
+                </td>
+                <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
                             <input pInputText type="number" [(ngModel)]="product.grossPrice">
@@ -121,6 +166,9 @@
                             {{product.grossPrice }}
                         </ng-template>
                     </p-cellEditor>
+                </td>
+                <td>
+                    Currency 
                 </td>
                 <td>
                     <p-cellEditor>
@@ -163,6 +211,12 @@
                     </p-cellEditor>
                 </td>
                 <td>
+                    Mat.Grp Retrieved
+                </td>
+                <td>
+                   Service Type 
+                </td>
+                <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">
                             <input pInputText type="text" [(ngModel)]="product.externalServiceNumber">
@@ -183,14 +237,15 @@
                     </p-cellEditor>
                 </td>
                 <td>
-                    <p-cellEditor>
+                    Service Text retrieved
+                    <!-- <p-cellEditor>
                         <ng-template pTemplate="input">
                             <input pInputText type="text" [(ngModel)]="product.serviceText">
                         </ng-template>
                         <ng-template pTemplate="output">
                             {{product.serviceText }}
                         </ng-template>
-                    </p-cellEditor>
+                    </p-cellEditor> -->
                 </td>
                 <td>
                     <p-cellEditor>
@@ -201,6 +256,9 @@
                             {{product.lineText }}
                         </ng-template>
                     </p-cellEditor>
+                </td>
+                <td>
+                    line type dropdown
                 </td>
                 <td>
                     <p-cellEditor>
@@ -281,22 +339,54 @@
                     <input pInputText type="number" [(ngModel)]="newService.id">
                 </td>
                 <td>
-                    <input pInputText type="checkbox" [(ngModel)]="newService.selectionCheckbox" required>
-                </td>
+                    <input pInputText type="checkbox" [(ngModel)]="newService.deletionIndicator">
+        </td>
                 <td>
+                    <!-- <input pInputText type="checkbox" [(ngModel)]="newService.selectionCheckbox" required> -->
+                    <p-dropdown  optionLabel="code"
+                    [filter]="true" filterBy="code" [showClear]="true" placeholder="Select Service.No">
+                    <ng-template let-country pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ country.code }}::{{ country.description }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+                </td>
+                <!-- <td>
                             <input pInputText type="number" [(ngModel)]="newService.lineIndex">
-                </td>
+                </td> -->
+               
                 <td>
-                            <input pInputText type="checkbox" [(ngModel)]="newService.deletionIndicator">
-                </td>
-                <td>
-                            <input pInputText type="text" [(ngModel)]="newService.shortText">
+                    short text retrieved
+                            <!-- <input pInputText type="text" [(ngModel)]="newService.shortText"> -->
                 </td>
                 <td>
                             <input pInputText type="number" [(ngModel)]="newService.quantity">
                 </td>
                 <td>
+                    <!-- <input pInputText type="checkbox" [(ngModel)]="newService.selectionCheckbox" required> -->
+                    <!-- <p-dropdown  optionLabel="code"
+                    [filter]="true" filterBy="code" [showClear]="true" placeholder="Select UOM">
+                    <ng-template let-country pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ country.code }}::{{ country.description }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown> -->
+                uom retrieved
+                </td>
+                <td>
                             <input pInputText type="number" [(ngModel)]="newService.grossPrice">
+                </td>
+                <td>
+                    <p-dropdown  optionLabel="code"
+                    [filter]="true" filterBy="code" [showClear]="true" placeholder="Select Currency">
+                    <ng-template let-country pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ country.code }}::{{ country.description }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
                 </td>
                 <td>
                             <input pInputText type="number" [(ngModel)]="newService.overFulfilmentPercentage">
@@ -311,19 +401,53 @@
                             <input pInputText type="number" [(ngModel)]="newService.pricePerUnitOfMeasurement">
                 </td>
                 <td>
+                    <!-- <p-dropdown  optionLabel="code"
+                    [filter]="true" filterBy="code" [showClear]="true" placeholder="Select Mat.Grp">
+                    <ng-template let-country pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ country.code }}::{{ country.description }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown> -->
+                Mat.Grp retrieved
+                </td>
+                <td>
+                    <p-dropdown  optionLabel="code"
+                    [filter]="true" filterBy="code" [showClear]="true" placeholder="Select ServiceType">
+                    <ng-template let-country pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ country.code }}::{{ country.description }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+                </td>
+                <td>
                             <input pInputText type="text" [(ngModel)]="newService.externalServiceNumber">
                 </td>
                 <td>
                             <input pInputText type="number" [(ngModel)]="newService.netValue">
                 </td>
                 <td>
-                            <input pInputText type="text" [(ngModel)]="newService.serviceText">
+                    service text retrieved
+                            <!-- <input pInputText type="text" [(ngModel)]="newService.serviceText"> -->
                 </td>
                 <td>
                             <input pInputText type="text" [(ngModel)]="newService.lineText">
                 </td>
                 <td>
-                            <input pInputText type="text" [(ngModel)]="newService.formula">
+                    <p-dropdown  optionLabel="code"
+                    [filter]="true" filterBy="code" [showClear]="true" placeholder="Select LineType">
+                    <ng-template let-country pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ country.code }}::{{ country.description }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown>
+                </td>
+
+                <td>
+                    formula id retrieved
+                            <!-- <input pInputText type="text" [(ngModel)]="newService.formula"> -->
                 </td>
                 <td>
                             <input pInputText type="text" [(ngModel)]="newService.lineNumber">
