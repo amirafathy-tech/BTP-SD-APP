@@ -57,11 +57,6 @@
                         <p-checkbox [value]="record" 
                           (onChange)="onRecordSelectionChange($event, record)"></p-checkbox>
                       </td>
-                    <!-- <td>
-                        <p-checkbox [value]="record" [(ngModel)]="selectedRecordMap[record.id]"
-                            (onChange)="onRecordSelectionChange($event, record)"></p-checkbox>
-                    </td> -->
-
                     <td *ngFor="let col of columns">
                         {{record[col.field]}}
                       

@@ -14,11 +14,14 @@ import { ActivatedRoute, Router } from '@angular/router';
   providers: [ApiService, ServiceMasterService, MessageService]
 })
 export class ServiceMasterAddComponent implements OnInit {
+savedRecord!:ServiceMaster;
+public isSaving: boolean = false;
 
   editMode = false
   selectedRecord: ServiceMaster = {
-    id: 0, code: '', description: '', shortTextChangeAllowed: false, deletionIndicator: false,
+    serviceNumberCode: 0, code: '', description: '',serviceText:'', shortTextChangeAllowed: false, deletionIndicator: false,
     numberToBeConverted: 0, convertedNumber: 0, mainItem: false,
+    formulaCode:0,unitOfMeasurementCode:0,serviceTypeCode:0,materialGroupCode:0,
     lastChangeDate: Instant.now()
   };
 
@@ -32,21 +35,38 @@ export class ServiceMasterAddComponent implements OnInit {
 
   // Fields of Dropdowns:
   recordsServiceType!: any[];
+  selectedServiceType!: number;
+  recordsMeasure!: any[];
+  selectedMeasure!: number;
   recordsFormula!: any[];
-  selectedServiceType: string | undefined;
+  selectedFormula!: number;
+  recordsMaterialGrp!: any[];
+  selectedMaterialGrp!: number;
+  
 
   ngOnInit() {
-    // this.apiService.get<any[]>('formulas').subscribe(response => {
-    //   console.log(response);
-    //   this.recordsFormula = response;
-    //   console.log(this.recordsFormula);
+    this.apiService.get<any[]>('formulas').subscribe(response => {
+      console.log(response);
+      this.recordsFormula = response;
+      console.log(this.recordsFormula);
 
-    // });
-    // this.apiService.get<any[]>('servicetypes').subscribe(response => {
-    //   console.log(response);
-    //   this.recordsServiceType = response;
-    //   console.log(this.recordsServiceType);
-    // });
+    });
+    this.apiService.get<any[]>('servicetypes').subscribe(response => {
+      console.log(response);
+      this.recordsServiceType = response;
+      console.log(this.recordsServiceType);
+    });
+    this.apiService.get<any[]>('measurements').subscribe(response => {
+      console.log(response);
+      this.recordsMeasure = response;
+      console.log(this.recordsMeasure);
+    });
+    this.apiService.get<any[]>('materialgroups').subscribe(response => {
+      console.log(response);
+      this.recordsMaterialGrp = response;
+      console.log(this.recordsMaterialGrp);
+    });
+
    this.messageAdd = [{ severity: 'success', summary: 'Success', detail: 'Added Successfully' }];
    this.messageUpdate = [{ severity: 'success', summary: 'Success', detail: 'Updated Successfully' }];
   }
@@ -75,24 +95,41 @@ export class ServiceMasterAddComponent implements OnInit {
 
   onSubmit(form: NgForm) {
     const value = form.value;
-    const newRecord = new ServiceMaster(value.id, value.code, value.description, value.shortTextChangeAllowed,
+    console.log(this.selectedServiceType);
+    
+    const newRecord = new ServiceMaster(value.code, value.description,value.serviceText, value.shortTextChangeAllowed,
       value.deletionIndicator
       , value.mainItem, value.numberToBeConverted,
-      value.convertedNumber, Instant.now());
+      value.convertedNumber,
+      this.selectedFormula,this.selectedMeasure,this.selectedServiceType,this.selectedMaterialGrp,
+       Instant.now());
     console.log(newRecord);
     if (this.editMode) {
       const updatedRecord = {
-        id: this.selectedRecord.id, code: value.code, description: value.description
-        , shortTextChangeAllowed: value.shortTextChangeAllowed, deletionIndicator: value.deletionIndicator,
+        serviceNumberCode: this.selectedRecord.serviceNumberCode, code: value.code, description: value.description
+        ,serviceText:value.serviceText, shortTextChangeAllowed: value.shortTextChangeAllowed, deletionIndicator: value.deletionIndicator,
         mainItem: value.mainItem, numberToBeConverted: value.numberToBeConverted,
-        convertedNumber: value.convertedNumber, lastChangeDate: Instant.now()
+        convertedNumber: value.convertedNumber,
+        formulaCode: this.selectedFormula,unitOfMeasurementCode: this.selectedMeasure,
+        serviceTypeCode: this.selectedServiceType,materialGroupCode:this.selectedMaterialGrp,
+        lastChangeDate: Instant.now()
       };
       console.log(updatedRecord);
 
-      this.serviceMasterService.updateRecord(this.selectedRecord.id, updatedRecord);
+      this.serviceMasterService.updateRecord(this.selectedRecord.serviceNumberCode, updatedRecord);
       this.updateMessage = true;
     } else {
-      this.serviceMasterService.addRecord(newRecord);
+      //this.serviceMasterService.addRecord(newRecord);
+     // this.savedRecord=this.serviceMasterService.addRecord(newRecord);
+     this.apiService.post<ServiceMaster>('servicenumbers', newRecord).subscribe((response: ServiceMaster) => {
+      console.log('service master created:', response);
+      this.isSaving = true;
+      this.serviceMasterService.getRecords();
+      this.savedRecord= response
+      console.log(this.savedRecord);
+      
+      
+    });
       this.addMessage = true;
     }
     //this.editMode = false;

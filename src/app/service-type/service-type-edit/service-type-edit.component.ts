@@ -32,7 +32,7 @@ export class ServiceTypeEditComponent {
               console.log(this.editedItem);
 
               this.slForm.setValue({
-                code: this.editedItem.code,
+                code: this.editedItem.serviceId,
                 description: this.editedItem.description
               });
             });

@@ -1,11 +1,11 @@
 export class ServiceType {
   public serviceTypeCode!:number;
-    public code: string;
+    public serviceId: string;
     public description: string;
 
-    constructor(code:string,description: string
+    constructor(serviceId:string,description: string
     ) {
-        this.code = code;
+        this.serviceId = serviceId;
       this.description=description;
     }
 }

@@ -3,27 +3,36 @@
 
 <form (ngSubmit)="onSubmit(f)" #f="ngForm" >
     <div class="row m-2">
-        <div class="field col-12 md:col-4">
-
+        <!-- <div class="field col-12 md:col-3">
             <label for="id">Service Number(ID):</label>
-            <input id="id" name="id" type="number" [(ngModel)]="selectedRecord.id" ngModel 
+            <input id="serviceNumberCode" name="serviceNumberCode" type="number" [(ngModel)]="selectedRecord.serviceNumberCode" ngModel 
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
-
-           <!--  <input id="id" name="id" type="number" ngModel [(ngModel)] ="selectedRecord.id" [ngModelOptions]="{standalone: true}"
-                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"> -->
-
-        </div>
-        <div class="field col-12 md:col-4">
+        </div> -->
+        <div class="field col-12 md:col-3">
+            <label for="id">Service Number(ID):</label>
+            <input id="serviceNumberCode" name="serviceNumberCode" type="number" [(ngModel)]="selectedRecord.serviceNumberCode" [ngModel]="isSaving ? savedRecord.serviceNumberCode : selectedRecord.serviceNumberCode"
+              (ngModelChange)="isSaving ? savedRecord.serviceNumberCode = $event : null" ngModel 
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+              [disabled]="true">
+          </div>
+        <div class="field col-12 md:col-3">
             <label for="code">Code:</label>
 
             <input id="code" name="code" required type="text" [(ngModel)]="selectedRecord.code" ngModel 
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
 
         </div>
-        <div class="field col-12 md:col-4">
+        <div class="field col-12 md:col-3">
             <label for="description">Description:</label>
 
             <input id="description" name="description" required type="text" [(ngModel)]="selectedRecord.description" ngModel 
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
+
+        </div>
+        <div class="field col-12 md:col-3">
+            <label for="serviceText">Service Text:</label>
+
+            <input id="serviceText" name="serviceText" required type="text" [(ngModel)]="selectedRecord.serviceText" ngModel 
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
 
         </div>
@@ -45,22 +54,24 @@
 
     <div class="row m-2">
         <div class="field col-12 md:col-4">
-            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" [ngModelOptions]="{standalone: true}" optionLabel="code"
-                [filter]="true" filterBy="code" [showClear]="true" placeholder="Select a ServiceType">
-                <ng-template let-country pTemplate="item">
+            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" ngModel="selectedRecord.serviceTypeCode"  [ngModelOptions]="{standalone: true}"
+            optionValue="serviceTypeCode" optionLabel="serviceId"
+                [filter]="true" filterBy="serviceId" [showClear]="true" placeholder="Select a ServiceType">
+                <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">
-                        <div>{{ country.code }}::{{ country.description }}</div>
+                        <div>{{ record.serviceId }}::{{ record.description }}</div>
                     </div>
                 </ng-template>
             </p-dropdown>
         </div>
         <div class="field col-12 md:col-4">
 
-            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" [ngModelOptions]="{standalone: true}" optionLabel="code"
+            <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedMeasure" ngModel="selectedRecord.serviceTypeCode" [ngModelOptions]="{standalone: true}"
+            optionValue="unitOfMeasurementCode" optionLabel="code"
                 [filter]="true" filterBy="code" [showClear]="true" placeholder="Select an UnitOfMeasure">
-                <ng-template let-country pTemplate="item">
+                <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">
-                        <div>{{ country.code }}::{{ country.description }}</div>
+                        <div>{{ record.code }}::{{ record.description }}</div>
                     </div>
                 </ng-template>
             </p-dropdown>
@@ -77,11 +88,12 @@
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
         </div>
         <div class="field col-12 md:col-3">
-            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" [ngModelOptions]="{standalone: true}" optionLabel="code"
-                [filter]="true" filterBy="code" [showClear]="true" placeholder="Select UnitOfMeasure">
-                <ng-template let-serviceType pTemplate="item">
+            <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedMeasure" [ngModelOptions]="{standalone: true}"
+            optionValue="unitOfMeasurementCode" optionLabel="code"
+                [filter]="true" filterBy="code" [showClear]="true" placeholder="Select an UnitOfMeasure">
+                <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">
-                        <div>{{ serviceType.code }}::{{ serviceType.description }}</div>
+                        <div>{{ record.code }}::{{ record.description }}</div>
                     </div>
                 </ng-template>
             </p-dropdown>
@@ -91,11 +103,12 @@
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
         </div>
         <div class="field col-12 md:col-3">
-            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" [ngModelOptions]="{standalone: true}" optionLabel="code"
+            <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedMeasure" [ngModelOptions]="{standalone: true}"
+            optionValue="unitOfMeasurementCode" optionLabel="code"
                 [filter]="true" filterBy="code" [showClear]="true" placeholder="Select Converted UnitOfMeasure">
-                <ng-template let-serviceType pTemplate="item">
+                <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">
-                        <div>{{ serviceType.code }}::{{ serviceType.description }}</div>
+                        <div>{{ record.code }}::{{ record.description }}</div>
                     </div>
                 </ng-template>
             </p-dropdown>
@@ -111,22 +124,24 @@
     </div>
     <div class="row m-2">
         <div class="field col-12 md:col-4">
-            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" [ngModelOptions]="{standalone: true}" optionLabel="code"
-                [filter]="true" filterBy="code" [showClear]="true" placeholder="Select Formula">
-                <ng-template let-country pTemplate="item">
+            <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedFormula" [ngModelOptions]="{standalone: true}"
+            optionValue="formulaCode" optionLabel="formula"
+                [filter]="true" filterBy="formula" [showClear]="true" placeholder="Select Formula">
+                <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">
-                        <div>{{ country.code }}::{{ country.description }}</div>
+                        <div>{{ record.formula }}::{{ record.description }}</div>
                     </div>
                 </ng-template>
             </p-dropdown>
         </div>
         <div class="field col-12 md:col-4">
 
-            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType" [ngModelOptions]="{standalone: true}" optionLabel="code"
+            <p-dropdown [options]="recordsMaterialGrp" [(ngModel)]="selectedMaterialGrp" [ngModelOptions]="{standalone: true}" 
+            optionValue="materialGroupCode" optionLabel="code"
                 [filter]="true" filterBy="code" [showClear]="true" placeholder="Select Material/Service Grp">
-                <ng-template let-country pTemplate="item">
+                <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">
-                        <div>{{ country.code }}::{{ country.description }}</div>
+                        <div>{{ record.code }}::{{ record.description }}</div>
                     </div>
                 </ng-template>
             </p-dropdown>

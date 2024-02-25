@@ -4,6 +4,7 @@ import { NavigationExtras, Router } from '@angular/router';
 import * as FileSaver from 'file-saver';
 import { ServiceMaster } from './service-master.model';
 import { ServiceMasterService } from './service-master.service';
+import { Subscription } from 'rxjs';
 
 interface Column {
     field: string;
@@ -17,6 +18,8 @@ interface Column {
 })
 
 export class ServiceMasterComponent implements OnInit {
+    subscription!: Subscription;
+
 
     serviceRecords!: ServiceMaster[];
 
@@ -34,123 +37,29 @@ export class ServiceMasterComponent implements OnInit {
 
     selectedRecordMap: { [key: string]: boolean } = {}; // Map to store selected state of each record
 
+   
+
     selectedRecords: any[] = [];
-    // onRecordSelectionChange(event: any, record: any) {
-    //     const checked = event.checked;
-
-    //     if (checked) {
-    //         this.selectedRecord = record
-    //         // Add the record to the selectedRecords array if it's not already present
-    //         if (!this.selectedRecords.includes(record)) {
-    //             this.selectedRecords.push(record);
-    //             console.log(this.selectedRecords);
-
-    //             this.selectedRecordCount++;
-    //         }
-    //     } else {
-    //         // Remove the record from the selectedRecords array
-    //         const index = this.selectedRecords.indexOf(record);
-    //         console.log(index)
-    //         if (index !== -1) {
-    //             this.selectedRecords.splice(index, 1);
-    //             console.log(this.selectedRecords);
-    //             this.selectedRecordCount--;
-    //         }
-    //     }
-    // }
-
 
     onRecordSelectionChange(event: any, record: any) {
-        if (event.checked) {
-            this.selectedRecord=record
-            console.log(this.selectedRecord);
-          console.log(record);
-
-          // Add the record to the selectedRecords array if it's not already present
-          if (!this.selectedRecords.includes(record)) {
-            this.selectedRecords.push(record);
-            console.log(this.selectedRecords);
-           // this.selectedRecordCount++;
-          }
-        } else {
-          // Remove the record from the selectedRecords array
-          const index = this.selectedRecords.indexOf(record);
-          if (index !== -1) {
-            this.selectedRecords.splice(index, 1);
-            console.log(this.selectedRecords);
-           // this.selectedRecordCount--;
-          }
+      if (event.checked) {
+        console.log(record);
+        this.selectedRecord = record
+        // Add the record to the selectedRecords array if it's not already present
+        if (!this.selectedRecords.includes(record)) {
+          this.selectedRecords.push(record);
+          console.log(this.selectedRecords);
         }
-
-        // console.log(this.selectedRecords.length);
-        // console.log(this.selectedRecordCount);
-        //this.isEditButtonDisabled = this.selectedRecords.length == 1;
+      } else {
+        // Remove the record from the selectedRecords array
+        const index = this.selectedRecords.indexOf(record);
+        console.log(index)
+        if (index !== -1) {
+          this.selectedRecords.splice(index, 1);
+          console.log(this.selectedRecords);
+        }
       }
-
-    // onRecordSelectionChange(event: any, record: any) {
-    //     if (event.checked) {
-    //         console.log(record);
-
-    //         // Add the record to the selectedRecords array
-    //         this.selectedRecords.push(record);
-    //         this.selectedRecordCount++;
-    //     } else {
-    //         // Remove the record from the selectedRecords array
-    //         const index = this.selectedRecords.indexOf(record);
-    //         if (index !== -1) {
-    //             this.selectedRecords.splice(index, 1);
-    //             this.selectedRecordCount--;
-    //         }
-
-    //     }
-    //     console.log(this.selectedRecords.length);
-    //     console.log(this.selectedRecordCount);
-
-    //     this.isEditButtonDisabled = this.selectedRecordCount == 1 && this.selectedRecords.length == 1;
-    //     //this.selectedRecordCount=0
-    // }
-
-    // onRecordSelectionChange(event: any, record: any) {
-    //     // Check if at least one checkbox is selected
-    //     const atLeastOneCheckboxSelected = this.serviceRecords.some((r: any) => r.selected);
-    //     console.log(atLeastOneCheckboxSelected);
-
-    //     this.isEditButtonDisabled = !atLeastOneCheckboxSelected;
-    //     console.log(this.isEditButtonDisabled);
-
-    //   }
-
-
-    // onRecordSelectionChange(event: any, record: ServiceMaster) {
-    //     console.log("heree");
-    //     if (event.checked) {
-    //         this.editMode = true;
-    //         this.selectedRecord = record;
-    //         // const navigationExtras: NavigationExtras = {
-    //         //     state: {
-    //         //       Record:record
-    //         //     }
-    //         //   };
-    //         //   console.log(navigationExtras);
-    //         // this.router.navigate(['/servicemaster-add'],navigationExtras);
-    //         console.log(this.selectedRecord);
-    //         const editButton = event.originalEvent.target.closest('.edit-button');
-    //         console.log(editButton);
-
-    //         if (editButton) {
-    //             // Perform the desired action for the "Edit" button
-    //             console.log('Edit button pressed');
-    //             // Add your code here
-    //         }
-
-
-    //     } else {
-    //         this.editMode = false;
-    //         this.selectedRecord = null;
-    //     }
-    // }
-
-
+    }
     selectedProductIds: string[] = [];
 
     updateSelectedProductIds(event: any, productId: number) {
@@ -179,8 +88,14 @@ export class ServiceMasterComponent implements OnInit {
 
 
     ngOnInit() {
-        this.serviceRecords = this.serviceMasterService.getRecords();
-        console.log(this.serviceRecords);
+        this.serviceMasterService.getRecords();
+        this.subscription = this.serviceMasterService.recordsChanged.subscribe((records: ServiceMaster[]) => {
+          this.serviceRecords = records;
+          console.log(this.serviceRecords);
+        });
+    
+        //this.serviceRecords = this.serviceMasterService.getRecords();
+        //console.log(this.serviceRecords);
         this.cd.markForCheck();
 
         this.cols = [
@@ -188,7 +103,7 @@ export class ServiceMasterComponent implements OnInit {
             // { field: 'unitOfMeasure', header: 'Unit Of Measure' },
             { field: 'description', header: 'Description' },
             { field: 'lastChangeDate', header: 'Last Change Date' },
-            { field: 'serviceType', header: 'Service Type' }
+            { field: 'serviceTypeCode', header: 'Service Type' }
         ];
         this.selectedColumns = this.cols;
     }
@@ -238,6 +153,7 @@ export class ServiceMasterComponent implements OnInit {
                 Record: this.selectedRecord,
             }
         };
+        console.log(this.selectedRecord);
         console.log(navigationExtras);
         if (this.selectedRecords.length > 0) {
             this.router.navigate(['/servicemaster-add'], navigationExtras);
@@ -258,16 +174,7 @@ export class ServiceMasterComponent implements OnInit {
     }
 
     navigateAddServices() {
-        // if(this.selectedRecords.length == 1){
         this.router.navigate(['/servicemaster-add']);
-        // }
-        // else{
-        //     console.log("more than one record");
-        //     console.log(this.selectedRecords.length);
-
-
-        // }
-
     }
 
     // Export Data to Excel Sheet
@@ -308,5 +215,4 @@ export class ServiceMasterComponent implements OnInit {
         });
         FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
     }
-
 }
