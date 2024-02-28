@@ -23,8 +23,9 @@
                 <th fd-table-cell>ServiceSelection</th>
                 <th fd-table-cell>Description</th>
                 <th fd-table-cell>SearchTerm</th>
-                <th fd-table-cell>PurchaseOrgnization</th>
-                <th fd-table-cell>Contract</th>
+                <th fd-table-cell>Currency</th>
+                <!-- <th fd-table-cell>PurchaseOrgnization</th>
+                <th fd-table-cell>Contract</th> -->
                 <th fd-table-cell>Services</th>
                 <th fd-table-cell>Actions</th>
             </tr>
@@ -34,15 +35,16 @@
                 <td>
                     <p-tableCheckbox [value]="record"></p-tableCheckbox>
                 </td>
-                <td><span *ngIf="!editMode">{{record.id}}</span><input *ngIf="editMode" [(ngModel)]="record.id"></td>
+                <td><span *ngIf="!editMode">{{record.modelSpecCode}}</span><input *ngIf="editMode" [(ngModel)]="record.id"></td>
                 
                 <td><span *ngIf="!editMode">{{record.modelServSpec}}</span><input *ngIf="editMode" [(ngModel)]="record.modelServSpec"></td>
                 <td><span *ngIf="!editMode">{{record.blockingIndicator}}</span><input *ngIf="editMode" type="checkbox" [(ngModel)]="record.blockingIndicator"></td>
                 <td><span *ngIf="!editMode">{{record.serviceSelection}}</span><input *ngIf="editMode" type="checkbox" [(ngModel)]="record.serviceSelection"></td>
                 <td><span *ngIf="!editMode">{{record.description}}</span><input *ngIf="editMode" [(ngModel)]="record.description"></td>
                 <td><span *ngIf="!editMode">{{record.searchTerm}}</span><input *ngIf="editMode" [(ngModel)]="record.searchTerm"></td>
-                <td><span *ngIf="!editMode">{{record.purchaseOrgnization}}</span><input *ngIf="editMode" [(ngModel)]="record.purchaseOrgnization"></td>
-                <td><span *ngIf="!editMode">{{record.contract}}</span><input *ngIf="editMode" [(ngModel)]="record.contract"></td>
+                <td><span *ngIf="!editMode">{{record.currencyCode}}</span><input *ngIf="editMode" [(ngModel)]="record.currencyCode"></td>
+                <!-- <td><span *ngIf="!editMode">{{record.purchaseOrgnization}}</span><input *ngIf="editMode" [(ngModel)]="record.purchaseOrgnization"></td>
+                <td><span *ngIf="!editMode">{{record.contract}}</span><input *ngIf="editMode" [(ngModel)]="record.contract"></td> -->
 <!-- Repeat this for other editable fields -->
                 <!-- <td><span>{{record.id}}</span></td>
                 <td><span>{{record.modelServSpec}}</span></td>
@@ -52,7 +54,7 @@
                 <td><span>{{record.searchTerm}}</span></td>
                 <td><span>{{record.purchaseOrgnization}}</span></td>
                 <td><span>{{record.contract}}</span></td> -->
-                <td> <button pButton (click)="navigateServices()" icon="pi pi-external-link" size="small" label="Services"></button>
+                <td> <button pButton (click)="navigateServices(record)" icon="pi pi-external-link" size="small" label="Services"></button>
                 </td>
                 <td>
                     <p-button  *ngIf="editMode" icon="pi pi-check" severity="success" (click)="saveRecord(record.id,record)"></p-button>
@@ -66,7 +68,7 @@
 
 
 
-<p-dialog header="Add Model" [(visible)]="modalVisible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
+<!-- <p-dialog header="Add Model" [(visible)]="modalVisible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
     [draggable]="false" [resizable]="false">
     <form #f="ngForm" (ngSubmit)="onSubmit(f)">
         <div class="form-group">
@@ -121,7 +123,7 @@
             <button pButton data-dismiss="modal" icon="pi pi-save" [disabled]="!f.valid">Add Model</button>
         </div>
     </form>
-</p-dialog>
+</p-dialog> -->
 
 
     <!-- <p-dialog header="Delete Model" [(visible)]="deleteDialog" [style]="{width: '50vw'}">

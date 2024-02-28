@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { ModelComponent } from './model/model.component';
 import { AddModelComponent } from './model/add-model/add-model.component';
 import { ServiceComponent } from './service/service.component';
-import { ServiceTestComponent } from './service-test/service-test.component';
+import { ModelDetailsComponent } from './model-details/model-details.component';
 import { ServiceTypeComponent } from './service-type/service-type.component';
 import { FormulaComponent } from './formula/formula.component';
 import { CreateComponent } from './formula/create/create.component';
@@ -20,7 +20,7 @@ const routes: Routes = [
   { path: 'model', component: ModelComponent },
   { path: 'modeladd', component: AddModelComponent },
   { path: 'service', component: ServiceComponent },
-  { path: 'serviceTest', component: ServiceTestComponent },
+  { path: 'serviceTest', component: ModelDetailsComponent },
   
   { path: 'servicetype', component: ServiceTypeComponent },
   

@@ -42,7 +42,7 @@ export class ApiService {
     return this.http.patch<T>(`${this.baseUrl}/${url}`, body);
   }
 
-  delete<T>(url: string, id: number, headers?: HttpHeaders): Observable<T> {
+  delete<T>(url: string, id: any, headers?: HttpHeaders): Observable<T> {
     //const options = { headers };
     return this.http.delete<T>(`${this.baseUrl}/${url}/${id}`);
   }

@@ -1,0 +1,572 @@
+<p-card class="m-2">
+    <div class="row">
+        <div class="form-group col-6">
+            <label for="modelServSpec">Sh.Text:</label>
+            <!-- <div class="input-group">
+                {{modelSpecRecord.description}}
+            </div> -->
+            <ng-container *ngIf="modelSpecRecord">
+                {{ modelSpecRecord.description }}
+            </ng-container>
+        </div>
+
+        <div class="form-group col-4">
+            <label for="blockingIndicator">TotalValue:</label>
+            <div class="input-group">
+                calculated
+            </div>
+        </div>
+        <div class="form-group col-2">
+            <label for="blockingIndicator">UOM:</label>
+            <ng-container *ngIf="currency">
+                {{ currency.code }}
+            </ng-container>
+            <!-- <div class="input-group">
+                {{currency.code}}
+            </div> -->
+        </div>
+    </div>
+</p-card>
+<p-card class="m-2">
+    <ng-template pTemplate="right">
+        <div class="field ">
+            <input pInputText type="number" 
+                placeholder="Search for Line..."
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary " />
+        </div>
+        <!-- <button pButton label="Create" size="small" icon="pi pi-plus" class="m-2"></button> -->
+        <!-- <button pButton label="Edit" (click)="navigateAddServices()" [disabled]="!isEditButtonDisabled" class="m-2 edit-button"></button>  -->
+        <button pButton label="Detail" size="small" class="m-2 edit-button"></button>
+        <button pButton pRipple icon="pi pi-trash" (click)="deleteRecord()"  [disabled]="!selectedRecords || !selectedRecords.length" class="p-button-rounded m-2 "></button>
+        <button pButton label="Condition" size="small"  class="m-2"></button>
+
+    </ng-template>
+</p-card>
+<div class="card">
+    <p-toast></p-toast>
+
+    <p-table [value]="records"  [(selection)]="selectedRecords" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+        <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 4rem">
+                    <!-- <p-tableHeaderCheckbox ></p-tableHeaderCheckbox> -->
+                    <!-- <p-checkbox (onChange)="onSelectAllRecords($event)"></p-checkbox> -->
+                    <p-tableHeaderCheckbox (onChange)="onSelectAllRecords($event)"></p-tableHeaderCheckbox>
+                </th>
+                <th fd-table-cell>ID </th>
+                <!-- <th fd-table-cell>Selection</th> -->
+                <!-- <th fd-table-cell>LineIndex</th> -->
+                <th fd-table-cell>Del.Ind</th>
+                <th fd-table-cell>Service.No</th>
+                <th fd-table-cell>ShortText</th>
+                <th fd-table-cell>Quantity</th>
+                <th fd-table-cell>UnitOfMeasure</th>
+                <th fd-table-cell>GrossPrice</th>
+                <th fd-table-cell>Currency</th>
+                <th fd-table-cell>OverF.Percentage</th>
+                <th fd-table-cell>PriceChangedAllowed</th>
+                <th fd-table-cell>UnlimitedOverF</th>
+                <th fd-table-cell>PricePerUnitOfMeasurement</th>
+                <th fd-table-cell>Mat Group</th>
+                <th fd-table-cell>Service Type</th>
+                <th fd-table-cell>External.Service.No</th>
+                <th fd-table-cell>Net Value</th>
+                <th fd-table-cell>Service Text</th>
+                <th fd-table-cell>Line Text</th>
+                <th fd-table-cell>PersonnelNumber</th>
+                <th fd-table-cell>Line Type</th>
+                <th fd-table-cell>Formula</th>
+                <th fd-table-cell>Don'tUseFormula</th>
+                <th fd-table-cell>Line Number</th>
+                <th fd-table-cell>Alt</th>
+                <th fd-table-cell>Bidder's Line</th>
+                <th fd-table-cell>Supp.Line</th>
+                <th fd-table-cell>Cstg Ls</th>
+                <th fd-table-cell>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-record let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="record">
+                <td>
+                    <!-- <p-tableCheckbox (onHeaderCheckboxToggle)="onRecordSelectionChange($event, record)" [value]="record"></p-tableCheckbox> -->
+                    <p-checkbox  (onChange)="onRecordSelectionChange($event, record)" [value]="record"></p-checkbox>
+                    <!-- <p-tableCheckbox [value]="record"></p-tableCheckbox> -->
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="record.id">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.modelSpecDetailsCode}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="record.deletionIndicator">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.deletionIndicator}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <p-dropdown [options]="recordsServiceNumber" [(ngModel)]="selectedServiceNumber"
+                                [ngModelOptions]="{standalone: true}" optionValue="serviceNumberCode" optionLabel="code"
+                                [filter]="true" filterBy="code" [showClear]="true" placeholder="Select SeviceNumber">
+                                <ng-template let-record pTemplate="item">
+                                    <div class="flex align-items-center gap-2">
+                                        <div>{{ record.code }}::{{ record.description }}</div>
+                                    </div>
+                                </ng-template>
+                            </p-dropdown>
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.serviceNumberCode}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.shortText">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.shortText }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="record.quantity">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.quantity }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="record.unitOfMeasurementCode">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.unitOfMeasurementCode }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="record.grossPrice">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.grossPrice }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <ng-container *ngIf="currency">
+                        {{ currency.code }}
+                    </ng-container>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="record.overFulfilmentPercentage">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.overFulfilmentPercentage }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="record.priceChangedAllowed">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.priceChangedAllowed }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="record.unlimitedOverFulfillment">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.unlimitedOverFulfillment}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="record.pricePerUnitOfMeasurement">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.pricePerUnitOfMeasurement }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="record.materialGroupCode">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.materialGroupCode }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="record.serviceTypeCode">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.serviceTypeCode }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.externalServiceNumber">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.externalServiceNumber }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="number" [(ngModel)]="record.netValue">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.netValue }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <!-- Service Text retrieved -->
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.serviceText">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.serviceText }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.lineText">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.lineText }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.personnelNumberCode">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.personnelNumberCode }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.lineTypeCode">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.lineTypeCode }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.formula">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.formula }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="record.dontUseFormula">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.dontUseFormula }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.lineNumber">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.lineNumber }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.alternatives">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.alternatives }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="record.biddersLine">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.biddersLine }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="record.supplementaryLine">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.supplementaryLine }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="checkbox" [(ngModel)]="record.lotSizeForCostingIsOne">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.lotSizeForCostingIsOne }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <div class="flex align-items-center justify-content-center gap-2">
+                        <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil"
+                            (click)="onRowEditInit(record)" class="p-button-rounded p-button-text"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check"
+                            (click)="onRowEditSave(record.id,record)"
+                            class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times"
+                            (click)="onRowEditCancel(record, ri)"
+                            class="p-button-rounded p-button-text p-button-danger"></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="footer">
+            <tr>
+                <!-- <form (ngSubmit)="onSubmit(f)" #f="ngForm"> -->
+                <td>
+                    <!-- <p-tableCheckbox [value]="newService"></p-tableCheckbox> -->
+                    <p-checkbox  [value]="newService"></p-checkbox>
+                </td>
+                <td>
+                    <!-- incremented -->
+                    <!-- <input pInputText type="number" [(ngModel)]="newService.modelSpecDetailsCode"> -->
+                    <!-- <ng-container *ngIf="newService">
+                        {{newService.modelSpecDetailsCode}}
+                    </ng-container> -->
+                </td>
+                <td>
+                    <input  name="deletionIndicator" type="checkbox"
+                        [(ngModel)]="newService.deletionIndicator">
+                </td>
+                <td>
+                    <p-dropdown [options]="recordsServiceNumber" [(ngModel)]="selectedServiceNumber"
+                        [ngModelOptions]="{standalone: true}" optionValue="serviceNumberCode" optionLabel="code"
+                        [filter]="true" [filterFields]="['code','description']"  [showClear]="true" [virtualScroll]="true"
+                        [virtualScrollItemSize]="38" placeholder="Select SeviceNumber"
+                        (onChange)="onServiceNumberChange($event)">
+                        <ng-template let-record pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ record.code }}::{{ record.description }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </td>
+                <!-- <td>
+                            <input pInputText type="number" [(ngModel)]="newService.lineIndex">
+                </td> -->
+                <td>
+                    <ng-container *ngIf="!selectedServiceNumberRecord">
+                        <input pInputText type="text" [(ngModel)]="shortText">
+                    </ng-container>
+                    <ng-container *ngIf="shortTextChangeAllowed && selectedServiceNumberRecord">
+                        <input pInputText type="text" [ngModel]="selectedServiceNumberRecord.description"
+                            (ngModelChange)="shortText = $event">
+                    </ng-container>
+                    <ng-container *ngIf="!shortTextChangeAllowed && selectedServiceNumberRecord">
+                        {{ selectedServiceNumberRecord.description }}
+                    </ng-container>
+                    <!-- <input pInputText type="text" [(ngModel)]="newService.shortText"> -->
+                </td>
+                <td>
+                    <input  name="quantity" type="number" [(ngModel)]="newService.quantity">
+                </td>
+                <td>
+                    <ng-container *ngIf="selectedServiceNumberRecord">
+                        {{ selectedServiceNumberRecord.unitOfMeasurementCode }}
+                    </ng-container>
+
+                    <ng-container *ngIf="!selectedServiceNumberRecord">
+                        <p-dropdown [options]="recordsUnitOfMeasure" [(ngModel)]="selectedUnitOfMeasure"
+                            [ngModelOptions]="{standalone: true}" optionValue="unitOfMeasurementCode" optionLabel="code"
+                            [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select UnitOfMeasure"
+                            [required]="true">
+                            <ng-template let-record pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <div>{{ record.code }}::{{ record.description }}</div>
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                    </ng-container>
+                </td>
+                <td>
+                    <input  name="grossPrice" type="number" [(ngModel)]="newService.grossPrice">
+                </td>
+                <td>
+                    <ng-container *ngIf="currency">
+                        {{ currency.code }}
+                    </ng-container>
+                </td>
+                <td>
+                    <input  name="overFulfilmentPercentage" type="number"
+                        [(ngModel)]="newService.overFulfilmentPercentage">
+                </td>
+                <td>
+                    <input  name="priceChangedAllowed" type="checkbox"
+                        [(ngModel)]="newService.priceChangedAllowed">
+                </td>
+                <td>
+                    <input  name="unlimitedOverFulfillment" type="checkbox"
+                        [(ngModel)]="newService.unlimitedOverFulfillment">
+                </td>
+                <td>
+                    <input  name="pricePerUnitOfMeasurement" type="number"
+                        [(ngModel)]="newService.pricePerUnitOfMeasurement">
+                </td>
+                <td>
+                    <!-- <p-dropdown  optionLabel="code"
+                    [filter]="true" filterBy="code" [showClear]="true" placeholder="Select Mat.Grp">
+                    <ng-template let-country pTemplate="item">
+                        <div class="flex align-items-center gap-2">
+                            <div>{{ country.code }}::{{ country.description }}</div>
+                        </div>
+                    </ng-template>
+                </p-dropdown> -->
+                    <ng-container *ngIf="selectedServiceNumberRecord">
+                        {{ selectedServiceNumberRecord.materialGroupCode }}
+                    </ng-container>
+                </td>
+                <td>
+                    <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType"
+                        [ngModelOptions]="{standalone: true}" optionValue="serviceTypeCode" optionLabel="serviceId"
+                        [filter]="true" [filterFields]="['serviceId','description']" [showClear]="true" [virtualScroll]="true"
+                        [virtualScrollItemSize]="38" placeholder="Select ServiceType">
+                        <ng-template let-record pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ record.serviceId }}::{{ record.description }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </td>
+                <td>
+                    <input pInputText name="externalServiceNumber" type="text"
+                        [(ngModel)]="newService.externalServiceNumber">
+                </td>
+                <td>
+                    <input name="netValue"  type="number" [(ngModel)]="newService.netValue">
+                </td>
+                <td>
+                    <ng-container *ngIf="selectedServiceNumberRecord">
+                        {{ selectedServiceNumberRecord.serviceText }}
+                    </ng-container>
+                    <!-- <input pInputText type="text" [(ngModel)]="newService.serviceText"> -->
+                </td>
+                <td>
+                    <input pInputText name="lineText" type="text" [(ngModel)]="newService.lineText">
+                </td>
+                <td>
+                    <p-dropdown [options]="recordsPersonnelNumber" [(ngModel)]="selectedPersonnelNumber"
+                        [ngModelOptions]="{standalone: true}" optionValue="personnelNumberCode" optionLabel="code"
+                        [filter]="true" [filterFields]="['code','description']" [showClear]="true" 
+                         placeholder="Select PersonnelNumber">
+                        <ng-template let-record pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ record.code }}::{{ record.description }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </td>
+                <td>
+                    <input  name="lineTypeCode" type="number" [(ngModel)]="newService.lineTypeCode">
+                </td>
+
+                <td>
+                    <ng-container *ngIf="selectedServiceNumberRecord">
+                        {{ selectedServiceNumberRecord.formulaCode }}
+                    </ng-container>
+                </td>
+                <td>
+                    <input  name="dontUseFormula" type="checkbox" [(ngModel)]="newService.dontUseFormula">
+                </td>
+                <td>
+                    <input pInputText name="lineNumber" type="text" [(ngModel)]="newService.lineNumber">
+                </td>
+                <td>
+                    <input pInputText name="alternatives" type="text" [(ngModel)]="newService.alternatives">
+                </td>
+                <td>
+                    <input  name="biddersLine" type="checkbox" [(ngModel)]="newService.biddersLine">
+                </td>
+                <td>
+                    <input  name="supplementaryLine" type="checkbox"
+                        [(ngModel)]="newService.supplementaryLine">
+                </td>
+                <td>
+                    <input  name="lotSizeForCostingIsOne" type="checkbox"
+                        [(ngModel)]="newService.lotSizeForCostingIsOne">
+
+                </td>
+                <td>
+                    <button pButton type="button" icon="pi pi-plus" class="ui-button-info" label="Add" 
+                        [disabled]="!selectedServiceNumberRecord && !selectedUnitOfMeasure" (click)="addRow()">
+                        </button>
+                </td>
+                <!-- </form> -->
+            </tr>
+        </ng-template>
+        
+    </p-table>
+</div>
+
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

@@ -6,6 +6,7 @@ import { ModelService } from '../model.service';
 import { ModelEntity } from '../model.model';
 import { Message } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { ApiService } from 'src/app/ApiService.service';
 
 
 @Component({
@@ -21,11 +22,19 @@ export class AddModelComponent implements OnInit {
   @ViewChild('f', { static: false })
   slForm!: NgForm;
 
+  recordsCurrency!: any[];
+  selectedCurrency!: number;
+
   ngOnInit() {
+    this.apiService.get<any[]>('currencies').subscribe(response => {
+      console.log(response);
+      this.recordsCurrency = response;
+      console.log(this.recordsCurrency);
+    });
     this.messages = [{ severity: 'success', summary: 'Success', detail: 'Added Successfully' }];
   }
 
-  constructor(private modelService: ModelService,private messageService: MessageService) {
+  constructor(private modelService: ModelService,private apiService: ApiService,private messageService: MessageService) {
   }
   showSuccess() {
     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Added Successfully' });
@@ -34,8 +43,16 @@ export class AddModelComponent implements OnInit {
   onSubmit(form: NgForm) {
     const value = form.value;
     console.log(value)
-    const newRecord = new ModelEntity(value.id, value.modelServSpec, value.blockingIndicator, value.serviceSelection, value.description,
-      value.searchTerm, value.purchaseOrgnization, value.contract);
+    const newRecord = new ModelEntity(this.selectedCurrency,value.modelServSpec, value.blockingIndicator, value.serviceSelection, value.description,
+      value.searchTerm);
+      this.apiService.post<ModelEntity>('modelspecs', newRecord).subscribe((response: ModelEntity) => {
+        console.log('model specs created:', response);
+        this.modelService.getRecords();
+        // this.savedRecord= response
+        // console.log(this.savedRecord);
+        
+        
+      });
     this.modelService.addRecord(newRecord);
     this.successMessage=true;
   }

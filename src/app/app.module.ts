@@ -37,7 +37,7 @@ import { HeaderComponent } from './header/header.component';
 import { ModelComponent } from './model/model.component';
 import { AddModelComponent } from './model/add-model/add-model.component';
 import { ServiceComponent } from './service/service.component';
-import { ServiceTestComponent } from './service-test/service-test.component';
+import { ModelDetailsComponent } from './model-details/model-details.component';
 import { ServiceTypeComponent } from './service-type/service-type.component';
 import { FormulaComponent } from './formula/formula.component';
 import { CreateComponent } from './formula/create/create.component';
@@ -56,7 +56,7 @@ import { FormulaService } from './formula/formula.service';
     ModelComponent,
     AddModelComponent,
     ServiceComponent,
-    ServiceTestComponent,
+    ModelDetailsComponent,
     ServiceTypeComponent,
     FormulaComponent,
     CreateComponent,

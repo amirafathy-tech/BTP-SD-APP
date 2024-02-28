@@ -3,7 +3,8 @@ import { ModelService } from './model.service';
 import { ModelEntity } from './model.model';
 import { NgForm, FormBuilder } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
+import { NavigationExtras, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-model',
@@ -19,6 +20,7 @@ export class ModelComponent implements OnInit {
   slForm!: NgForm;
 
   modalVisible: boolean = false;
+  subscription!: Subscription;
   showDialog() {
       //this.modalVisible = true;
       this.router.navigate(['/modeladd']);
@@ -40,8 +42,15 @@ export class ModelComponent implements OnInit {
   constructor(private modelService: ModelService, private modalService: NgbModal, private fb: FormBuilder,
     private router: Router) {
   }
-  navigateServices(){
-    this.router.navigate(['/serviceTest']);
+  navigateServices(record:ModelEntity){
+    console.log(record);
+    const navigationExtras: NavigationExtras = {
+      state: {
+        Record:record
+      }
+    };
+    
+    this.router.navigate(['/serviceTest'],navigationExtras);
   }
 
   // deleteRecord(index:number){
@@ -57,7 +66,12 @@ export class ModelComponent implements OnInit {
 
  
   ngOnInit() {
-    this.records = this.modelService.getRecords();
+    this.modelService.getRecords();
+    this.subscription = this.modelService.recordsChanged.subscribe((records: ModelEntity[]) => {
+      this.records = records;
+      console.log(this.records);
+    });
+    // this.records = this.modelService.getRecords();
     // this.editForm = this.fb.group({
     //   projectCode: [''],
     //   projectId: [''],
@@ -67,12 +81,12 @@ export class ModelComponent implements OnInit {
     // })
   }
 
-  onSubmit(form: NgForm) {
-    const value = form.value;
-    const newRecord = new ModelEntity(value.id, value.modelServSpec, value.blockingIndicator, value.serviceSelection, value.description,
-      value.searchTerm,value.purchaseOrgnization,value.contract);
-   this.modelService.addRecord(newRecord);
-    this.ngOnInit(); //reload the table
-  }
+  // onSubmit(form: NgForm) {
+  //   const value = form.value;
+  //   const newRecord = new ModelEntity(value.id, value.modelServSpec, value.blockingIndicator, value.serviceSelection, value.description,
+  //     value.searchTerm,value.purchaseOrgnization,value.contract);
+  //  this.modelService.addRecord(newRecord);
+  //   this.ngOnInit(); //reload the table
+  // }
 }
 

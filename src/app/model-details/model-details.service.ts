@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Subject } from 'rxjs';
-import { ModelSpecDetails } from './service.model';
+import { ModelSpecDetails } from './model-details.model';
 import { ApiService } from '../ApiService.service';
 
 @Injectable()
@@ -100,11 +100,15 @@ export class ModelSpecDetailService {
     });
   }
 
-  deleteRecord(index: number) {
+  deleteRecord(index: any) {
     // this.records.splice(index, 1);
     // console.log(this.records);
     // this.recordsChanged.next(this.records.slice());
     // console.log(this.recordsChanged);
+    this.apiService.delete<ModelSpecDetails>('modelspecdetails', index).subscribe(response => {
+      console.log('model spec deleted:',response);
+      this.getRecords()
+    });
   }
 
 

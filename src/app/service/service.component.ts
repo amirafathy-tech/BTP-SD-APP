@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-import { ServiceDetailService } from './service.service';
-import { Service } from './service.model';
+import { ModelSpecDetailService } from './service.service';
+import { ModelSpecDetails } from './service.model';
 import { FormBuilder, NgForm, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
@@ -12,7 +12,7 @@ interface City {
   selector: 'app-service',
   templateUrl: './service.component.html',
   styleUrls: ['./service.component.css'],
-  providers:[ServiceDetailService]
+  providers:[ModelSpecDetailService]
 
 })
 export class ServiceComponent {
@@ -20,7 +20,7 @@ export class ServiceComponent {
   @ViewChild('f', { static: false })
   slForm!: NgForm;
   @Input()
-  detail!: Service;
+  detail!: ModelSpecDetails;
  @Input() displayAddModal: boolean = true;
   @Output() clickClose: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() clickAdd: EventEmitter<any> = new EventEmitter<any>();
@@ -45,20 +45,20 @@ export class ServiceComponent {
   selectedCity: City | undefined;
 
 
-  newService!: Service;
+  newService!: ModelSpecDetails;
 
   closeResult!: string;
   isNewRecordVisible: boolean = false;
   newRecord: any = {};
-  records!: Service[];
+  records!: ModelSpecDetails[];
 
-  selectedProducts!: Service;
+  selectedProducts!: ModelSpecDetails;
 
-  constructor(private detailsService: ServiceDetailService,private modalService: NgbModal, private fb: FormBuilder,
+  constructor(private modelSpecDetailsService: ModelSpecDetailService,private modalService: NgbModal, private fb: FormBuilder,
     ) {}
 
   ngOnInit() {
-    this.records=  this.detailsService.getRecords();
+    //this.records=  this.detailsService.getRecords();
     this.cities = [
       { name: 'New York', code: 'NY' },
       { name: 'Rome', code: 'RM' },
@@ -86,11 +86,11 @@ export class ServiceComponent {
 
   onSubmit(form: NgForm) {
     const value = form.value;
-    const newRecord = new Service(value.id, value.selectionCheckbox, value.lineIndex, value.deletionIndicator, value.shortText,
-      value.quantity,value.grossPrice,value.overFulfilmentPercentage,value.priceChangedAllowed,value.UnlimitedOverFulfilment,
-      value.pricePerUnitOfMeasurement,value.externalServiceNumber,value.netValue,value.serviceText,value.lineText,
-      value.formula,value.lineNumber,value.alternatives,value.biddersLine,value.supplementaryLine,value.lotSizeForCostingIsOne);
-   this.detailsService.addRecord(newRecord);
+  //   const newRecord = new ModelSpecDetails(value.id, value.selectionCheckbox, value.lineIndex, value.deletionIndicator, value.shortText,
+  //     value.quantity,value.grossPrice,value.overFulfilmentPercentage,value.priceChangedAllowed,value.UnlimitedOverFulfilment,
+  //     value.pricePerUnitOfMeasurement,value.externalServiceNumber,value.netValue,value.serviceText,value.lineText,
+  //     value.formula,value.lineNumber,value.alternatives,value.biddersLine,value.supplementaryLine,value.lotSizeForCostingIsOne);
+  //  this.detailsService.addRecord(newRecord);
     this.ngOnInit(); //reload the table
   }
 }
