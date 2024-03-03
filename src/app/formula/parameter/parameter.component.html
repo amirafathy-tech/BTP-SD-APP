@@ -29,6 +29,19 @@
           />
           <small *ngIf="(paramDescription.invalid && submitted) || (paramDescription.dirty && paramDescription.invalid)" class="p-error">ParamDescription{{ index + 1 }} is required.</small>
         </div>
+        <div class="field col ">
+          <label for="unitOfMeasurementCode{{ index }}">UnitOfMeasure{{ index + 1 }}:<span class="required-indicator" style="color:red">*</span></label>
+              <p-dropdown [options]="recordsUnitOfMeasure" [(ngModel)]="selectedUnitOfMeasure"
+              [ngModelOptions]="{standalone: true}" optionValue="unitOfMeasurementCode" optionLabel="code"
+              [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select UnitOfMeasure"
+            >
+              <ng-template let-record pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                      <div>{{ record.code }}::{{ record.description }}</div>
+                  </div>
+              </ng-template>
+          </p-dropdown>
+        </div>
       </div>
     </ng-template>
     <ng-template pTemplate="footer">

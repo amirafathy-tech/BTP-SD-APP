@@ -21,7 +21,7 @@ export class ModelComponent implements OnInit {
 
   modalVisible: boolean = false;
   subscription!: Subscription;
-  showDialog() {
+  navigateModelAdd() {
       //this.modalVisible = true;
       this.router.navigate(['/modeladd']);
   }

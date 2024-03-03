@@ -3,6 +3,8 @@ import { FormulaService } from '../formula.service';
 import { NavigationExtras, Router } from '@angular/router';
 
 import { ActivatedRoute } from '@angular/router';
+import { UnitOfMeasure } from 'src/app/models/unitOfMeasure.model';
+import { ApiService } from 'src/app/ApiService.service';
 @Component({
   selector: 'app-parameter',
   templateUrl: './parameter.component.html',
@@ -17,9 +19,12 @@ export class ParameterComponent implements OnInit {
   parameterInformation: any;
   parameterInformationIterator: any[] = [];
 
+  recordsUnitOfMeasure!: UnitOfMeasure[];
+  selectedUnitOfMeasure!: number;
+
   submitted: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,) {
+  constructor(private apiService: ApiService,private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,) {
     this.numberOfParameters = this.router.getCurrentNavigation()?.extras.state?.['numberOfParameters'];
 
     this.passedCreateInfo = this.router.getCurrentNavigation()?.extras.state?.['passedCreateInfo'];
@@ -33,6 +38,11 @@ export class ParameterComponent implements OnInit {
       this.parameterInformationIterator.push({ paramID: '', paramDescription: '' });
 
     }
+    this.apiService.get<UnitOfMeasure[]>('measurements').subscribe(response => {
+      console.log(response);
+      this.recordsUnitOfMeasure = response;
+      console.log(this.recordsUnitOfMeasure);
+    });
   }
 
   nextPage() {

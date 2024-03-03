@@ -3,11 +3,12 @@
     <ng-template pTemplate="content">
       <div class="field">
         <label for="formula">Formula: <span class="required-indicator" style="color:red">*</span></label>
-        <input #formula="ngModel" id="formula" type="text" maxlength="4" required pInputText [(ngModel)]="createInformation.formula"
-          class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full" 
-          [ngClass]="{ 'ng-dirty': (formula.invalid && submitted) || (formula.dirty && formula.invalid) }"
-          />
-          <small *ngIf="(formula.invalid && submitted) || (formula.dirty && formula.invalid)" class="p-error">Formula is required.</small>
+        <input #formula="ngModel" id="formula" type="text" maxlength="4" required pInputText
+          [(ngModel)]="createInformation.formula"
+          class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
+          [ngClass]="{ 'ng-dirty': (formula.invalid && submitted) || (formula.dirty && formula.invalid) }" />
+        <small *ngIf="(formula.invalid && submitted) || (formula.dirty && formula.invalid)" class="p-error">Formula is
+          required.</small>
 
       </div>
       <div class="field">
@@ -15,35 +16,40 @@
         <input #description="ngModel" id="description" type="text" required pInputText
           [(ngModel)]="createInformation.description"
           class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
-          [ngClass]="{ 'ng-dirty': (description.invalid && submitted) || (description.dirty && description.invalid) }"
-          />
-          <small *ngIf="(description.invalid && submitted) || (description.dirty && description.invalid)" class="p-error">Description is required.</small>
+          [ngClass]="{ 'ng-dirty': (description.invalid && submitted) || (description.dirty && description.invalid) }" />
+        <small *ngIf="(description.invalid && submitted) || (description.dirty && description.invalid)"
+          class="p-error">Description is required.</small>
+      </div>
+      <div class="row formgrid grid m-1">
+        <div class="field col">
+          <label for="numberOfParameters">NumberOfParams:<span class="required-indicator"
+              style="color:red">*</span></label>
+          <input #numberOfParameters="ngModel" id="numberOfParameters" type="number" required pInputText
+            [(ngModel)]="createInformation.numberOfParameters"
+            class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary "
+            [ngClass]="{ 'ng-dirty': (numberOfParameters.invalid && submitted) || (numberOfParameters.dirty && numberOfParameters.invalid) }"
+            [min]="1" />
+          <small
+            *ngIf="(numberOfParameters.invalid && submitted) || (numberOfParameters.dirty && numberOfParameters.invalid)"
+            class="p-error">NumberOfParameters is required.</small>
+        </div>
+
+        <div class="field col">
+          <label for="unitOfMeasurementCode">Result UnitOfMeasure:<span class="required-indicator"
+              style="color:red">*</span></label>
+              <p-dropdown [options]="recordsUnitOfMeasure" [(ngModel)]="selectedUnitOfMeasure"
+              [ngModelOptions]="{standalone: true}" optionValue="unitOfMeasurementCode" optionLabel="code"
+              [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select UnitOfMeasure"
+              [required]="true" >
+              <ng-template let-record pTemplate="item">
+                  <div class="flex align-items-center gap-2">
+                      <div>{{ record.code }}::{{ record.description }}</div>
+                  </div>
+              </ng-template>
+          </p-dropdown>
+        </div>
       </div>
 
-      <div class="field">
-        <label for="numberOfParameters">NumberOfParams:<span class="required-indicator" style="color:red">*</span></label>
-        <input #numberOfParameters="ngModel" id="numberOfParameters"  type="number" required pInputText
-          [(ngModel)]="createInformation.numberOfParameters"
-          class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
-          [ngClass]="{ 'ng-dirty': (numberOfParameters.invalid && submitted) || (numberOfParameters.dirty && numberOfParameters.invalid) }"
-          [min]="1"
-          />
-          <small *ngIf="(numberOfParameters.invalid && submitted) || (numberOfParameters.dirty && numberOfParameters.invalid)" class="p-error">NumberOfParameters is required.</small>
-      </div>
-
-      <!-- <div class="field">
-        <label for="numberOfParameters">Result Unit Of Measure:<span class="required-indicator m-1" style="color:red">*</span></label>
-        <p-dropdown  optionLabel="code"
-        [filter]="true" filterBy="code" [showClear]="true" placeholder="Select Unit Of Measure"
-        
-        >
-        <ng-template let-serviceType pTemplate="item">
-            <div class="flex align-items-center gap-2">
-                <div>{{ serviceType.code }}::{{ serviceType.description }}</div>
-            </div>
-        </ng-template>
-    </p-dropdown>
-      </div> -->
     </ng-template>
     <ng-template pTemplate="footer">
       <div class="flex justify-content-end flex-wrap">

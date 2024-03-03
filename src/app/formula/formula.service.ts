@@ -8,6 +8,7 @@ export class FormulaService {
             formula: '',
             description: '',
             numberOfParameters: null,
+            unitOfMeasurementCode:null
         },
         parameterInformation: {
             parameters: [] as { paramID: [], paramDescription: [] }[]
@@ -30,7 +31,7 @@ export class FormulaService {
     }
 
     setFormulaformation(formulaInformation: {
-        createInformation: { formula: string; description: string; numberOfParameters: null; };
+        createInformation: { formula: string; description: string; numberOfParameters: null;unitOfMeasurementCode: null };
         parameterInformation: {
             parameters: { paramID: []; paramDescription: [] }[];
         };

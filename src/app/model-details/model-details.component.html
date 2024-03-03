@@ -1,57 +1,68 @@
 <p-card class="m-2">
     <div class="row">
         <div class="form-group col-6">
-            <label for="modelServSpec">Sh.Text:</label>
-            <!-- <div class="input-group">
-                {{modelSpecRecord.description}}
-            </div> -->
+            <label for="shortText" class="fw-bold mr-2">Sh.Text:</label>
             <ng-container *ngIf="modelSpecRecord">
-                {{ modelSpecRecord.description }}
+                <div class="inline-element border border-1 border-black">
+                    {{ modelSpecRecord.description }}
+                </div>
             </ng-container>
         </div>
-
-        <div class="form-group col-4">
-            <label for="blockingIndicator">TotalValue:</label>
-            <div class="input-group">
+        <div class="form-group col-6">
+            <label for="totalValue" class="fw-bold mr-2">TotalValue:</label>
+            <div class="inline-element border border-1 border-black">
                 calculated
             </div>
-        </div>
-        <div class="form-group col-2">
-            <label for="blockingIndicator">UOM:</label>
             <ng-container *ngIf="currency">
-                {{ currency.code }}
+                <div class="inline-element border border-1 border-black">
+                    {{ currency.code }}
+                </div>
             </ng-container>
-            <!-- <div class="input-group">
-                {{currency.code}}
-            </div> -->
         </div>
     </div>
 </p-card>
-<p-card class="m-2">
+
+<p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="right">
-        <div class="field ">
-            <input pInputText type="number" 
-                placeholder="Search for Line..."
-                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary " />
-        </div>
-        <!-- <button pButton label="Create" size="small" icon="pi pi-plus" class="m-2"></button> -->
-        <!-- <button pButton label="Edit" (click)="navigateAddServices()" [disabled]="!isEditButtonDisabled" class="m-2 edit-button"></button>  -->
+
         <button pButton label="Detail" size="small" class="m-2 edit-button"></button>
-        <button pButton pRipple icon="pi pi-trash" (click)="deleteRecord()"  [disabled]="!selectedRecords || !selectedRecords.length" class="p-button-rounded m-2 "></button>
-        <button pButton label="Condition" size="small"  class="m-2"></button>
+        <button pButton pRipple icon="pi pi-trash" (click)="deleteRecord()"
+            [disabled]="!selectedRecords || !selectedRecords.length" class="p-button-rounded m-2 "></button>
+        <button pButton label="Condition" size="small" class="m-2"></button>
 
     </ng-template>
-</p-card>
+    <ng-template pTemplate="left">
+        <div class="field">
+          <input pInputText type="number" placeholder="Search for Line..."
+            class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary "
+            [(ngModel)]="searchValue" (input)="onSearchInputChange()" />
+        </div>
+          <!-- <ng-template pTemplate="left">
+        <div class="field ">
+            <input pInputText type="number" placeholder="Search for Line..."
+                class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary " />
+        </div>
+    </ng-template> -->
+        <!-- <div class="field">
+            <input pInputText type="number" placeholder="Search for Line..."
+              class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary "
+              [(ngModel)]="searchValue"  />
+          </div>
+        <button pButton label="Search" (click)="onSearchInputChange(searchValue)"></button> -->
+      </ng-template>
+</p-toolbar>
+
 <div class="card">
     <p-toast></p-toast>
 
-    <p-table [value]="records"  [(selection)]="selectedRecords" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+    <p-table [value]="filteredRecords" [(selection)]="selectedRecords" dataKey="id" editMode="row"
+        [tableStyle]="{'min-width': '50rem'}" [responsive]="true">
         <ng-template pTemplate="header">
             <tr>
-                <th style="width: 4rem">
+                <th >
                     <!-- <p-tableHeaderCheckbox ></p-tableHeaderCheckbox> -->
-                    <!-- <p-checkbox (onChange)="onSelectAllRecords($event)"></p-checkbox> -->
-                    <p-tableHeaderCheckbox (onChange)="onSelectAllRecords($event)"></p-tableHeaderCheckbox>
+                    <p-checkbox [(ngModel)]="selectAllRows" (onChange)="onSelectAllRecords($event)"  [value]="records"></p-checkbox>
+                    <!-- <p-tableHeaderCheckbox (onChange)="onSelectAllRecords($event)"></p-tableHeaderCheckbox> -->
                 </th>
                 <th fd-table-cell>ID </th>
                 <!-- <th fd-table-cell>Selection</th> -->
@@ -62,9 +73,9 @@
                 <th fd-table-cell>Quantity</th>
                 <th fd-table-cell>UnitOfMeasure</th>
                 <th fd-table-cell>GrossPrice</th>
-                <th fd-table-cell>Currency</th>
+                <th fd-table-cell>Crcy</th>
                 <th fd-table-cell>OverF.Percentage</th>
-                <th fd-table-cell>PriceChangedAllowed</th>
+                <th fd-table-cell>PriceChangeAllowed</th>
                 <th fd-table-cell>UnlimitedOverF</th>
                 <th fd-table-cell>PricePerUnitOfMeasurement</th>
                 <th fd-table-cell>Mat Group</th>
@@ -89,7 +100,7 @@
             <tr [pEditableRow]="record">
                 <td>
                     <!-- <p-tableCheckbox (onHeaderCheckboxToggle)="onRecordSelectionChange($event, record)" [value]="record"></p-tableCheckbox> -->
-                    <p-checkbox  (onChange)="onRecordSelectionChange($event, record)" [value]="record"></p-checkbox>
+                    <p-checkbox   (onChange)="onRecordSelectionChange($event, record)" [value]="record"></p-checkbox>
                     <!-- <p-tableCheckbox [value]="record"></p-tableCheckbox> -->
                 </td>
                 <td>
@@ -381,13 +392,13 @@
                 </td>
             </tr>
         </ng-template>
-        
+
         <ng-template pTemplate="footer">
             <tr>
                 <!-- <form (ngSubmit)="onSubmit(f)" #f="ngForm"> -->
                 <td>
                     <!-- <p-tableCheckbox [value]="newService"></p-tableCheckbox> -->
-                    <p-checkbox  [value]="newService"></p-checkbox>
+                    <p-checkbox [value]="newService"></p-checkbox>
                 </td>
                 <td>
                     <!-- incremented -->
@@ -397,14 +408,13 @@
                     </ng-container> -->
                 </td>
                 <td>
-                    <input  name="deletionIndicator" type="checkbox"
-                        [(ngModel)]="newService.deletionIndicator">
+                    <input name="deletionIndicator" type="checkbox" [(ngModel)]="newService.deletionIndicator">
                 </td>
                 <td>
                     <p-dropdown [options]="recordsServiceNumber" [(ngModel)]="selectedServiceNumber"
                         [ngModelOptions]="{standalone: true}" optionValue="serviceNumberCode" optionLabel="code"
-                        [filter]="true" [filterFields]="['code','description']"  [showClear]="true" [virtualScroll]="true"
-                        [virtualScrollItemSize]="38" placeholder="Select SeviceNumber"
+                        [filter]="true" [filterFields]="['code','description']" [showClear]="true"
+                        [virtualScroll]="true" [virtualScrollItemSize]="38" placeholder="Select SeviceNumber"
                         (onChange)="onServiceNumberChange($event)">
                         <ng-template let-record pTemplate="item">
                             <div class="flex align-items-center gap-2">
@@ -430,7 +440,7 @@
                     <!-- <input pInputText type="text" [(ngModel)]="newService.shortText"> -->
                 </td>
                 <td>
-                    <input  name="quantity" type="number" [(ngModel)]="newService.quantity">
+                    <input name="quantity" type="number" [(ngModel)]="newService.quantity">
                 </td>
                 <td>
                     <ng-container *ngIf="selectedServiceNumberRecord">
@@ -440,8 +450,8 @@
                     <ng-container *ngIf="!selectedServiceNumberRecord">
                         <p-dropdown [options]="recordsUnitOfMeasure" [(ngModel)]="selectedUnitOfMeasure"
                             [ngModelOptions]="{standalone: true}" optionValue="unitOfMeasurementCode" optionLabel="code"
-                            [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select UnitOfMeasure"
-                            [required]="true">
+                            [filter]="true" [filterFields]="['code','description']" [showClear]="true"
+                            placeholder="Select UnitOfMeasure" [required]="true">
                             <ng-template let-record pTemplate="item">
                                 <div class="flex align-items-center gap-2">
                                     <div>{{ record.code }}::{{ record.description }}</div>
@@ -451,7 +461,7 @@
                     </ng-container>
                 </td>
                 <td>
-                    <input  name="grossPrice" type="number" [(ngModel)]="newService.grossPrice">
+                    <input name="grossPrice" type="number" [(ngModel)]="newService.grossPrice">
                 </td>
                 <td>
                     <ng-container *ngIf="currency">
@@ -459,19 +469,18 @@
                     </ng-container>
                 </td>
                 <td>
-                    <input  name="overFulfilmentPercentage" type="number"
+                    <input name="overFulfilmentPercentage" type="number"
                         [(ngModel)]="newService.overFulfilmentPercentage">
                 </td>
                 <td>
-                    <input  name="priceChangedAllowed" type="checkbox"
-                        [(ngModel)]="newService.priceChangedAllowed">
+                    <input name="priceChangedAllowed" type="checkbox" [(ngModel)]="newService.priceChangedAllowed">
                 </td>
                 <td>
-                    <input  name="unlimitedOverFulfillment" type="checkbox"
+                    <input name="unlimitedOverFulfillment" type="checkbox"
                         [(ngModel)]="newService.unlimitedOverFulfillment">
                 </td>
                 <td>
-                    <input  name="pricePerUnitOfMeasurement" type="number"
+                    <input name="pricePerUnitOfMeasurement" type="number"
                         [(ngModel)]="newService.pricePerUnitOfMeasurement">
                 </td>
                 <td>
@@ -490,8 +499,8 @@
                 <td>
                     <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType"
                         [ngModelOptions]="{standalone: true}" optionValue="serviceTypeCode" optionLabel="serviceId"
-                        [filter]="true" [filterFields]="['serviceId','description']" [showClear]="true" [virtualScroll]="true"
-                        [virtualScrollItemSize]="38" placeholder="Select ServiceType">
+                        [filter]="true" [filterFields]="['serviceId','description']" [showClear]="true"
+                        [virtualScroll]="true" [virtualScrollItemSize]="38" placeholder="Select ServiceType">
                         <ng-template let-record pTemplate="item">
                             <div class="flex align-items-center gap-2">
                                 <div>{{ record.serviceId }}::{{ record.description }}</div>
@@ -504,7 +513,7 @@
                         [(ngModel)]="newService.externalServiceNumber">
                 </td>
                 <td>
-                    <input name="netValue"  type="number" [(ngModel)]="newService.netValue">
+                    <input name="netValue" type="number" [(ngModel)]="newService.netValue">
                 </td>
                 <td>
                     <ng-container *ngIf="selectedServiceNumberRecord">
@@ -518,8 +527,8 @@
                 <td>
                     <p-dropdown [options]="recordsPersonnelNumber" [(ngModel)]="selectedPersonnelNumber"
                         [ngModelOptions]="{standalone: true}" optionValue="personnelNumberCode" optionLabel="code"
-                        [filter]="true" [filterFields]="['code','description']" [showClear]="true" 
-                         placeholder="Select PersonnelNumber">
+                        [filter]="true" [filterFields]="['code','description']" [showClear]="true"
+                        placeholder="Select PersonnelNumber">
                         <ng-template let-record pTemplate="item">
                             <div class="flex align-items-center gap-2">
                                 <div>{{ record.code }}::{{ record.description }}</div>
@@ -528,7 +537,7 @@
                     </p-dropdown>
                 </td>
                 <td>
-                    <input  name="lineTypeCode" type="number" [(ngModel)]="newService.lineTypeCode">
+                    <input name="lineTypeCode" type="number" [(ngModel)]="newService.lineTypeCode">
                 </td>
 
                 <td>
@@ -537,7 +546,7 @@
                     </ng-container>
                 </td>
                 <td>
-                    <input  name="dontUseFormula" type="checkbox" [(ngModel)]="newService.dontUseFormula">
+                    <input name="dontUseFormula" type="checkbox" [(ngModel)]="newService.dontUseFormula">
                 </td>
                 <td>
                     <input pInputText name="lineNumber" type="text" [(ngModel)]="newService.lineNumber">
@@ -546,26 +555,25 @@
                     <input pInputText name="alternatives" type="text" [(ngModel)]="newService.alternatives">
                 </td>
                 <td>
-                    <input  name="biddersLine" type="checkbox" [(ngModel)]="newService.biddersLine">
+                    <input name="biddersLine" type="checkbox" [(ngModel)]="newService.biddersLine">
                 </td>
                 <td>
-                    <input  name="supplementaryLine" type="checkbox"
-                        [(ngModel)]="newService.supplementaryLine">
+                    <input name="supplementaryLine" type="checkbox" [(ngModel)]="newService.supplementaryLine">
                 </td>
                 <td>
-                    <input  name="lotSizeForCostingIsOne" type="checkbox"
+                    <input name="lotSizeForCostingIsOne" type="checkbox"
                         [(ngModel)]="newService.lotSizeForCostingIsOne">
 
                 </td>
                 <td>
-                    <button pButton type="button" icon="pi pi-plus" class="ui-button-info" label="Add" 
+                    <button pButton type="button" icon="pi pi-plus" class="ui-button-info" label="Add"
                         [disabled]="!selectedServiceNumberRecord && !selectedUnitOfMeasure" (click)="addRow()">
-                        </button>
+                    </button>
                 </td>
                 <!-- </form> -->
             </tr>
         </ng-template>
-        
+
     </p-table>
 </div>
 

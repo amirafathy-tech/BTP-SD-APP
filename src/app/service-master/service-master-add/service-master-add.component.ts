@@ -91,8 +91,7 @@ public isSaving: boolean = false;
       }
     }
   }
-
-
+  
   onSubmit(form: NgForm) {
     const value = form.value;
     console.log(this.selectedServiceType);

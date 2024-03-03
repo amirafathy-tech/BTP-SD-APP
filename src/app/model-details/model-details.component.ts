@@ -48,7 +48,22 @@ export class ModelDetailsComponent {
 
 
   selectedModelSpecs!: ModelSpecDetails[] | null;
- 
+  
+ // To handle Search Input 
+  searchValue: number = 0;
+  filteredRecords: ModelSpecDetails[] = this.records ;
+  onSearchInputChange(): void {
+    const index =this.searchValue
+    if (index) {
+      this.apiService.getID<ModelSpecDetails>('modelspecdetails', index).subscribe(response => {
+        console.log(response);
+        this.filteredRecords = [response]; 
+        console.log(this.filteredRecords);
+      });
+    } else {
+      this.filteredRecords = this.records;
+    }
+  }
 
   constructor(private apiService: ApiService, private router: Router, private modelSpecDetailsService: ModelSpecDetailService, private messageService: MessageService, private confirmationService: ConfirmationService,) {
     this.modelSpecRecord = this.router.getCurrentNavigation()?.extras.state?.['Record'];
@@ -61,7 +76,7 @@ export class ModelDetailsComponent {
       });
     }
   }
-// to handle shortTextChangeAlolled Flag 
+// to handle shortTextChangeAlowlled Flag 
   onServiceNumberChange(event: any) {
     const selectedRecord = this.recordsServiceNumber.find(record => record.serviceNumberCode === this.selectedServiceNumber);
     console.log(selectedRecord);
@@ -90,6 +105,7 @@ export class ModelDetailsComponent {
         console.log(this.selectedRecords);
       }
     } else {
+      console.log("heree");
       // Remove the record from the selectedRecords array
       const index = this.selectedRecords.indexOf(record);
       console.log(index)
@@ -100,13 +116,23 @@ export class ModelDetailsComponent {
     }
   }
 
+  selectAllRows : boolean = false;
+  selectedAllRecords: ModelSpecDetails[] = [];
   onSelectAllRecords(event: any): void {
-    if (event.checked) {    
-      this.selectedRecords = [...this.records];
-      console.log(this.selectedRecords);
+    this.selectAllRows = event.checked;
+    console.log(event);
+    
+
+    if (event.checked) {
+      console.log(event);
+      this.selectedAllRecords = [...this.records];
+      console.log(this.selectedAllRecords);
     } else {
-      // Deselect all records
-      this.selectedRecords = [];
+      console.log(event);
+      console.log("else heree");
+      this.selectedAllRecords = [];
+      console.log(this.selectedAllRecords);
+      
     }
   }
   
@@ -114,9 +140,9 @@ export class ModelDetailsComponent {
     this.modelSpecDetailsService.getRecords();
     this.subscription = this.modelSpecDetailsService.recordsChanged.subscribe((records: ModelSpecDetails[]) => {
       this.records = records;
+     this. filteredRecords=records
       this.recordsLength = records.length;
       console.log(this.recordsLength);
-
       console.log(this.records);
     });
 

@@ -3,10 +3,10 @@
 <p-toolbar class="m-2">
 
     <div class="p-toolbar-group-start">
-        <button pButton > Model Details</button>
+        <!-- <button pButton > Model Details</button> -->
     </div>
     <div class="p-toolbar-group-end">
-        <button pButton icon="pi pi-plus" (click)="showDialog()">Add New Model</button>
+        <button pButton icon="pi pi-plus" (click)="navigateModelAdd()">Add New Model</button>
     </div>
 </p-toolbar>
 
@@ -15,7 +15,7 @@
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 4rem">
-                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                    <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
                 </th>
                 <th fd-table-cell>ID </th>
                 <th fd-table-cell>modelServ.Spec</th>
@@ -65,72 +65,3 @@
         </ng-template>
     </p-table>
 </div>
-
-
-
-<!-- <p-dialog header="Add Model" [(visible)]="modalVisible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }"
-    [draggable]="false" [resizable]="false">
-    <form #f="ngForm" (ngSubmit)="onSubmit(f)">
-        <div class="form-group">
-            <label for="id">Id:</label>
-            <div class="input-group">
-                <input id="id" name="id" type="number" required class="form-control" ngModel>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="modelServSpec">ModelServSpec:</label>
-            <div class="input-group">
-                <input id="modelServSpec" name="modelServSpec" required type="text" class="form-control" ngModel>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="blockingIndicator">BlockingIndicator:</label>
-            <div class="input-group">
-                <input id="blockingIndicator" name="blockingIndicator" type="checkbox" ngModel>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="serviceSelection">ServiceSelection:</label>
-            <div class="input-group">
-                <input id="serviceSelection" name="serviceSelection" type="checkbox" ngModel>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <div class="input-group">
-                <input id="description" name="description" required type="text" class="form-control" ngModel>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="searchTerm">SearchTerm:</label>
-            <div class="input-group">
-                <input id="searchTerm" name="searchTerm" type="text" class="form-control" ngModel>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="purchaseOrgnization">PurchaseOrgnization:</label>
-            <div class="input-group">
-                <input id="purchaseOrgnization" name="purchaseOrgnization" type="text" class="form-control" ngModel>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="contract">Contract:</label>
-            <div class="input-group">
-                <input id="contract" name="contract" type="text" class="form-control" ngModel>
-            </div>
-        </div>
-        <div class=" text-center m-3">
-            <button pButton data-dismiss="modal" icon="pi pi-save" [disabled]="!f.valid">Add Model</button>
-        </div>
-    </form>
-</p-dialog> -->
-
-
-    <!-- <p-dialog header="Delete Model" [(visible)]="deleteDialog" [style]="{width: '50vw'}">
-        <h2>
-            Are you sure you want to delete?
-        </h2>
-        <div class=" text-center m-3">
-        <p-button  icon="pi pi-trash" la severity="danger" label="Delete" (click)="deleteRecord()" ></p-button>
-       </div>
-    </p-dialog> -->

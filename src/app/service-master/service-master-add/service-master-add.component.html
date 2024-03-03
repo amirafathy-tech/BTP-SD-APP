@@ -1,6 +1,4 @@
 
-
-
 <form (ngSubmit)="onSubmit(f)" #f="ngForm" >
     <div class="row m-2">
         <!-- <div class="field col-12 md:col-3">
@@ -187,17 +185,4 @@
     <p-messages position="top-left" *ngIf="updateMessage" [(value)]="messageUpdate" [enableService]="false"></p-messages>
 </form>
 
-<!-- <div class="row m-2">
-    <div class="card flex justify-content-center">
-        <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedCountry" optionLabel="formula" [filter]="true"
-            filterBy="formula" [showClear]="true" placeholder="Select a Formula">
-
-            <ng-template let-country pTemplate="item">
-                <div class="flex align-items-center gap-2">
-                    <div>{{ country.formula }}::{{ country.description }}</div>
-                </div>
-            </ng-template>
-        </p-dropdown>
-    </div>
-</div> -->
 

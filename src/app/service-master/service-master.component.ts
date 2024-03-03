@@ -18,27 +18,18 @@ interface Column {
 })
 
 export class ServiceMasterComponent implements OnInit {
+
     subscription!: Subscription;
-
-
     serviceRecords!: ServiceMaster[];
 
     // to change Columns View 
     cols!: Column[];
     selectedColumns!: Column[];
-
     // to handel checkbox selection:
     selectedRecord: ServiceMaster | null = null;
 
     editMode = false;
-    isEditButtonDisabled: boolean = false;
      // Array to store selected records
-    selectedRecordCount: number = 0;
-
-    selectedRecordMap: { [key: string]: boolean } = {}; // Map to store selected state of each record
-
-   
-
     selectedRecords: any[] = [];
 
     onRecordSelectionChange(event: any, record: any) {
@@ -60,32 +51,11 @@ export class ServiceMasterComponent implements OnInit {
         }
       }
     }
-    selectedProductIds: string[] = [];
-
-    updateSelectedProductIds(event: any, productId: number) {
-        if (event.checked) {
-            //   this.selectedProductIds.push(productId);
-            //   console.log(this.selectedProductIds);
-            console.log(productId);
-
-        }
-        // else {
-        //   const index = this.selectedProductIds.indexOf(productId);
-        //   if (index !== -1) {
-        //     this.selectedProductIds.splice(index, 1);
-        //   }
-        // }
-    }
-
 
     submitted: boolean = false;
 
-    statuses!: any[];
-
     constructor(private serviceMasterService: ServiceMasterService, private messageService: MessageService,
         private confirmationService: ConfirmationService, private router: Router, private cd: ChangeDetectorRef) { }
-
-
 
     ngOnInit() {
         this.serviceMasterService.getRecords();
@@ -93,7 +63,6 @@ export class ServiceMasterComponent implements OnInit {
           this.serviceRecords = records;
           console.log(this.serviceRecords);
         });
-    
         //this.serviceRecords = this.serviceMasterService.getRecords();
         //console.log(this.serviceRecords);
         this.cd.markForCheck();
@@ -107,46 +76,12 @@ export class ServiceMasterComponent implements OnInit {
         ];
         this.selectedColumns = this.cols;
     }
+
     onColumnSelectionChange() {
         // Update the selected columns when the selection changes
         this.selectedColumns = this.cols.filter(col => this.selectedColumns.includes(col));
     }
-
-    deleteSelectedProducts() {
-        this.confirmationService.confirm({
-            message: 'Are you sure you want to delete the selected records?',
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
-            // accept: () => {
-            //     this.products = this.products.filter((val) => !this.selectedProducts?.includes(val));
-            //     this.selectedProducts = null;
-            //     this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Records Deleted', life: 3000 });
-            // }
-        });
-    }
-
     // Service Master 
-    editRecord(record: ServiceMaster) {
-        const navigationExtras: NavigationExtras = {
-            state: {
-                Record: record
-            }
-        };
-        console.log(navigationExtras);
-        this.router.navigate(['/servicemaster-add'], navigationExtras);
-    }
-
-    copyRecord(record: ServiceMaster) {
-        const navigationExtras: NavigationExtras = {
-            state: {
-                Record: record,
-                Copy: true
-            }
-        };
-        console.log(navigationExtras);
-        this.router.navigate(['/servicemaster-add'], navigationExtras);
-    }
-
     navigateEditService() {
         const navigationExtras: NavigationExtras = {
             state: {

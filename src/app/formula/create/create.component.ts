@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { FormulaService } from '../formula.service';
+import { UnitOfMeasure } from 'src/app/models/unitOfMeasure.model';
+import { ApiService } from 'src/app/ApiService.service';
 
 @Component({
   selector: 'app-create',
@@ -14,6 +16,10 @@ export class CreateComponent implements OnInit {
 
   submitted: boolean = false;
 
+  
+  recordsUnitOfMeasure!: UnitOfMeasure[];
+  selectedUnitOfMeasure!: number;
+
   validateNumberInput(event: KeyboardEvent) {
     const inputElement = event.target as HTMLInputElement;
     const enteredValue = Number(inputElement.value);
@@ -22,13 +28,18 @@ export class CreateComponent implements OnInit {
     }
 }
 
-  constructor(private router: Router, public formulaService: FormulaService,) { }
+  constructor(private apiService: ApiService,private router: Router, public formulaService: FormulaService,) { }
 
   ngOnInit() {
     this.createInformation = this.formulaService.getFormulaInformation().createInformation;
+    this.apiService.get<UnitOfMeasure[]>('measurements').subscribe(response => {
+      console.log(response);
+      this.recordsUnitOfMeasure = response;
+      console.log(this.recordsUnitOfMeasure);
+    });
   }
   nextPage() {
-    if (this.createInformation.formula && this.createInformation.description && this.createInformation.numberOfParameters) {
+    if (this.createInformation.formula && this.createInformation.description && this.createInformation.numberOfParameters && this.selectedUnitOfMeasure) {
       this.formulaService.formulaInformation.createInformation = this.createInformation;
       const navigationExtras: NavigationExtras = {
         state: {

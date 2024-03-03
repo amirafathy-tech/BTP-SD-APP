@@ -1,3 +1,7 @@
 .dimmed {
     color: #999; /* Dimmed text color */
 }
+.inline-element {
+    display: inline-block;
+    margin-right: 10px; /* Adjust the margin as needed */
+  }
