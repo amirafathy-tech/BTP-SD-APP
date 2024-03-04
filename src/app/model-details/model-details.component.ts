@@ -9,14 +9,12 @@ import { Subscription } from 'rxjs';
 import { ServiceMaster } from '../service-master/service-master.model';
 import { ServiceType } from '../service-type/service-type.model';
 import { UnitOfMeasure } from '../models/unitOfMeasure.model';
-import { NgForm } from '@angular/forms';
 import { PersonnelNumber } from '../models/personnelNumber.model';
-
 @Component({
   selector: 'app-model-details',
   templateUrl: './model-details.component.html',
   styleUrls: ['./model-details.component.css'],
-  providers: [ModelSpecDetailService, MessageService,ConfirmationService]
+  providers: [ModelSpecDetailService, MessageService, ConfirmationService]
 })
 export class ModelDetailsComponent {
 
@@ -26,7 +24,7 @@ export class ModelDetailsComponent {
 
   modelSpecRecord!: ModelEntity // hold ModelSpecRecord from previous screen
   currency: any
- 
+
   //fields for dropdown lists
   recordsServiceNumber!: ServiceMaster[];
   selectedServiceNumber!: number;
@@ -45,19 +43,15 @@ export class ModelDetailsComponent {
 
   recordsLineType!: any[];
   selectedLineType!: number;
-
-
-  selectedModelSpecs!: ModelSpecDetails[] | null;
-  
- // To handle Search Input 
+  // To handle Search Input 
   searchValue: number = 0;
-  filteredRecords: ModelSpecDetails[] = this.records ;
+  filteredRecords: ModelSpecDetails[] = this.records;
   onSearchInputChange(): void {
-    const index =this.searchValue
-    if (index) {
+    const index = this.searchValue
+    if (index > 0) {
       this.apiService.getID<ModelSpecDetails>('modelspecdetails', index).subscribe(response => {
         console.log(response);
-        this.filteredRecords = [response]; 
+        this.filteredRecords = [response];
         console.log(this.filteredRecords);
       });
     } else {
@@ -67,7 +61,6 @@ export class ModelDetailsComponent {
 
   constructor(private apiService: ApiService, private router: Router, private modelSpecDetailsService: ModelSpecDetailService, private messageService: MessageService, private confirmationService: ConfirmationService,) {
     this.modelSpecRecord = this.router.getCurrentNavigation()?.extras.state?.['Record'];
-
     console.log(this.modelSpecRecord);
     if (this.modelSpecRecord) {
       this.apiService.getID<any>('currencies', this.modelSpecRecord.currencyCode).subscribe(response => {
@@ -76,13 +69,35 @@ export class ModelDetailsComponent {
       });
     }
   }
-// to handle shortTextChangeAlowlled Flag 
+
+  retrievedUOM! : UnitOfMeasure
+  retrievedMatGrp !:any
+  retrievedFormula:any
+  // to handle shortTextChangeAlowlled Flag 
   onServiceNumberChange(event: any) {
     const selectedRecord = this.recordsServiceNumber.find(record => record.serviceNumberCode === this.selectedServiceNumber);
     console.log(selectedRecord);
 
     if (selectedRecord) {
       this.selectedServiceNumberRecord = selectedRecord
+      console.log(this.selectedServiceNumberRecord);
+      this.apiService.getID<UnitOfMeasure>('measurements', this.selectedServiceNumberRecord.unitOfMeasurementCode).subscribe(response => {
+        console.log(response);
+        this.retrievedUOM = response;
+        console.log(this.retrievedUOM);
+      });
+      this.apiService.getID<any>('materialgroups', this.selectedServiceNumberRecord.materialGroupCode).subscribe(response => {
+        console.log(response);
+        this.retrievedMatGrp = response;
+        console.log(this.retrievedMatGrp);
+      });
+      this.apiService.getID<any>('formulas', this.selectedServiceNumberRecord.formulaCode).subscribe(response => {
+        console.log(response);
+        this.retrievedFormula = response;
+        console.log(this.retrievedFormula);
+      });
+
+      
     }
     //this.selectedServiceNumberRecord = selectedRecord ? selectedRecord: {} ;
     this.shortTextChangeAllowed = this.selectedServiceNumberRecord?.shortTextChangeAllowed || false;
@@ -92,38 +107,19 @@ export class ModelDetailsComponent {
     console.log(this.selectedServiceNumberRecord);
 
   }
-// to handle selection checkbox
-  selectedRecord: ModelSpecDetails | null = null;
+  // to handle selection checkbox
   selectedRecords: ModelSpecDetails[] = [];
   onRecordSelectionChange(event: any, record: any) {
-    if (event.checked) {
-      console.log(record);
-      this.selectedRecord = record
-      // Add the record to the selectedRecords array if it's not already present
-      if (!this.selectedRecords.includes(record)) {
-        this.selectedRecords.push(record);
-        console.log(this.selectedRecords);
-      }
-    } else {
-      console.log("heree");
-      // Remove the record from the selectedRecords array
-      const index = this.selectedRecords.indexOf(record);
-      console.log(index)
-      if (index !== -1) {
-        this.selectedRecords.splice(index, 1);
-        console.log(this.selectedRecords);
-      }
-    }
+    //console.log(Array.isArray(event.checked));
+    console.log(event.checked);
+    this.selectedRecords = event.checked
+    console.log(this.selectedRecords);
   }
-
-  selectAllRows : boolean = false;
+  // to handle All Records Selection / Deselection 
   selectedAllRecords: ModelSpecDetails[] = [];
   onSelectAllRecords(event: any): void {
-    this.selectAllRows = event.checked;
-    console.log(event);
-    
-
-    if (event.checked) {
+    console.log(event.checked.length)
+    if (Array.isArray(event.checked) && event.checked.length > 0) {
       console.log(event);
       this.selectedAllRecords = [...this.records];
       console.log(this.selectedAllRecords);
@@ -132,15 +128,14 @@ export class ModelDetailsComponent {
       console.log("else heree");
       this.selectedAllRecords = [];
       console.log(this.selectedAllRecords);
-      
     }
   }
-  
+
   ngOnInit() {
     this.modelSpecDetailsService.getRecords();
     this.subscription = this.modelSpecDetailsService.recordsChanged.subscribe((records: ModelSpecDetails[]) => {
       this.records = records;
-     this. filteredRecords=records
+      this.filteredRecords = records
       this.recordsLength = records.length;
       console.log(this.recordsLength);
       console.log(this.records);
@@ -173,50 +168,44 @@ export class ModelDetailsComponent {
     });
 
   }
-  
-  deleteRecord(){
-    console.log(this.selectedRecord);
-    //this.modelSpecCode=  this.selectedRecord?.modelSpecDetailsCode
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete the selected record?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-       // this.modelSpecDetailsService.deleteRecord(this.selectedRecord?.modelSpecDetailsCode)
-          // this.products = this.products.filter((val) => !this.selectedProducts?.includes(val));
-          if(this.selectedRecords.length === 1) {
-            this.apiService.delete<ModelSpecDetails>('modelspecdetails', this.selectedRecord?.modelSpecDetailsCode).subscribe(response => {
-              console.log('model spec deleted:',response);
-              this.modelSpecDetailsService.getRecords();
-              this.selectedRecords = [];
-              this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Record Deleted', life: 3000 });
-            });
-          }
-          else if (this.selectedRecords.length > 1) {
-            for (const record of this.selectedRecords) {
-              this.apiService.delete<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode).subscribe(response => {
-                console.log('model spec deleted:', response);
-                this.modelSpecDetailsService.getRecords();
-              });
-            }
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Records Deleted', life: 3000 });
-            this.selectedRecords = []; // Clear the selectedRecords array after deleting all records
-          }
-      }
-  });
-  }
-  deleteSelectedRecords() {
-    this.confirmationService.confirm({
-        message: 'Are you sure you want to delete the selected records?',
+
+  // handle Deletion Record/ Records
+  deleteRecord() {
+    if (this.selectedRecords.length) {
+      this.confirmationService.confirm({
+        message: 'Are you sure you want to delete the selected record?',
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            // this.products = this.products.filter((val) => !this.selectedProducts?.includes(val));
-            // this.selectedProducts = null;
-            this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Records Deleted', life: 3000 });
+          for (const record of this.selectedRecords) {
+            this.apiService.delete<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode).subscribe(response => {
+              console.log('model spec deleted:', response);
+              this.modelSpecDetailsService.getRecords();
+            });
+          }
+          this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
+          this.selectedRecords = []; // Clear the selectedRecords array after deleting all records
         }
-    });
-}
+      });
+    }
+    if (this.selectedAllRecords.length) {
+      this.confirmationService.confirm({
+        message: 'Are you sure you want to delete the selected record?',
+        header: 'Confirm',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+          for (const record of this.selectedAllRecords) {
+            this.apiService.delete<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode).subscribe(response => {
+              console.log('model spec deleted:', response);
+              this.modelSpecDetailsService.getRecords();
+            });
+          }
+          this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
+          this.selectedAllRecords = [];
+        }
+      });
+    }
+  }
 
   onRowEditInit(product: ModelSpecDetails) {
     // this.clonedProducts[product.id as string] = { ...product };

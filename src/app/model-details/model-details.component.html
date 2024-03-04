@@ -27,7 +27,7 @@
 
         <button pButton label="Detail" size="small" class="m-2 edit-button"></button>
         <button pButton pRipple icon="pi pi-trash" (click)="deleteRecord()"
-            [disabled]="!selectedRecords || !selectedRecords.length" class="p-button-rounded m-2 "></button>
+           class="p-button-rounded m-2 "></button>
         <button pButton label="Condition" size="small" class="m-2"></button>
 
     </ng-template>
@@ -56,13 +56,11 @@
     <p-toast></p-toast>
 
     <p-table [value]="filteredRecords" [(selection)]="selectedRecords" dataKey="id" editMode="row"
-        [tableStyle]="{'min-width': '50rem'}" [responsive]="true">
+        [tableStyle]="{'min-width': '50rem'}" [responsive]="true" [(selection)]="selectedRecords">
         <ng-template pTemplate="header">
             <tr>
                 <th >
-                    <!-- <p-tableHeaderCheckbox ></p-tableHeaderCheckbox> -->
-                    <p-checkbox [(ngModel)]="selectAllRows" (onChange)="onSelectAllRecords($event)"  [value]="records"></p-checkbox>
-                    <!-- <p-tableHeaderCheckbox (onChange)="onSelectAllRecords($event)"></p-tableHeaderCheckbox> -->
+                    <p-checkbox  (onChange)="onSelectAllRecords($event)"  [value]="records"></p-checkbox>
                 </th>
                 <th fd-table-cell>ID </th>
                 <!-- <th fd-table-cell>Selection</th> -->
@@ -100,7 +98,8 @@
             <tr [pEditableRow]="record">
                 <td>
                     <!-- <p-tableCheckbox (onHeaderCheckboxToggle)="onRecordSelectionChange($event, record)" [value]="record"></p-tableCheckbox> -->
-                    <p-checkbox   (onChange)="onRecordSelectionChange($event, record)" [value]="record"></p-checkbox>
+                    <p-checkbox [(ngModel)]="selectedAllRecords"   (onChange)="onRecordSelectionChange($event, record)" [value]="record"></p-checkbox> 
+                    <!-- <p-checkbox [(ngModel)]="selectedAllRecords"   [value]="record"></p-checkbox> -->
                     <!-- <p-tableCheckbox [value]="record"></p-tableCheckbox> -->
                 </td>
                 <td>
@@ -440,11 +439,20 @@
                     <!-- <input pInputText type="text" [(ngModel)]="newService.shortText"> -->
                 </td>
                 <td>
-                    <input name="quantity" type="number" [(ngModel)]="newService.quantity">
+                    <ng-container *ngIf="selectedServiceNumberRecord && retrievedFormula">
+                        {{ this.retrievedFormula.result }}
+                    </ng-container>
+                    <ng-container *ngIf="!selectedServiceNumberRecord && !retrievedFormula" >
+                        <input name="quantity" type="number" [(ngModel)]="newService.quantity">
+                    </ng-container>
+                    <ng-container *ngIf="selectedServiceNumberRecord && retrievedUOM && newService.dontUseFormula ">
+                        <input name="quantity" type="number" [value]="retrievedFormula.result" [(ngModel)]="newService.quantity">
+                    </ng-container>
+                   
                 </td>
                 <td>
-                    <ng-container *ngIf="selectedServiceNumberRecord">
-                        {{ selectedServiceNumberRecord.unitOfMeasurementCode }}
+                    <ng-container *ngIf="selectedServiceNumberRecord && retrievedUOM">
+                        {{ this.retrievedUOM.code }}
                     </ng-container>
 
                     <ng-container *ngIf="!selectedServiceNumberRecord">
@@ -492,8 +500,9 @@
                         </div>
                     </ng-template>
                 </p-dropdown> -->
-                    <ng-container *ngIf="selectedServiceNumberRecord">
-                        {{ selectedServiceNumberRecord.materialGroupCode }}
+                    <ng-container *ngIf="selectedServiceNumberRecord && retrievedMatGrp">
+                        <!-- {{ selectedServiceNumberRecord.materialGroupCode }} -->
+                        {{ retrievedMatGrp.code }}
                     </ng-container>
                 </td>
                 <td>
@@ -541,8 +550,9 @@
                 </td>
 
                 <td>
-                    <ng-container *ngIf="selectedServiceNumberRecord">
-                        {{ selectedServiceNumberRecord.formulaCode }}
+                    <ng-container *ngIf="selectedServiceNumberRecord && retrievedFormula">
+                        <!-- {{ selectedServiceNumberRecord.formulaCode }} -->
+                        {{ retrievedFormula.formula }}
                     </ng-container>
                 </td>
                 <td>
