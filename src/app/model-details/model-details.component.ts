@@ -10,6 +10,7 @@ import { ServiceMaster } from '../service-master/service-master.model';
 import { ServiceType } from '../service-type/service-type.model';
 import { UnitOfMeasure } from '../models/unitOfMeasure.model';
 import { PersonnelNumber } from '../models/personnelNumber.model';
+import { SelectItem } from 'primeng/api';
 @Component({
   selector: 'app-model-details',
   templateUrl: './model-details.component.html',
@@ -28,9 +29,13 @@ export class ModelDetailsComponent {
   //fields for dropdown lists
   recordsServiceNumber!: ServiceMaster[];
   selectedServiceNumber!: number;
+  updateSelectedServiceNumber!: number
   selectedServiceNumberRecord!: ServiceMaster
+  updateSelectedServiceNumberRecord!: ServiceMaster
   shortText: string = '';
+  updateShortText: string = '';
   shortTextChangeAllowed: boolean = false;
+  updateShortTextChangeAllowed: boolean = false;
 
   recordsUnitOfMeasure!: UnitOfMeasure[];
   selectedUnitOfMeasure!: number;
@@ -40,6 +45,12 @@ export class ModelDetailsComponent {
 
   recordsPersonnelNumber!: PersonnelNumber[];
   selectedPersonnelNumber!: number;
+
+  recordsFormula!: any[];
+  selectedFormula!: number;
+
+  recordsMatGrp!: any[];
+  selectedMatGrp!: number;
 
   recordsLineType!: any[];
   selectedLineType!: number;
@@ -70,10 +81,14 @@ export class ModelDetailsComponent {
     }
   }
 
-  retrievedUOM! : UnitOfMeasure
-  retrievedMatGrp !:any
-  retrievedFormula:any
-  // to handle shortTextChangeAlowlled Flag 
+  retrievedUOM!: UnitOfMeasure
+  retrievedMatGrp !: any
+  retrievedFormula: any
+
+  updateRetrievedUOM!: UnitOfMeasure
+  updateRetrievedMatGrp !: any
+  updateRetrievedFormula: any
+  //In Creation to handle shortTextChangeAlowlled Flag 
   onServiceNumberChange(event: any) {
     const selectedRecord = this.recordsServiceNumber.find(record => record.serviceNumberCode === this.selectedServiceNumber);
     console.log(selectedRecord);
@@ -96,8 +111,6 @@ export class ModelDetailsComponent {
         this.retrievedFormula = response;
         console.log(this.retrievedFormula);
       });
-
-      
     }
     //this.selectedServiceNumberRecord = selectedRecord ? selectedRecord: {} ;
     this.shortTextChangeAllowed = this.selectedServiceNumberRecord?.shortTextChangeAllowed || false;
@@ -105,6 +118,41 @@ export class ModelDetailsComponent {
 
     this.shortText = ""
     console.log(this.selectedServiceNumberRecord);
+
+  }
+  //In Update to handle shortTextChangeAlowlled Flag 
+  onServiceNumberUpdateChange(event: any) {
+    console.log(event.value);
+    const updateSelectedRecord = this.recordsServiceNumber.find(record => record.serviceNumberCode === event.value);
+    console.log(updateSelectedRecord);
+
+    if (updateSelectedRecord) {
+      this.updateSelectedServiceNumberRecord = updateSelectedRecord
+      console.log(this.updateSelectedServiceNumberRecord);
+
+      this.updateShortTextChangeAllowed = this.updateSelectedServiceNumberRecord?.shortTextChangeAllowed || false;
+      console.log(this.updateShortTextChangeAllowed);
+      this.updateShortText = ""
+      console.log(this.updateSelectedServiceNumberRecord);
+
+      this.apiService.getID<UnitOfMeasure>('measurements', this.updateSelectedServiceNumberRecord.unitOfMeasurementCode).subscribe(response => {
+        console.log(response);
+        this.updateRetrievedUOM = response;
+        console.log(this.updateRetrievedUOM);
+      });
+      this.apiService.getID<any>('materialgroups', this.updateSelectedServiceNumberRecord.materialGroupCode).subscribe(response => {
+        console.log(response);
+        this.updateRetrievedMatGrp = response;
+        console.log(this.updateRetrievedMatGrp);
+      });
+      this.apiService.getID<any>('formulas', this.updateSelectedServiceNumberRecord.formulaCode).subscribe(response => {
+        console.log(response);
+        this.updateRetrievedFormula = response;
+        console.log(this.updateRetrievedFormula);
+      });
+    }
+    //this.selectedServiceNumberRecord = selectedRecord ? selectedRecord: {} ;
+
 
   }
   // to handle selection checkbox
@@ -166,6 +214,16 @@ export class ModelDetailsComponent {
       this.recordsLineType = response;
       console.log(this.recordsLineType);
     });
+    this.apiService.get<any[]>('formulas').subscribe(response => {
+      console.log(response);
+      this.recordsFormula = response;
+      console.log(this.recordsFormula);
+    });
+    this.apiService.get<any[]>('materialgroups').subscribe(response => {
+      console.log(response);
+      this.recordsMatGrp = response;
+      console.log(this.recordsMatGrp);
+    });
 
   }
 
@@ -206,28 +264,65 @@ export class ModelDetailsComponent {
       });
     }
   }
-
-  onRowEditInit(product: ModelSpecDetails) {
-    // this.clonedProducts[product.id as string] = { ...product };
+  clonedModelSpecDetails: { [s: number]: ModelSpecDetails } = {};
+  selectedRecordForEdit!: ModelSpecDetails; // Add a selectedRecord property to store the currently selected record
+  onRowEditInit(record: ModelSpecDetails) {
+    this.clonedModelSpecDetails[record.modelSpecDetailsCode] = { ...record };
+    console.log(this.clonedModelSpecDetails);
+}
+  onRowEditSave(index: number, record: ModelSpecDetails) {
+    console.log(index)
+    console.log(record)
+    console.log(this.updateSelectedServiceNumber);
+    if(this.updateSelectedServiceNumberRecord){
+      const newRecord: ModelSpecDetails = {
+        ...record, // Copy all properties from the original record
+  
+        // Modify specific attributes
+        unitOfMeasurementCode:this.updateSelectedServiceNumberRecord.unitOfMeasurementCode,
+        materialGroupCode: this.updateSelectedServiceNumberRecord.materialGroupCode,
+        formulaCode: this.updateSelectedServiceNumberRecord.formulaCode,
+        shortText: this.updateSelectedServiceNumberRecord.description,
+        serviceText: this.updateSelectedServiceNumberRecord.serviceText,
+        quantity: this.updateRetrievedFormula.result,
+      };
+      console.log(newRecord);
+      
+      this.apiService.put<ModelSpecDetails>('modelspecdetails', index, newRecord).subscribe(response => {
+        console.log('modelspecDetail updated:',response);
+        if(response){
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
+        }
+        else{
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Data' });
+        }
+        this.ngOnInit();
+      });
+    }
+    else{
+    //this.modelSpecDetailsService.updateRecord(index,record);
+    this.apiService.put<ModelSpecDetails>('modelspecdetails', index, record).subscribe(response => {
+      console.log('modelspecDetail updated:',response);
+      if(response){
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
+      }
+      else{
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Data' });
+      }
+      this.ngOnInit();
+    });
+  }
   }
 
-  onRowEditSave(index: number, product: ModelSpecDetails) {
-    this.records[index] = product;
-    console.log(this.records)
-    //this.recordsChanged.next(this.records.slice());
-    // this.detailsService.updateRecord(index,product);
-    this.ngOnInit(); //reload the table
-    // if (product.price > 0) {
-    //     delete this.clonedProducts[product.id as string];
-    //     this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Product is updated' });
-    // } else {
-    //     this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Price' });
+  onRowEditCancel(row: ModelSpecDetails, index: number) {
+    // const originalRecord = this.records.find(item => item.modelSpecDetailsCode === row.modelSpecDetailsCode);
+    // if (originalRecord) {
+    //     Object.assign(originalRecord, row);
     // }
-  }
-
-  onRowEditCancel(product: ModelSpecDetails, index: number) {
-    // this.products[index] = this.clonedProducts[product.id as string];
-    // delete this.clonedProducts[product.id as string];
+    //delete this.clonedModelSpecDetails[row.modelSpecDetailsCode as number];
+    console.log(this.records[index]);
+    this.records[index] = this.clonedModelSpecDetails[row.modelSpecDetailsCode]
+    delete this.clonedModelSpecDetails[row.modelSpecDetailsCode]
   }
 
   newService: ModelSpecDetails = {
@@ -267,7 +362,7 @@ export class ModelDetailsComponent {
     if (!this.selectedServiceNumberRecord) { // if user didn't select serviceNumber
       const newRecord = {
         //serviceNumberCode: this.selectedServiceNumber,
-        lineTypeCode: this.newService.lineTypeCode,
+        lineTypeCode: this.selectedLineType,
         unitOfMeasurementCode: this.selectedUnitOfMeasure,
         currencyCode: this.modelSpecRecord.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
@@ -312,12 +407,101 @@ export class ModelDetailsComponent {
         this.modelSpecDetailsService.getRecords();
       });
     }
-    else {
-      // save in the newRecord + basic fields 
-      // shortTextInput or the edited shortText
-      // unitOfMeasure
-      // serviceText
-      // quantity
+    else if (this.selectedServiceNumberRecord && this.newService.dontUseFormula) {
+      const newRecord = {
+        //serviceNumberCode: this.selectedServiceNumber,
+        lineTypeCode: this.selectedLineType,
+        unitOfMeasurementCode: this.selectedUnitOfMeasure,
+        currencyCode: this.modelSpecRecord.currencyCode,
+        personnelNumberCode: this.selectedPersonnelNumber,
+        serviceTypeCode: this.selectedServiceType,
+        //  materialGroupCode:this.selectedServiceNumberRecord.materialGroupCode,
+        //  formulaCode:this.selectedServiceNumberRecord.formulaCode,
+        deletionIndicator: this.newService.deletionIndicator,
+        shortText: this.shortText,
+        quantity: this.newService.quantity,
+        grossPrice: this.newService.grossPrice,
+        overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
+        priceChangedAllowed: this.newService.priceChangedAllowed,
+        unlimitedOverFulfillment: this.newService.unlimitedOverFulfillment,
+        pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
+        externalServiceNumber: this.newService.externalServiceNumber,
+        netValue: this.newService.netValue,
+        //serviceText:this.selectedServiceNumberRecord.serviceText,
+        lineText: this.newService.lineText,
+        lineNumber: this.newService.lineNumber,
+        alternatives: this.newService.alternatives,
+        biddersLine: this.newService.biddersLine,
+        supplementaryLine: this.newService.supplementaryLine,
+        lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
+        dontUseFormula: this.newService.dontUseFormula
+      }
+      console.log(newRecord);
+      // Remove properties with empty or default values
+      const filteredRecord = Object.fromEntries(
+        Object.entries(newRecord).filter(([_, value]) => {
+          return value !== '' && value !== 0 && value !== false && value !== undefined;
+        })
+      );
+      console.log(filteredRecord);
+      this.apiService.post<ModelSpecDetails>('modelspecdetails', filteredRecord).subscribe((response: ModelSpecDetails) => {
+        console.log('modelspecdetails created:', response);
+        if (response) {
+          this.resetNewService();
+          console.log(this.newService);
+
+        }
+        console.log(response);
+        this.modelSpecDetailsService.getRecords();
+      });
+    }
+    else if (this.selectedServiceNumberRecord && !this.newService.dontUseFormula) {
+      const newRecord = {
+        //serviceNumberCode: this.selectedServiceNumber,
+        lineTypeCode: this.selectedLineType,
+        unitOfMeasurementCode: this.selectedUnitOfMeasure,
+        currencyCode: this.modelSpecRecord.currencyCode,
+        personnelNumberCode: this.selectedPersonnelNumber,
+        serviceTypeCode: this.selectedServiceType,
+        //  materialGroupCode:this.selectedServiceNumberRecord.materialGroupCode,
+        //  formulaCode:this.selectedServiceNumberRecord.formulaCode,
+        deletionIndicator: this.newService.deletionIndicator,
+        shortText: this.shortText,
+        quantity: this.retrievedFormula.result,
+        grossPrice: this.newService.grossPrice,
+        overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
+        priceChangedAllowed: this.newService.priceChangedAllowed,
+        unlimitedOverFulfillment: this.newService.unlimitedOverFulfillment,
+        pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
+        externalServiceNumber: this.newService.externalServiceNumber,
+        netValue: this.newService.netValue,
+        //serviceText:this.selectedServiceNumberRecord.serviceText,
+        lineText: this.newService.lineText,
+        lineNumber: this.newService.lineNumber,
+        alternatives: this.newService.alternatives,
+        biddersLine: this.newService.biddersLine,
+        supplementaryLine: this.newService.supplementaryLine,
+        lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
+        dontUseFormula: this.newService.dontUseFormula
+      }
+      console.log(newRecord);
+      // Remove properties with empty or default values
+      const filteredRecord = Object.fromEntries(
+        Object.entries(newRecord).filter(([_, value]) => {
+          return value !== '' && value !== 0 && value !== false && value !== undefined;
+        })
+      );
+      console.log(filteredRecord);
+      this.apiService.post<ModelSpecDetails>('modelspecdetails', filteredRecord).subscribe((response: ModelSpecDetails) => {
+        console.log('modelspecdetails created:', response);
+        if (response) {
+          this.resetNewService();
+          console.log(this.newService);
+
+        }
+        console.log(response);
+        this.modelSpecDetailsService.getRecords();
+      });
     }
     // const newRecord = new ModelSpecDetails(this.selectedServiceNumber, this.newService.lineTypeCode,
     //   this.selectedServiceNumberRecord.unitOfMeasurementCode,
@@ -330,7 +514,7 @@ export class ModelDetailsComponent {
     //   this.newService.alternatives, this.newService.biddersLine, this.newService.supplementaryLine, this.newService.lotSizeForCostingIsOne, this.newService.dontUseFormula)
     let newRecord = {
       serviceNumberCode: this.selectedServiceNumber,
-      lineTypeCode: this.newService.lineTypeCode,
+      lineTypeCode: this.selectedLineType,
       unitOfMeasurementCode: this.selectedServiceNumberRecord.unitOfMeasurementCode,
       currencyCode: this.modelSpecRecord.currencyCode,
       personnelNumberCode: this.selectedPersonnelNumber,
@@ -339,7 +523,7 @@ export class ModelDetailsComponent {
       formulaCode: this.selectedServiceNumberRecord.formulaCode,
       deletionIndicator: this.newService.deletionIndicator,
       shortText: this.selectedServiceNumberRecord.description,
-      quantity: this.newService.quantity,
+      quantity: this.retrievedFormula.result,
       grossPrice: this.newService.grossPrice,
       overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
       priceChangedAllowed: this.newService.priceChangedAllowed,

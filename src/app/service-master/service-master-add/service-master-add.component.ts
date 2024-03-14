@@ -38,6 +38,8 @@ public isSaving: boolean = false;
   selectedServiceType!: number;
   recordsMeasure!: any[];
   selectedMeasure!: number;
+  selectedToBeConvertedMeasure!: number;
+  selectedConvertedMeasure!: number;
   recordsFormula!: any[];
   selectedFormula!: number;
   recordsMaterialGrp!: any[];

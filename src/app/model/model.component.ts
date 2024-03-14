@@ -5,12 +5,14 @@ import { NgForm, FormBuilder } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationExtras, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ApiService } from '../ApiService.service';
 
 @Component({
   selector: 'app-model',
   templateUrl: './model.component.html',
   styleUrls: ['./model.component.css'],
-  providers:[ModelService]
+  providers:[ModelService,MessageService, ConfirmationService]
 })
 export class ModelComponent implements OnInit {
 
@@ -21,6 +23,10 @@ export class ModelComponent implements OnInit {
 
   modalVisible: boolean = false;
   subscription!: Subscription;
+
+  recordsCurrency!: any[];
+  selectedCurrency!: number;
+
   navigateModelAdd() {
       //this.modalVisible = true;
       this.router.navigate(['/modeladd']);
@@ -33,13 +39,35 @@ export class ModelComponent implements OnInit {
 
   editMode = false;
 
+  clonedRecords: { [s: number]: ModelEntity; } = {};
+  
+  onRowEditInit(record: ModelEntity) {
+    this.clonedRecords[record.modelSpecCode] = {...record};
+}
+
+onRowEditSave(index: number,record: ModelEntity) {
+  console.log(index);
+  console.log(record);
+  
+  
+        delete this.clonedRecords[record.modelSpecCode];
+        this.messageService.add({severity:'success', summary: 'Success', detail:'Record is updated'});
+    
+}
+
+onRowEditCancel(record: ModelEntity, index: number) {
+    this.records[index] = this.clonedRecords[record.modelSpecCode];
+    delete this.clonedRecords[record.modelSpecCode];
+}
+
+
   saveRecord(index:number,record: ModelEntity) {
     this.modelService.updateRecord(index,record);
     this.ngOnInit(); //reload the table
     this.editMode = false;
   }
 
-  constructor(private modelService: ModelService, private modalService: NgbModal, private fb: FormBuilder,
+  constructor(private apiService: ApiService,private modelService: ModelService, private messageService: MessageService, private confirmationService: ConfirmationService, private modalService: NgbModal, private fb: FormBuilder,
     private router: Router) {
   }
   navigateServices(record:ModelEntity){
@@ -58,10 +86,25 @@ export class ModelComponent implements OnInit {
   //   this.ngOnInit(); //reload the table
   // }
   deleteRecord(record: ModelEntity) {
-        const index = this.records.indexOf(record);
-        if (index !== -1) {
-          this.records.splice(index, 1);
-        }
+        // const index = this.records.indexOf(record);
+        // if (index !== -1) {
+        //   this.records.splice(index, 1);
+        // }
+        this.confirmationService.confirm({
+          message: 'Are you sure you want to delete the selected record?',
+          header: 'Confirm',
+          icon: 'pi pi-exclamation-triangle',
+          accept: () => {
+           // for (const record of this.selectedAllRecords) {
+              this.apiService.delete<ModelEntity>('modelspecs', record.modelSpecCode).subscribe(response => {
+                console.log('model spec deleted:', response);
+                this.modelService.getRecords();
+              });
+           // }
+            this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
+            //this.selectedAllRecords = [];
+          }
+        });
   }
 
  
@@ -70,6 +113,12 @@ export class ModelComponent implements OnInit {
     this.subscription = this.modelService.recordsChanged.subscribe((records: ModelEntity[]) => {
       this.records = records;
       console.log(this.records);
+    });
+
+    this.apiService.get<any[]>('currencies').subscribe(response => {
+      console.log(response);
+      this.recordsCurrency = response;
+      console.log(this.recordsCurrency);
     });
     // this.records = this.modelService.getRecords();
     // this.editForm = this.fb.group({

@@ -3,8 +3,11 @@
     <p-toast></p-toast>
     <p-toolbar styleClass="mb-4 gap-2">
         <ng-template pTemplate="left">
-            <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button> -->
-            <!-- <button pButton pRipple icon="pi pi-trash" class="p-button-danger"></button> -->
+            <div class="field">
+                <input pInputText type="text" placeholder="Search...."
+                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary "
+                    [(ngModel)]="searchValue" (input)="onSearchInputChange()" />
+            </div>
         </ng-template>
         <ng-template pTemplate="right">
             <button pButton label="Create" size="small" icon="pi pi-plus" (click)="navigateAddServices()"
@@ -29,7 +32,7 @@
             </div> -->
         </div>
 
-        <p-table #dt [columns]="selectedColumns" [value]="serviceRecords" [scrollable]="true" scrollHeight="400px"
+        <p-table #dt [columns]="selectedColumns" [value]="filteredRecords" [scrollable]="true" scrollHeight="400px"
             [reorderableColumns]="true" [rows]="10" [filterDelay]="0"
             [globalFilterFields]="['code', 'description','lastChangeDate','serviceTypeCode']"
             [tableStyle]="{ 'min-width': '50rem' }" [rowHover]="true" dataKey="id" [showCurrentPageReport]="true">

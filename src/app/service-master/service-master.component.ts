@@ -5,6 +5,7 @@ import * as FileSaver from 'file-saver';
 import { ServiceMaster } from './service-master.model';
 import { ServiceMasterService } from './service-master.service';
 import { Subscription } from 'rxjs';
+import { ApiService } from '../ApiService.service';
 
 interface Column {
     field: string;
@@ -54,13 +55,14 @@ export class ServiceMasterComponent implements OnInit {
 
     submitted: boolean = false;
 
-    constructor(private serviceMasterService: ServiceMasterService, private messageService: MessageService,
+    constructor(private apiService: ApiService,private serviceMasterService: ServiceMasterService, private messageService: MessageService,
         private confirmationService: ConfirmationService, private router: Router, private cd: ChangeDetectorRef) { }
 
     ngOnInit() {
         this.serviceMasterService.getRecords();
         this.subscription = this.serviceMasterService.recordsChanged.subscribe((records: ServiceMaster[]) => {
           this.serviceRecords = records;
+          this.filteredRecords = records
           console.log(this.serviceRecords);
         });
         //this.serviceRecords = this.serviceMasterService.getRecords();
@@ -76,6 +78,23 @@ export class ServiceMasterComponent implements OnInit {
         ];
         this.selectedColumns = this.cols;
     }
+
+     // To handle Search Input 
+  searchValue: string = '';
+  filteredRecords: ServiceMaster[] = this.serviceRecords;
+  onSearchInputChange(): void {
+    const keyword = this.searchValue
+    if (keyword !== '') {
+      this.apiService.get<ServiceMaster[]>('servicenumbers/search',keyword).subscribe(response => {
+        console.log(response);
+        this.filteredRecords = response
+        console.log(this.filteredRecords);
+      });
+    }
+    else{
+        this.filteredRecords = this.serviceRecords;
+    }
+  }
 
     onColumnSelectionChange() {
         // Update the selected columns when the selection changes

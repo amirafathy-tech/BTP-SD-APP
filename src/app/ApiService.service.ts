@@ -6,19 +6,30 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'https://sd-dev.d452a1f.kyma.ondemand.com';
+  private baseUrl = 'https://sd-dev.c-74814dd.kyma.ondemand.com';
 
   constructor(private http: HttpClient) { }
 
-  get<T>(url: string, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
-    //params: new HttpParams().set('token', user.token);
-   // const options = { params, headers :new HttpHeaders().set('Authorization',`Bearer ${localStorage.getItem('token')}`)};
+  // get<T>(url: string, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
+  //   //params: new HttpParams().set('token', user.token);
+  //  // const options = { params, headers :new HttpHeaders().set('Authorization',`Bearer ${localStorage.getItem('token')}`)};
 
-   // const options = { params, headers };
-    //console.log(options);
-    console.log(this.http.get<T>(`${this.baseUrl}/${url}`));
+  //  // const options = { params, headers };
+  //   //console.log(options);
+  //   console.log(this.http.get<T>(`${this.baseUrl}/${url}`));
     
-    return this.http.get<T>(`${this.baseUrl}/${url}`);
+  //   return this.http.get<T>(`${this.baseUrl}/${url}`);
+  // }
+  get<T>(url: string, queryParam?: string, headers?: HttpHeaders): Observable<T> {
+    let params = new HttpParams();
+    
+    if (queryParam) {
+      params = params.set('keyword', queryParam);
+      console.log(params);
+    }
+  
+    console.log(this.http.get<T>(`${this.baseUrl}/${url}`, { params }));
+    return this.http.get<T>(`${this.baseUrl}/${url}`, { params });
   }
   
   getID<T>(url: string, id: number, params?: HttpParams, headers?: HttpHeaders): Observable<T> {
