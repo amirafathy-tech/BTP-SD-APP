@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Message, MessageService } from 'primeng/api';
+import { ConfirmationService, Message, MessageService } from 'primeng/api';
 import { ServiceMasterService } from '../service-master.service';
 import { NgForm } from '@angular/forms';
 import { ApiService } from 'src/app/ApiService.service';
@@ -11,7 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-service-master-add',
   templateUrl: './service-master-add.component.html',
   styleUrls: ['./service-master-add.component.css'],
-  providers: [ApiService, ServiceMasterService, MessageService]
+  providers: [ApiService, ServiceMasterService, MessageService, ConfirmationService]
 })
 export class ServiceMasterAddComponent implements OnInit {
 savedRecord!:ServiceMaster;

@@ -152,8 +152,6 @@ export class ModelDetailsComponent {
       });
     }
     //this.selectedServiceNumberRecord = selectedRecord ? selectedRecord: {} ;
-
-
   }
   // to handle selection checkbox
   selectedRecords: ModelSpecDetails[] = [];

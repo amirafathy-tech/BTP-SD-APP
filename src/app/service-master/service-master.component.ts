@@ -128,7 +128,7 @@ export class ServiceMasterComponent implements OnInit {
     }
 
     navigateAddServices() {
-        this.router.navigate(['/servicemaster-add']);
+        this.router.navigate(['/add-servicemaster']);
     }
 
     // Export Data to Excel Sheet

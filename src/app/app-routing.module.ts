@@ -18,14 +18,14 @@ import { ServiceMasterAddComponent } from './service-master/service-master-add/s
 const routes: Routes = [
   { path: '', component: AppComponent },
   { path: 'model', component: ModelComponent },
-  { path: 'modeladd', component: AddModelComponent },
+  { path: 'add-model', component: AddModelComponent },
   { path: 'service', component: ServiceComponent },
-  { path: 'serviceTest', component: ModelDetailsComponent },
+  { path: 'modelSpecDetails', component: ModelDetailsComponent },
   
   { path: 'servicetype', component: ServiceTypeComponent },
   
   { path: 'servicemaster', component: ServiceMasterComponent },
-  { path: 'servicemaster-add', component: ServiceMasterAddComponent },
+  { path: 'add-servicemaster', component: ServiceMasterAddComponent },
 //   {
 //     path: 'servicemaster', component: ServiceMasterComponent,
 //     children: [

@@ -29,7 +29,7 @@ export class ModelComponent implements OnInit {
 
   navigateModelAdd() {
       //this.modalVisible = true;
-      this.router.navigate(['/modeladd']);
+      this.router.navigate(['/add-model']);
   }
   deleteDialog: boolean = false;
 
@@ -77,8 +77,7 @@ onRowEditCancel(record: ModelEntity, index: number) {
         Record:record
       }
     };
-    
-    this.router.navigate(['/serviceTest'],navigationExtras);
+    this.router.navigate(['/modelSpecDetails'],navigationExtras);
   }
 
   // deleteRecord(index:number){

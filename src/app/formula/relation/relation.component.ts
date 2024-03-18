@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { FormulaService } from '../formula.service';
+import { ApiService } from 'src/app/ApiService.service';
 
 @Component({
   selector: 'app-relation',
@@ -13,14 +14,22 @@ export class RelationComponent implements OnInit {
   passedParamInfo: any;
   relationInformation: any;
   submitted: boolean = false;
+  
+  parameterIds: string[] = [];
+  parameterDescriptions: string[] = []
 
   operations:string[]=['+','-','*','/','%','π','^']
 
-  constructor(private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,) {
+  constructor(private apiService: ApiService,private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,) {
     this.passedCreateInfo = this.router.getCurrentNavigation()?.extras.state?.['passedCreateInfo'];
     this.passedParamInfo = this.router.getCurrentNavigation()?.extras.state?.['passedParamInfo'];
     console.log(this.passedCreateInfo);
     console.log(this.passedParamInfo);
+    
+    this.parameterIds = this.passedParamInfo.map((item: { paramID: any; }) => item.paramID);
+    this.parameterDescriptions = this.passedParamInfo.map((item: { paramDescription: any; }) => item.paramDescription);
+    console.log(this.parameterIds);
+    console.log(this.parameterDescriptions);
 
   }
 
@@ -61,6 +70,26 @@ export class RelationComponent implements OnInit {
     this.submitted = true;
   }
   prevPage() {
-    this.router.navigate(['formula/parameter']);
+    const formulaObject1: any = {
+      formula: this.passedCreateInfo.formula,
+      description: this.passedCreateInfo.description,
+      numberOfParameters: this.passedCreateInfo.numberOfParameters,
+      unitOfMeasurementCode: this.passedCreateInfo.unitOfMeasurementCode,
+      parameterIds: this.parameterIds,
+      parameterDescriptions: this.parameterDescriptions,
+      formulaLogic: this.relationInformation.formulaLogic,
+      // testParameters: valuesOnly
+    };
+
+    console.log(formulaObject1);
+
+
+
+    this.apiService.post<any>('formulas', formulaObject1).subscribe((response) => {
+      console.log('formula created:', response);
+      // this.result = response.result;
+      // this.visible = true;
+    });
+    //this.router.navigate(['formula/parameter']);
   }
 }

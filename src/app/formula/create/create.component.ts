@@ -15,18 +15,15 @@ export class CreateComponent implements OnInit {
   createInformation: any;
 
   submitted: boolean = false;
+  isNumberOfParametersValid = true;
 
   
   recordsUnitOfMeasure!: UnitOfMeasure[];
   selectedUnitOfMeasure!: number;
 
-  validateNumberInput(event: KeyboardEvent) {
-    const inputElement = event.target as HTMLInputElement;
-    const enteredValue = Number(inputElement.value);
-    if (enteredValue < 0) {
-        event.preventDefault();
-    }
-}
+  validateNumberOfParameters() {
+    this.isNumberOfParametersValid = this.createInformation.numberOfParameters >= 0;
+  }
 
   constructor(private apiService: ApiService,private router: Router, public formulaService: FormulaService,) { }
 
@@ -39,7 +36,7 @@ export class CreateComponent implements OnInit {
     });
   }
   nextPage() {
-    if (this.createInformation.formula && this.createInformation.description && this.createInformation.numberOfParameters && this.selectedUnitOfMeasure) {
+    if (this.createInformation.formula && this.createInformation.description && this.createInformation.numberOfParameters && this.createInformation.unitOfMeasurementCode) {
       this.formulaService.formulaInformation.createInformation = this.createInformation;
       const navigationExtras: NavigationExtras = {
         state: {
