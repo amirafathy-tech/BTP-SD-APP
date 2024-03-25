@@ -18,8 +18,8 @@ export class CreateComponent implements OnInit {
   isNumberOfParametersValid = true;
 
   
-  recordsUnitOfMeasure!: UnitOfMeasure[];
-  selectedUnitOfMeasure!: number;
+  // recordsUnitOfMeasure!: UnitOfMeasure[];
+  // selectedUnitOfMeasure!: number;
 
   validateNumberOfParameters() {
     this.isNumberOfParametersValid = this.createInformation.numberOfParameters >= 0;
@@ -29,14 +29,16 @@ export class CreateComponent implements OnInit {
 
   ngOnInit() {
     this.createInformation = this.formulaService.getFormulaInformation().createInformation;
-    this.apiService.get<UnitOfMeasure[]>('measurements').subscribe(response => {
-      console.log(response);
-      this.recordsUnitOfMeasure = response;
-      console.log(this.recordsUnitOfMeasure);
-    });
+    // this.apiService.get<UnitOfMeasure[]>('measurements').subscribe(response => {
+    //   console.log(response);
+    //   this.recordsUnitOfMeasure = response;
+    //   console.log(this.recordsUnitOfMeasure);
+    // });
   }
   nextPage() {
-    if (this.createInformation.formula && this.createInformation.description && this.createInformation.numberOfParameters && this.createInformation.unitOfMeasurementCode) {
+    if (this.createInformation.formula && this.createInformation.description && this.createInformation.numberOfParameters 
+      //&& this.createInformation.unitOfMeasurementCode
+      ) {
       this.formulaService.formulaInformation.createInformation = this.createInformation;
       const navigationExtras: NavigationExtras = {
         state: {

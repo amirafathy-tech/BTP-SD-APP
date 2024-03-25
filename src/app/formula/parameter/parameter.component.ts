@@ -19,8 +19,8 @@ export class ParameterComponent implements OnInit {
   parameterInformation: any;
   parameterInformationIterator: any[] = [];
 
-  recordsUnitOfMeasure!: UnitOfMeasure[];
-  selectedUnitOfMeasure!: number;
+  // recordsUnitOfMeasure!: UnitOfMeasure[];
+  // selectedUnitOfMeasure!: number;
 
   submitted: boolean = false;
 
@@ -38,11 +38,11 @@ export class ParameterComponent implements OnInit {
       this.parameterInformationIterator.push({ paramID: '', paramDescription: '' });
 
     }
-    this.apiService.get<UnitOfMeasure[]>('measurements').subscribe(response => {
-      console.log(response);
-      this.recordsUnitOfMeasure = response;
-      console.log(this.recordsUnitOfMeasure);
-    });
+    // this.apiService.get<UnitOfMeasure[]>('measurements').subscribe(response => {
+    //   console.log(response);
+    //   this.recordsUnitOfMeasure = response;
+    //   console.log(this.recordsUnitOfMeasure);
+    // });
   }
 
   nextPage() {

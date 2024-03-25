@@ -12,17 +12,24 @@ import { Instant } from "js-joda";
     public convertedNumber: number;
     
     public formulaCode: number;
-    public unitOfMeasurementCode:number;
+   // public unitOfMeasurementCode:number;
     public serviceTypeCode: number;
     public materialGroupCode: number;
 
     public lastChangeDate:Instant;
+
+    public baseUnitOfMeasurement:string;
+    public toBeConvertedUnitOfMeasurement:string
+    public defaultUnitOfMeasurement:string;
    
     constructor(code: string,description: string,serviceText: string, shortTextChangeAllowed: boolean,deletionIndicator: boolean,mainItem: boolean,
         numberToBeConverted: number,
         convertedNumber: number,
-        formulaCode: number,unitOfMeasurementCode:number,serviceTypeCode: number,materialGroupCode: number,
-        lastChangeDate:Instant
+        formulaCode: number,
+        //unitOfMeasurementCode:number,
+        serviceTypeCode: number,materialGroupCode: number,
+        lastChangeDate:Instant,baseUnitOfMeasurement:string,toBeConvertedUnitOfMeasurement:string,
+        defaultUnitOfMeasurement:string
     ) {
      //this.serviceNumberCode = serviceNumberCode;
         this.code = code;
@@ -35,10 +42,14 @@ import { Instant } from "js-joda";
       this.convertedNumber=convertedNumber;
       
       this.formulaCode=formulaCode;
-      this.unitOfMeasurementCode=unitOfMeasurementCode;
+    // this.unitOfMeasurementCode=unitOfMeasurementCode;
       this.serviceTypeCode=serviceTypeCode;
       this.materialGroupCode=materialGroupCode;
 
       this.lastChangeDate=lastChangeDate;
+
+      this.baseUnitOfMeasurement=baseUnitOfMeasurement;
+      this.toBeConvertedUnitOfMeasurement=toBeConvertedUnitOfMeasurement;
+      this.defaultUnitOfMeasurement=defaultUnitOfMeasurement;
     }
 }

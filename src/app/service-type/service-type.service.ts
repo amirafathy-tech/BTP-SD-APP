@@ -14,26 +14,23 @@ export class ServiceTypeService {
   private recordsApi!: ServiceType[]
 
   getApiRecords(){
-  //: Observable<Company[]> {
-   //return this.apiService.get<Company[]>('companies');
-  //  return this.apiService.get<Company[]>('companies');
     this.apiService.get<ServiceType[]>('servicetypes').subscribe(response => {
       console.log(response);
       this.recordsApi = response;
       this.recordsChanged.next(this.recordsApi); 
     });
   }
-  addApiRecord(company: ServiceType) {
-    this.apiService.post<ServiceType>('servicetypes', company).subscribe((response: ServiceType) => {
+  addApiRecord(record: ServiceType) {
+    this.apiService.post<ServiceType>('servicetypes', record).subscribe((response: ServiceType) => {
       console.log('ServiceType created:', response);
       this.getApiRecords();
     });
     
-    return this.apiService.post<ServiceType>('servicetypes', company);
+    return this.apiService.post<ServiceType>('servicetypes', record);
   }
-  updateApiRecord(id:number,company: any) {
-    console.log(this.apiService.put<ServiceType>('servicetypes',id, company));
-   this.apiService.put<ServiceType>('servicetypes',id,company).subscribe(response => {
+  updateApiRecord(id:number,record: any) {
+    console.log(this.apiService.put<ServiceType>('servicetypes',id, record));
+   this.apiService.put<ServiceType>('servicetypes',id,record).subscribe(response => {
     console.log(response);
    this.getApiRecords()
   });
@@ -44,7 +41,7 @@ export class ServiceTypeService {
   deleteApiRecord(id:number) {
     console.log(this.apiService.delete<ServiceType>('servicetypes',id));
     this.apiService.delete<ServiceType>('servicetypes',id).subscribe(response =>{
-      //console.log(response);
+      console.log(response);
       this.getApiRecords();
     })
     

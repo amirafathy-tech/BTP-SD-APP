@@ -33,7 +33,7 @@ export class TestComponent implements OnInit {
   passedCreateInfo: any;
   passedParamInfo: any;
   passedTestInfo: any;
-  resultUnitOfMeasurement:any;
+  // resultUnitOfMeasurement:any;
 
   constructor(private router: Router, private route: ActivatedRoute, public formulaService: FormulaService, private apiService: ApiService) {
     this.formulaLogic = this.router.getCurrentNavigation()?.extras.state?.['formulaLogic'];
@@ -53,11 +53,11 @@ export class TestComponent implements OnInit {
     console.log("heree");
 
     console.log(this.formulaService.formulaInformation);
-    this.apiService.getID<UnitOfMeasure>('measurements',this.passedCreateInfo.unitOfMeasurementCode).subscribe(response => {
-      console.log(response);
-      this.resultUnitOfMeasurement = response;
-      console.log(this.resultUnitOfMeasurement);
-    });
+    // this.apiService.getID<UnitOfMeasure>('measurements',this.passedCreateInfo.unitOfMeasurementCode).subscribe(response => {
+    //   console.log(response);
+    //   this.resultUnitOfMeasurement = response;
+    //   console.log(this.resultUnitOfMeasurement);
+    // });
   }
 
   getVariables(formulaLogic: string): string[] {
@@ -96,7 +96,7 @@ export class TestComponent implements OnInit {
         formula: this.passedCreateInfo.formula,
         description: this.passedCreateInfo.description,
         numberOfParameters: this.passedCreateInfo.numberOfParameters,
-      unitOfMeasurementCode: this.passedCreateInfo.unitOfMeasurementCode,
+    //  unitOfMeasurementCode: this.passedCreateInfo.unitOfMeasurementCode,
         parameterIds: this.parameterIds,
         parameterDescriptions: this.parameterDescriptions,
         formulaLogic: this.formulaLogic,
@@ -109,7 +109,8 @@ export class TestComponent implements OnInit {
 
       this.apiService.post<any>('formulas', formulaObject1).subscribe((response) => {
         console.log('formula created:', response.result);
-        this.result = response.result+this.resultUnitOfMeasurement.code;
+        this.result = response.result
+        //+this.resultUnitOfMeasurement.code;
         console.log(this.result);
         
         this.visible = true;

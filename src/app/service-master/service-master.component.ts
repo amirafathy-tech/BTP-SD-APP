@@ -110,7 +110,7 @@ export class ServiceMasterComponent implements OnInit {
         console.log(this.selectedRecord);
         console.log(navigationExtras);
         if (this.selectedRecords.length > 0) {
-            this.router.navigate(['/servicemaster-add'], navigationExtras);
+            this.router.navigate(['/add-servicemaster'], navigationExtras);
         }
     }
 
@@ -123,7 +123,7 @@ export class ServiceMasterComponent implements OnInit {
         };
         console.log(navigationExtras);
         if (this.selectedRecords.length > 0) {
-            this.router.navigate(['/servicemaster-add'], navigationExtras);
+            this.router.navigate(['/add-servicemaster'], navigationExtras);
         }
     }
 

@@ -49,7 +49,9 @@ onRowEditSave(index: number,record: ModelEntity) {
   console.log(index);
   console.log(record);
   
-  
+  this.modelService.updateRecord(index,record);
+  this.ngOnInit(); //reload the table
+  this.editMode = false;
         delete this.clonedRecords[record.modelSpecCode];
         this.messageService.add({severity:'success', summary: 'Success', detail:'Record is updated'});
     

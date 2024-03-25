@@ -44,21 +44,21 @@
             </small>
         </div>
 
-        <div class="field grid col">
+        <!-- <div class="field grid col">
           <label for="unitOfMeasurementCode">Result UnitOfMeasure:<span class="required-indicator"
               style="color:red">*</span></label>
               
               <p-dropdown [options]="recordsUnitOfMeasure" [(ngModel)]="createInformation.unitOfMeasurementCode"
               [ngModelOptions]="{standalone: true}" optionValue="unitOfMeasurementCode" optionLabel="code"
               [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select UnitOfMeasure"
-              [required]="true" >
+              [required]="true" [appendTo]="'body'" >
               <ng-template let-record pTemplate="item">
                   <div class="flex align-items-center gap-2">
                       <div>{{ record.code }}::{{ record.description }}</div>
                   </div>
               </ng-template>
           </p-dropdown>
-        </div>
+        </div> -->
       </div>
 
     </ng-template>

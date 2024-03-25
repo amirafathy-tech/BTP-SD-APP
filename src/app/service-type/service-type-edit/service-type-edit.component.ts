@@ -32,7 +32,7 @@ export class ServiceTypeEditComponent {
               console.log(this.editedItem);
 
               this.slForm.setValue({
-                code: this.editedItem.serviceId,
+                serviceId: this.editedItem.serviceId,
                 description: this.editedItem.description
               });
             });
@@ -41,11 +41,11 @@ export class ServiceTypeEditComponent {
 
   onSubmitApi(form: NgForm) {
     const value = form.value;
-    const newRecord = new ServiceType(value.code, value.description);
+    const newRecord = new ServiceType(value.serviceId, value.description);
     console.log(newRecord);
 
     if (this.editMode) {
-      const updatedRecord = { serviceTypeCode: this.editedItemIndex, code: value.code, description: value.description };
+      const updatedRecord = { serviceTypeCode: this.editedItemIndex, serviceId: value.serviceId, description: value.description };
       console.log(updatedRecord);
 
       this.serviceTypeService.updateApiRecord(this.editedItemIndex, updatedRecord);

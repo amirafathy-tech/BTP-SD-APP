@@ -21,8 +21,10 @@ public isSaving: boolean = false;
   selectedRecord: ServiceMaster = {
     serviceNumberCode: 0, code: '', description: '',serviceText:'', shortTextChangeAllowed: false, deletionIndicator: false,
     numberToBeConverted: 0, convertedNumber: 0, mainItem: false,
-    formulaCode:0,unitOfMeasurementCode:0,serviceTypeCode:0,materialGroupCode:0,
-    lastChangeDate: Instant.now()
+    formulaCode:0,
+    //unitOfMeasurementCode:0,
+    serviceTypeCode:0,materialGroupCode:0,
+    lastChangeDate: Instant.now(),baseUnitOfMeasurement:'',toBeConvertedUnitOfMeasurement:'',defaultUnitOfMeasurement:''
   };
 
   messageAdd!: Message[];
@@ -37,9 +39,13 @@ public isSaving: boolean = false;
   recordsServiceType!: any[];
   selectedServiceType!: number;
   recordsMeasure!: any[];
-  selectedMeasure!: number;
-  selectedToBeConvertedMeasure!: number;
-  selectedConvertedMeasure!: number;
+
+  selectedBaseMeasure!: number;
+
+  baseUnitOfMeasurement!:string;
+  selectedToBeConvertedMeasure!: string;
+  selectedConvertedMeasure!: string;
+
   recordsFormula!: any[];
   selectedFormula!: number;
   recordsMaterialGrp!: any[];
@@ -93,6 +99,19 @@ public isSaving: boolean = false;
       }
     }
   }
+
+  // onBaseMeasureSelection(event: any) {
+  //   const selectedRecord = this.recordsMeasure.find(record => record.unitOfMeasurementCode === this.selectedBaseMeasure);
+  //   console.log(selectedRecord);
+
+  //   if (selectedRecord) {
+  //     this.baseUnitOfMeasurement = selectedRecord.code
+  //   }
+  //   else {
+  //     console.log("no UnitOfMeasurement");
+  //     this.baseUnitOfMeasurement='';
+  //   }
+  // }
   
   onSubmit(form: NgForm) {
     const value = form.value;
@@ -102,8 +121,11 @@ public isSaving: boolean = false;
       value.deletionIndicator
       , value.mainItem, value.numberToBeConverted,
       value.convertedNumber,
-      this.selectedFormula,this.selectedMeasure,this.selectedServiceType,this.selectedMaterialGrp,
-       Instant.now());
+      this.selectedFormula,
+      //this.selectedBaseMeasure,
+      this.selectedServiceType,this.selectedMaterialGrp,
+       Instant.now(),this.baseUnitOfMeasurement,this.selectedToBeConvertedMeasure,this.selectedConvertedMeasure);
+
     console.log(newRecord);
     if (this.editMode) {
       const updatedRecord = {
@@ -111,9 +133,20 @@ public isSaving: boolean = false;
         ,serviceText:value.serviceText, shortTextChangeAllowed: value.shortTextChangeAllowed, deletionIndicator: value.deletionIndicator,
         mainItem: value.mainItem, numberToBeConverted: value.numberToBeConverted,
         convertedNumber: value.convertedNumber,
-        formulaCode: this.selectedFormula,unitOfMeasurementCode: this.selectedMeasure,
-        serviceTypeCode: this.selectedServiceType,materialGroupCode:this.selectedMaterialGrp,
-        lastChangeDate: Instant.now()
+        formulaCode:this.selectedRecord.formulaCode,
+        serviceTypeCode:this.selectedRecord.serviceTypeCode,
+        materialGroupCode:this.selectedRecord.materialGroupCode,
+      //   formulaCode: this.selectedFormula,
+      //  // unitOfMeasurementCode: this.selectedBaseMeasure,
+      //   serviceTypeCode: this.selectedServiceType,
+      //   materialGroupCode:this.selectedMaterialGrp,
+        lastChangeDate: Instant.now(),
+        baseUnitOfMeasurement:this.selectedRecord.baseUnitOfMeasurement,
+        toBeConvertedUnitOfMeasurement:this.selectedRecord.toBeConvertedUnitOfMeasurement,
+        defaultUnitOfMeasurement:this.selectedRecord.defaultUnitOfMeasurement
+        // baseUnitOfMeasurement:this.baseUnitOfMeasurement,
+        // toBeConvertedUnitOfMeasurement:this.selectedToBeConvertedMeasure,
+        // defaultUnitOfMeasurement:this.selectedConvertedMeasure
       };
       console.log(updatedRecord);
 

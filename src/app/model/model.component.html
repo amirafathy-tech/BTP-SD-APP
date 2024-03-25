@@ -103,7 +103,7 @@
                             <p-dropdown [options]="recordsCurrency" [(ngModel)]="record.currencyCode"
                                 [ngModelOptions]="{standalone: true}" optionValue="currencyCode" optionLabel="code"
                                 [filter]="true" [filterFields]="['code','description']" [showClear]="true"
-                                placeholder="Select Currency">
+                                placeholder="Select Currency" [appendTo]="'body'">
                                 <ng-template let-record pTemplate="item">
                                     <div class="flex align-items-center gap-2">
                                         <div>{{ record.code }}::{{ record.description }}</div>

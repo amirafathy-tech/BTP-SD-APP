@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'https://sd-dev.c-74814dd.kyma.ondemand.com';
+  private baseUrl = 'https://sd-dev.c-0f66b56.kyma.ondemand.com';
 
   constructor(private http: HttpClient) { }
 
