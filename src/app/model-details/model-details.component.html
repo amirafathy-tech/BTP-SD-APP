@@ -28,13 +28,13 @@
         <button pButton pRipple icon="pi pi-trash" (click)="deleteRecord()" class="p-button-rounded m-2 "></button>
         <button pButton label="Condition" size="small" class="m-2"></button>
     </ng-template>
-    <ng-template pTemplate="left">
+    <!-- <ng-template pTemplate="left">
         <div class="field">
             <input pInputText type="number" placeholder="Search for Line..."
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary "
                 [(ngModel)]="searchValue" (input)="onSearchInputChange()" />
         </div>
-    </ng-template>
+    </ng-template> -->
 </p-toolbar>
 
 <!-- <div class="card"> -->
@@ -89,14 +89,15 @@
                 <!-- <p-tableCheckbox [value]="record"></p-tableCheckbox> -->
             </td>
             <td>
-                <p-cellEditor>
+                {{ rowIndex + ri + 1 }}
+                <!-- <p-cellEditor>
                     <ng-template pTemplate="input">
                         {{record.modelSpecDetailsCode}}
                     </ng-template>
                     <ng-template pTemplate="output">
                         {{record.modelSpecDetailsCode}}
                     </ng-template>
-                </p-cellEditor>
+                </p-cellEditor> -->
             </td>
             <td pEditableColumn>
                 <p-cellEditor>

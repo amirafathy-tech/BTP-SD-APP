@@ -18,7 +18,7 @@ import { Instant } from 'js-joda';
   providers: [ModelSpecDetailService, MessageService, ConfirmationService]
 })
 export class ModelDetailsComponent {
-
+  public rowIndex = 0;
   subscription!: Subscription;
   records!: ModelSpecDetails[];
   recordsLength!: number
@@ -249,7 +249,6 @@ export class ModelDetailsComponent {
       this.recordsMatGrp = response;
       console.log(this.recordsMatGrp);
     });
-
   }
   // handle Deletion Record/ Records
   deleteRecord() {
@@ -263,8 +262,7 @@ export class ModelDetailsComponent {
             this.apiService.delete<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode).subscribe(response => {
               console.log('model spec deleted:', response);
               this.totalValue=0;
-              this.ngOnInit()
-             // this.modelSpecDetailsService.getRecords();
+              this.modelSpecDetailsService.getRecords();
             });
           }
           this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
@@ -282,8 +280,7 @@ export class ModelDetailsComponent {
             this.apiService.delete<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode).subscribe(response => {
               console.log('model spec deleted:', response);
               this.totalValue=0;
-              this.ngOnInit()
-             // this.modelSpecDetailsService.getRecords();
+              this.modelSpecDetailsService.getRecords();
             });
           }
           this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
@@ -323,8 +320,10 @@ export class ModelDetailsComponent {
         else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Data' });
         }
+        console.log(this.totalValue)
         this.totalValue=0;
-        this.ngOnInit();
+      this.modelSpecDetailsService.getRecords();
+        console.log(this.totalValue)
       });
     }
     else {
@@ -337,7 +336,7 @@ export class ModelDetailsComponent {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Data' });
         }
         this.totalValue=0;
-        this.ngOnInit();
+        this.modelSpecDetailsService.getRecords();
       });
     }
   }
@@ -433,8 +432,7 @@ export class ModelDetailsComponent {
         }
         console.log(response);
         this.totalValue=0;
-        this.ngOnInit()
-        //this.modelSpecDetailsService.getRecords();
+        this.modelSpecDetailsService.getRecords();
       });
     }
     else if (this.selectedServiceNumberRecord && this.newService.dontUseFormula) {
@@ -490,12 +488,10 @@ export class ModelDetailsComponent {
         if (response) {
           this.resetNewService();
           console.log(this.newService);
-
         }
         console.log(response);
         this.totalValue=0;
-        this.ngOnInit()
-       // this.modelSpecDetailsService.getRecords();
+       this.modelSpecDetailsService.getRecords();
       });
     }
     else if (this.selectedServiceNumberRecord && !this.newService.dontUseFormula) {
@@ -548,12 +544,10 @@ export class ModelDetailsComponent {
         if (response) {
           this.resetNewService();
           console.log(this.newService);
-
         }
         console.log(response);
         this.totalValue=0;
-        this.ngOnInit()
-       // this.modelSpecDetailsService.getRecords();
+        this.modelSpecDetailsService.getRecords();
       });
     }
     else {
@@ -610,8 +604,7 @@ export class ModelDetailsComponent {
         }
         console.log(response);
         this.totalValue=0;
-        this.ngOnInit()
-        //this.modelSpecDetailsService.getRecords();
+        this.modelSpecDetailsService.getRecords();
       });
     }
   }
