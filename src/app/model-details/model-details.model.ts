@@ -2,7 +2,7 @@ export class ModelSpecDetails {
     public modelSpecDetailsCode!: number;
     public serviceNumberCode: number;
     public lineTypeCode: number;
-    public unitOfMeasurementCode: number;// will be mandatory if service number could be empty
+    public unitOfMeasurementCode: string;// will be mandatory if service number could be empty
     public currencyCode: number;
     public personnelNumberCode: number;
     public serviceTypeCode: number;
@@ -74,7 +74,7 @@ export class ModelSpecDetails {
     //   this.dontUseFormula=dontUseFormula;
     // }
 
-    constructor(serviceNumberCode: number,lineTypeCode: number,unitOfMeasurementCode: number,currencyCode: number,
+    constructor(serviceNumberCode: number,lineTypeCode: number,unitOfMeasurementCode: string,currencyCode: number,
         personnelNumberCode: number,serviceTypeCode: number,materialGroupCode: number,formulaCode: number,
         deletionIndicator: boolean,shortText: string,
         quantity: number,grossPrice:number,overFulfilmentPercentage:number,priceChangedAllowed: boolean,

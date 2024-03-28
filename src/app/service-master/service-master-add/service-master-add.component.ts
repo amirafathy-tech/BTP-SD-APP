@@ -19,7 +19,7 @@ public isSaving: boolean = false;
 
   editMode = false
   selectedRecord: ServiceMaster = {
-    serviceNumberCode: 0, code: '', description: '',serviceText:'', shortTextChangeAllowed: false, deletionIndicator: false,
+    serviceNumberCode: 0, searchTerm: '', description: '',serviceText:'', shortTextChangeAllowed: false, deletionIndicator: false,
     numberToBeConverted: 0, convertedNumber: 0, mainItem: false,
     formulaCode:0,
     //unitOfMeasurementCode:0,
@@ -117,19 +117,23 @@ public isSaving: boolean = false;
     const value = form.value;
     console.log(this.selectedServiceType);
     
-    const newRecord = new ServiceMaster(value.code, value.description,value.serviceText, value.shortTextChangeAllowed,
+    const newRecord = new ServiceMaster(value.searchTerm, value.description,value.serviceText, value.shortTextChangeAllowed,
       value.deletionIndicator
       , value.mainItem, value.numberToBeConverted,
       value.convertedNumber,
-      this.selectedFormula,
+      //this.selectedFormula,
+      this.selectedRecord.formulaCode,
       //this.selectedBaseMeasure,
-      this.selectedServiceType,this.selectedMaterialGrp,
-       Instant.now(),this.baseUnitOfMeasurement,this.selectedToBeConvertedMeasure,this.selectedConvertedMeasure);
+      // this.selectedServiceType,this.selectedMaterialGrp,
+      this.selectedRecord.serviceTypeCode,this.selectedRecord.materialGroupCode,
+       Instant.now(),
+       //this.baseUnitOfMeasurement,this.selectedToBeConvertedMeasure,this.selectedConvertedMeasure
+      this.selectedRecord.baseUnitOfMeasurement,this.selectedRecord.toBeConvertedUnitOfMeasurement,this.selectedRecord.defaultUnitOfMeasurement);
 
     console.log(newRecord);
     if (this.editMode) {
       const updatedRecord = {
-        serviceNumberCode: this.selectedRecord.serviceNumberCode, code: value.code, description: value.description
+        serviceNumberCode: this.selectedRecord.serviceNumberCode, searchTerm: value.searchTerm, description: value.description
         ,serviceText:value.serviceText, shortTextChangeAllowed: value.shortTextChangeAllowed, deletionIndicator: value.deletionIndicator,
         mainItem: value.mainItem, numberToBeConverted: value.numberToBeConverted,
         convertedNumber: value.convertedNumber,

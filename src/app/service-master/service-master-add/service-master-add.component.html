@@ -16,7 +16,7 @@
         <div class="field col-12 md:col-3">
             <label for="code">SearchTerm:</label>
                    <!-- will be renamed to searchTerm in New Deployment -->
-            <input id="code" name="code" required type="text" [(ngModel)]="selectedRecord.code" ngModel 
+            <input id="searchTerm" name="searchTerm"  type="text" [(ngModel)]="selectedRecord.searchTerm" ngModel 
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
 
         </div>
@@ -30,7 +30,7 @@
         <div class="field col-12 md:col-3">
             <label for="serviceText">Service Text:</label>
 
-            <input id="serviceText" name="serviceText" required type="text" [(ngModel)]="selectedRecord.serviceText" ngModel 
+            <input id="serviceText" name="serviceText"  type="text" [(ngModel)]="selectedRecord.serviceText" ngModel 
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
 
         </div>
@@ -52,9 +52,9 @@
 
     <div class="row m-2">
         <div class="field col-12 md:col-4">
-            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedRecord.serviceTypeCode" ngModel  [ngModelOptions]="{standalone: true}"
+            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedRecord.serviceTypeCode"  [ngModelOptions]="{standalone: true}"
             optionValue="serviceTypeCode" optionLabel="serviceId"
-                [filter]="true" [filterFields]="['serviceId','description']" [showClear]="true" placeholder="Select a ServiceType">
+                [filter]="true" [filterFields]="['serviceId','description']" [showClear]="true"  placeholder="Select a ServiceType">
                 <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">
                         <div>{{ record.serviceId }}::{{ record.description }}</div>
@@ -64,8 +64,8 @@
         </div>
         <div class="field col-12 md:col-4">
 
-            <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.baseUnitOfMeasurement" ngModel [ngModelOptions]="{standalone: true}"
-            optionValue="code" optionLabel="code"
+            <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.baseUnitOfMeasurement"  [ngModelOptions]="{standalone: true}"
+            optionValue="code" optionLabel="code" [required]="true"
                 [filter]="true" [filterFields]="['code','description']" [showClear]="true"
                  placeholder="Select Base UnitOfMeasure"
                  >
@@ -88,7 +88,7 @@
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
         </div>
         <div class="field col-12 md:col-3">
-            <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.toBeConvertedUnitOfMeasurement" ngModel [ngModelOptions]="{standalone: true}"
+            <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.toBeConvertedUnitOfMeasurement"  [ngModelOptions]="{standalone: true}"
             optionValue="code" optionLabel="code"
                 [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select an UnitOfMeasure">
                 <ng-template let-record pTemplate="item">
@@ -103,7 +103,7 @@
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
         </div>
         <div class="field col-12 md:col-3">
-            <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.defaultUnitOfMeasurement" ngModel [ngModelOptions]="{standalone: true}"
+            <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.defaultUnitOfMeasurement"  [ngModelOptions]="{standalone: true}"
             optionValue="code" optionLabel="code"
                 [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select Converted UnitOfMeasure">
                 <ng-template let-record pTemplate="item">
@@ -124,7 +124,7 @@
     </div>
     <div class="row m-2">
         <div class="field col-12 md:col-4">
-            <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedRecord.formulaCode" ngModel [ngModelOptions]="{standalone: true}"
+            <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedRecord.formulaCode"  [ngModelOptions]="{standalone: true}"
             optionValue="formulaCode" optionLabel="formula"
                 [filter]="true" [filterFields]="['formula','description']" [showClear]="true" placeholder="Select Formula">
                 <ng-template let-record pTemplate="item">
@@ -136,7 +136,7 @@
         </div>
         <div class="field col-12 md:col-4">
 
-            <p-dropdown [options]="recordsMaterialGrp" [(ngModel)]="selectedRecord.materialGroupCode" ngModel [ngModelOptions]="{standalone: true}" 
+            <p-dropdown [options]="recordsMaterialGrp" [(ngModel)]="selectedRecord.materialGroupCode"  [ngModelOptions]="{standalone: true}" 
             optionValue="materialGroupCode" optionLabel="code"
                 [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select Material/Service Grp">
                 <ng-template let-record pTemplate="item">

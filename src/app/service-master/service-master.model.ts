@@ -2,7 +2,7 @@ import { Instant } from "js-joda";
 
  export class ServiceMaster {
   public serviceNumberCode!: number;
-    public code: string;
+    public searchTerm: string;
     public description: string;
     public serviceText: string;
     public shortTextChangeAllowed: boolean;
@@ -22,7 +22,7 @@ import { Instant } from "js-joda";
     public toBeConvertedUnitOfMeasurement:string
     public defaultUnitOfMeasurement:string;
    
-    constructor(code: string,description: string,serviceText: string, shortTextChangeAllowed: boolean,deletionIndicator: boolean,mainItem: boolean,
+    constructor(searchTerm: string,description: string,serviceText: string, shortTextChangeAllowed: boolean,deletionIndicator: boolean,mainItem: boolean,
         numberToBeConverted: number,
         convertedNumber: number,
         formulaCode: number,
@@ -32,7 +32,7 @@ import { Instant } from "js-joda";
         defaultUnitOfMeasurement:string
     ) {
      //this.serviceNumberCode = serviceNumberCode;
-        this.code = code;
+        this.searchTerm = searchTerm;
       this.description=description;
       this.serviceText=serviceText;
       this.shortTextChangeAllowed=shortTextChangeAllowed;

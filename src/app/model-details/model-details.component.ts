@@ -19,6 +19,18 @@ import { Instant } from 'js-joda';
 })
 export class ModelDetailsComponent {
   public rowIndex = 0;
+ searchTerm!: number;
+//  public isMatch(record: any, ri: number): boolean {
+//   const searchString = this.rowIndex + ri + 1;
+//   return searchString === this.searchTerm;
+// }
+public isMatch(record: any, ri: number): boolean {
+  if (!this.searchTerm) {
+    return true; // Display all records when search term is empty
+  }
+  const searchString = this.rowIndex + ri + 1;
+  return searchString === this.searchTerm;
+}
   subscription!: Subscription;
   records!: ModelSpecDetails[];
   recordsLength!: number
@@ -38,7 +50,7 @@ export class ModelDetailsComponent {
   updateShortTextChangeAllowed: boolean = false;
 
   recordsUnitOfMeasure!: UnitOfMeasure[];
-  selectedUnitOfMeasure!: number;
+  selectedUnitOfMeasure!: string;
 
   recordsServiceType!: ServiceType[];
   selectedServiceType!: number;
@@ -216,7 +228,8 @@ export class ModelDetailsComponent {
 
     this.apiService.get<ServiceMaster[]>('servicenumbers').subscribe(response => {
       console.log(response);
-      this.recordsServiceNumber = response;
+     // this.recordsServiceNumber = response;
+     this.recordsServiceNumber= response.filter(record => record.deletionIndicator === false);
       console.log(this.recordsServiceNumber);
     });
     this.apiService.get<UnitOfMeasure[]>('measurements').subscribe(response => {
@@ -304,7 +317,7 @@ export class ModelDetailsComponent {
         ...record, // Copy all properties from the original record
         // Modify specific attributes
         // will be updated in New Deployment
-       // unitOfMeasurementCode: this.updateSelectedServiceNumberRecord.unitOfMeasurementCode,
+        unitOfMeasurementCode: this.updateSelectedServiceNumberRecord.baseUnitOfMeasurement,
         materialGroupCode: this.updateSelectedServiceNumberRecord.materialGroupCode,
         formulaCode: this.updateSelectedServiceNumberRecord.formulaCode,
         shortText: this.updateSelectedServiceNumberRecord.description,
@@ -349,7 +362,7 @@ export class ModelDetailsComponent {
   newService: ModelSpecDetails = {
     serviceNumberCode: 0,
     lineTypeCode: 0,
-    unitOfMeasurementCode: 0,
+    unitOfMeasurementCode: '',
     currencyCode: 0,
     personnelNumberCode: 0,
     serviceTypeCode: 0,
@@ -420,7 +433,7 @@ export class ModelDetailsComponent {
       // Remove properties with empty or default values
       const filteredRecord = Object.fromEntries(
         Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== false && value !== undefined;
+          return value !== '' && value !== 0  && value !== undefined;
         })
       );
       console.log(filteredRecord);
@@ -442,12 +455,12 @@ export class ModelDetailsComponent {
         serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
          // will be updated in New Deployment
-        //unitOfMeasurementCode:this.selectedServiceNumberRecord.unitOfMeasurementCode,
+        unitOfMeasurementCode:this.selectedServiceNumberRecord.baseUnitOfMeasurement,
         currencyCode: this.modelSpecRecord.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
         serviceTypeCode: this.selectedServiceType,
          materialGroupCode:this.selectedServiceNumberRecord.materialGroupCode,
-         formulaCode:this.selectedServiceNumberRecord.formulaCode,
+        // formulaCode:this.selectedServiceNumberRecord.formulaCode,
         deletionIndicator: this.newService.deletionIndicator,
         shortText: this.selectedServiceNumberRecord.description,
         quantity: this.newService.quantity,
@@ -496,14 +509,14 @@ export class ModelDetailsComponent {
     }
     else if (this.selectedServiceNumberRecord && !this.newService.dontUseFormula) {
       const newRecord = {
-        //serviceNumberCode: this.selectedServiceNumber,
+        serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
-        unitOfMeasurementCode: this.selectedUnitOfMeasure,
+        unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
         currencyCode: this.modelSpecRecord.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
         serviceTypeCode: this.selectedServiceType,
         //  materialGroupCode:this.selectedServiceNumberRecord.materialGroupCode,
-        //  formulaCode:this.selectedServiceNumberRecord.formulaCode,
+         formulaCode:this.selectedServiceNumberRecord.formulaCode,
         deletionIndicator: this.newService.deletionIndicator,
         shortText: this.shortText,
         quantity: this.retrievedFormula.result,
@@ -514,7 +527,7 @@ export class ModelDetailsComponent {
         pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
         externalServiceNumber: this.newService.externalServiceNumber,
         netValue: this.newService.netValue,
-        //serviceText:this.selectedServiceNumberRecord.serviceText,
+        serviceText:this.selectedServiceNumberRecord.serviceText,
         lineText: this.newService.lineText,
         lineNumber: this.newService.lineNumber,
         alternatives: this.newService.alternatives,
@@ -535,7 +548,7 @@ export class ModelDetailsComponent {
       // Remove properties with empty or default values
       const filteredRecord = Object.fromEntries(
         Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== false && value !== undefined;
+          return value !== '' && value !== 0  && value !== undefined;
         })
       );
       console.log(filteredRecord);
@@ -555,7 +568,7 @@ export class ModelDetailsComponent {
         serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
          // will be updated in New Deployment
-       // unitOfMeasurementCode: this.selectedServiceNumberRecord.unitOfMeasurementCode,
+       unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
         currencyCode: this.modelSpecRecord.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
         serviceTypeCode: this.selectedServiceType,
@@ -613,7 +626,7 @@ export class ModelDetailsComponent {
     this.newService = {
       serviceNumberCode: 0,
       lineTypeCode: 0,
-      unitOfMeasurementCode: 0,
+      unitOfMeasurementCode: '',
       currencyCode: 0,
       personnelNumberCode: 0,
       serviceTypeCode: 0,
