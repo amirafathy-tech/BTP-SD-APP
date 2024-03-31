@@ -135,6 +135,23 @@ public isMatch(record: any, ri: number): boolean {
   updateRetrievedFormula: any
   dontSelectServiceNumber: boolean =true
   
+  selectedFormulaRecord :any
+  onFormulaSelect(event: any) { 
+    const selectedRecord = this.recordsFormula.find(record => record.formulaCode === this.selectedFormula);
+    console.log(selectedRecord);
+
+    if (selectedRecord) {
+      this.selectedFormulaRecord = selectedRecord
+      console.log(this.selectedFormulaRecord);
+      
+    }
+    else {
+      console.log("no Formula");
+      this.selectedFormulaRecord=undefined;
+      console.log(this.selectedFormulaRecord);
+      
+    }
+  }
   //In Creation to handle shortTextChangeAlowlled Flag 
   onServiceNumberChange(event: any) { 
     const selectedRecord = this.recordsServiceNumber.find(record => record.serviceNumberCode === this.selectedServiceNumber);
@@ -392,7 +409,7 @@ public isMatch(record: any, ri: number): boolean {
   };
   addRow() {
     console.log(this.newService);
-    if (!this.selectedServiceNumberRecord) { // if user didn't select serviceNumber
+    if (!this.selectedServiceNumberRecord && !this.selectedFormulaRecord) { // if user didn't select serviceNumber && didn't select formula
       const newRecord = {
         //serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
@@ -405,6 +422,62 @@ public isMatch(record: any, ri: number): boolean {
         deletionIndicator: this.newService.deletionIndicator,
         shortText: this.newService.shortText,
         quantity: this.newService.quantity,
+        grossPrice: this.newService.grossPrice,
+        overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
+        priceChangedAllowed: this.newService.priceChangedAllowed,
+        unlimitedOverFulfillment: this.newService.unlimitedOverFulfillment,
+        pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
+        externalServiceNumber: this.newService.externalServiceNumber,
+        netValue: this.newService.netValue,
+        serviceText:this.newService.serviceText,
+        lineText: this.newService.lineText,
+        lineNumber: this.newService.lineNumber,
+        alternatives: this.newService.alternatives,
+        biddersLine: this.newService.biddersLine,
+        supplementaryLine: this.newService.supplementaryLine,
+        lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
+        dontUseFormula: this.newService.dontUseFormula
+      }
+      if(this.newService.quantity===0 || this.newService.grossPrice===0){
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Quantity and GrossPrice are required',
+          life: 3000
+        });
+      }
+      console.log(newRecord);
+      // Remove properties with empty or default values
+      const filteredRecord = Object.fromEntries(
+        Object.entries(newRecord).filter(([_, value]) => {
+          return value !== '' && value !== 0  && value !== undefined;
+        })
+      );
+      console.log(filteredRecord);
+      this.apiService.post<ModelSpecDetails>('modelspecdetails', filteredRecord).subscribe((response: ModelSpecDetails) => {
+        console.log('modelspecdetails created:', response);
+        if (response) {
+          this.resetNewService();
+          console.log(this.newService);
+        }
+        console.log(response);
+        this.totalValue=0;
+        this.modelSpecDetailsService.getRecords();
+      });
+    }
+    else if (!this.selectedServiceNumberRecord && this.selectedFormulaRecord) { // if user didn't select serviceNumber && select formula
+      const newRecord = {
+        //serviceNumberCode: this.selectedServiceNumber,
+        lineTypeCode: this.selectedLineType,
+        unitOfMeasurementCode: this.selectedUnitOfMeasure,
+        currencyCode: this.modelSpecRecord.currencyCode,
+        personnelNumberCode: this.selectedPersonnelNumber,
+        serviceTypeCode: this.selectedServiceType,
+         materialGroupCode:this.selectedMatGrp,
+          formulaCode:this.selectedFormula,
+        deletionIndicator: this.newService.deletionIndicator,
+        shortText: this.newService.shortText,
+        quantity: this.selectedFormulaRecord.result,
         grossPrice: this.newService.grossPrice,
         overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
         priceChangedAllowed: this.newService.priceChangedAllowed,
@@ -518,7 +591,7 @@ public isMatch(record: any, ri: number): boolean {
         //  materialGroupCode:this.selectedServiceNumberRecord.materialGroupCode,
          formulaCode:this.selectedServiceNumberRecord.formulaCode,
         deletionIndicator: this.newService.deletionIndicator,
-        shortText: this.shortText,
+        shortText: this.selectedServiceNumberRecord.description,
         quantity: this.retrievedFormula.result,
         grossPrice: this.newService.grossPrice,
         overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
@@ -563,63 +636,63 @@ public isMatch(record: any, ri: number): boolean {
         this.modelSpecDetailsService.getRecords();
       });
     }
-    else {
-      let newRecord = {
-        serviceNumberCode: this.selectedServiceNumber,
-        lineTypeCode: this.selectedLineType,
-         // will be updated in New Deployment
-       unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
-        currencyCode: this.modelSpecRecord.currencyCode,
-        personnelNumberCode: this.selectedPersonnelNumber,
-        serviceTypeCode: this.selectedServiceType,
-        materialGroupCode: this.selectedServiceNumberRecord.materialGroupCode,
-        formulaCode: this.selectedServiceNumberRecord.formulaCode,
-        deletionIndicator: this.newService.deletionIndicator,
-        shortText: this.selectedServiceNumberRecord.description,
-        quantity: this.retrievedFormula.result,
-        grossPrice: this.newService.grossPrice,
-        overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
-        priceChangedAllowed: this.newService.priceChangedAllowed,
-        unlimitedOverFulfillment: this.newService.unlimitedOverFulfillment,
-        pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
-        externalServiceNumber: this.newService.externalServiceNumber,
-        netValue: this.newService.netValue,
-        serviceText: this.selectedServiceNumberRecord.serviceText,
-        lineText: this.newService.lineText,
-        lineNumber: this.newService.lineNumber,
-        alternatives: this.newService.alternatives,
-        biddersLine: this.newService.biddersLine,
-        supplementaryLine: this.newService.supplementaryLine,
-        lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
-        dontUseFormula: this.newService.dontUseFormula
-      }
-      if(this.newService.grossPrice===0){
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'GrossPrice is required',
-          life: 3000
-        });
-      }
-      console.log(newRecord);
-      const filteredRecord = Object.fromEntries(
-        Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== false && value !== undefined;
-        })
-      );
-      console.log(filteredRecord);
-      this.apiService.post<ModelSpecDetails>('modelspecdetails', filteredRecord).subscribe((response: ModelSpecDetails) => {
-        console.log('modelspecdetails created:', response);
-        if (response) {
-          this.resetNewService();
-          //newRecord={}
-          console.log(this.newService);
-        }
-        console.log(response);
-        this.totalValue=0;
-        this.modelSpecDetailsService.getRecords();
-      });
-    }
+    // else {
+    //   let newRecord = {
+    //     serviceNumberCode: this.selectedServiceNumber,
+    //     lineTypeCode: this.selectedLineType,
+    //      // will be updated in New Deployment
+    //    unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
+    //     currencyCode: this.modelSpecRecord.currencyCode,
+    //     personnelNumberCode: this.selectedPersonnelNumber,
+    //     serviceTypeCode: this.selectedServiceType,
+    //     materialGroupCode: this.selectedServiceNumberRecord.materialGroupCode,
+    //     formulaCode: this.selectedServiceNumberRecord.formulaCode,
+    //     deletionIndicator: this.newService.deletionIndicator,
+    //     shortText: this.selectedServiceNumberRecord.description,
+    //     quantity: this.retrievedFormula.result,
+    //     grossPrice: this.newService.grossPrice,
+    //     overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
+    //     priceChangedAllowed: this.newService.priceChangedAllowed,
+    //     unlimitedOverFulfillment: this.newService.unlimitedOverFulfillment,
+    //     pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
+    //     externalServiceNumber: this.newService.externalServiceNumber,
+    //     netValue: this.newService.netValue,
+    //     serviceText: this.selectedServiceNumberRecord.serviceText,
+    //     lineText: this.newService.lineText,
+    //     lineNumber: this.newService.lineNumber,
+    //     alternatives: this.newService.alternatives,
+    //     biddersLine: this.newService.biddersLine,
+    //     supplementaryLine: this.newService.supplementaryLine,
+    //     lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
+    //     dontUseFormula: this.newService.dontUseFormula
+    //   }
+    //   if(this.newService.grossPrice===0){
+    //     this.messageService.add({
+    //       severity: 'error',
+    //       summary: 'Error',
+    //       detail: 'GrossPrice is required',
+    //       life: 3000
+    //     });
+    //   }
+    //   console.log(newRecord);
+    //   const filteredRecord = Object.fromEntries(
+    //     Object.entries(newRecord).filter(([_, value]) => {
+    //       return value !== '' && value !== 0 && value !== false && value !== undefined;
+    //     })
+    //   );
+    //   console.log(filteredRecord);
+    //   this.apiService.post<ModelSpecDetails>('modelspecdetails', filteredRecord).subscribe((response: ModelSpecDetails) => {
+    //     console.log('modelspecdetails created:', response);
+    //     if (response) {
+    //       this.resetNewService();
+    //       //newRecord={}
+    //       console.log(this.newService);
+    //     }
+    //     console.log(response);
+    //     this.totalValue=0;
+    //     this.modelSpecDetailsService.getRecords();
+    //   });
+    // }
   }
 
   resetNewService() {

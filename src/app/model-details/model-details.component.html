@@ -45,7 +45,7 @@
 <!-- <div class="card"> -->
 <p-toast></p-toast>
 
-<p-table [value]="filteredRecords"  [scrollable]="true" scrollHeight="400px"  styleClass="p-datatable-gridlines" responsiveLayout="stack" [breakpoint]="'960px'" dataKey="modelSpecDetailsCode" editMode="row" [tableStyle]="{'min-width': '50rem'}"
+<p-table [value]="filteredRecords"  [scrollable]="true"   styleClass="p-datatable-gridlines" responsiveLayout="stack" [breakpoint]="'960px'" dataKey="modelSpecDetailsCode" editMode="row" [tableStyle]="{'min-width': '50rem'}"
     [responsive]="true">
     <ng-template pTemplate="header">
         <tr>
@@ -53,7 +53,7 @@
                 <p-checkbox (onChange)="onSelectAllRecords($event)" [value]="records"></p-checkbox>
             </th>
             <th fd-table-cell>Line</th>
-            <th fd-table-cell pSortableColumn="modelSpecDetailsCode">ID <p-sortIcon field="modelSpecDetailsCode"></p-sortIcon> </th>
+            <th fd-table-cell pSortableColumn="modelSpecDetailsCode">Model.Spec.Code <p-sortIcon field="modelSpecDetailsCode"></p-sortIcon> </th>
             
             <!-- <th fd-table-cell>Selection</th> -->
             <!-- <th fd-table-cell>LineIndex</th> -->
@@ -540,7 +540,10 @@
                 <ng-container *ngIf="selectedServiceNumberRecord && retrievedFormula">
                     {{ this.retrievedFormula.result }}
                 </ng-container>
-                <ng-container *ngIf="!selectedServiceNumberRecord">
+                <ng-container *ngIf="!selectedServiceNumberRecord && selectedFormulaRecord">
+                    {{ this.selectedFormulaRecord.result }}
+                </ng-container>
+                <ng-container *ngIf="!selectedServiceNumberRecord && !selectedFormulaRecord">
                     <input name="quantity" type="number" [min]="0" [(ngModel)]="newService.quantity">
                 </ng-container>
                 <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula ">
@@ -681,7 +684,7 @@
                     <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedFormula"
                         [ngModelOptions]="{standalone: true}" optionValue="formulaCode" optionLabel="formula"
                         [filter]="true" [filterFields]="['formula','description']" [showClear]="true"
-                        placeholder="Select Formula" [required]="true" [appendTo]="'body'">
+                        placeholder="Select Formula" [required]="true"  (onChange)="onFormulaSelect($event)" [appendTo]="'body'">
                         <ng-template let-record pTemplate="item">
                             <div class="flex align-items-center gap-2">
                                 <div>{{ record.formula }}::{{ record.description }}</div>
