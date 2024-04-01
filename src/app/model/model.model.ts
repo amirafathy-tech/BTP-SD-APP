@@ -1,5 +1,6 @@
 export class ModelEntity {
     public modelSpecCode!: number;
+    public modelSpecDetailsCode: number[]= [];
     public currencyCode:number;
     public modelServSpec: string;
     public blockingIndicator: boolean;

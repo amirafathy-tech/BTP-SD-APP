@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ModelSpecDetails } from './model-details.model';
 import { ApiService } from '../ApiService.service';
 
@@ -10,6 +10,7 @@ export class ModelSpecDetailService {
   startedEditing = new Subject<number>();
   constructor(private apiService: ApiService) { }
   private recordsApi!: ModelSpecDetails[]
+  private record: ModelSpecDetails | undefined
   // private records: ModelSpecDetails[] = [
   //   new ModelSpecDetails(
   //       1,
@@ -69,8 +70,16 @@ export class ModelSpecDetailService {
     });
   }
 
-  getRecord(index: number) {
-    // return this.records[index];
+  // getRecord(index: number) {
+  //   this.apiService.getID<ModelSpecDetails>('modelspecdetails',index).subscribe(response => {
+  //     console.log(response);
+  //     this.record = response;
+  //     return response;
+  //     //this.recordsChanged.next(this.recordsApi);
+  //   });
+  // }
+  getRecord(index: number): Observable<ModelSpecDetails> {
+    return this.apiService.getID<ModelSpecDetails>('modelspecdetails', index);
   }
  
 

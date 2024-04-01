@@ -45,16 +45,15 @@
 <!-- <div class="card"> -->
 <p-toast></p-toast>
 
-<p-table [value]="filteredRecords"  [scrollable]="true"   styleClass="p-datatable-gridlines" responsiveLayout="stack" [breakpoint]="'960px'" dataKey="modelSpecDetailsCode" editMode="row" [tableStyle]="{'min-width': '50rem'}"
+<p-table [value]="records"  [scrollable]="true"   styleClass="p-datatable-gridlines" responsiveLayout="stack" [breakpoint]="'960px'" dataKey="modelSpecDetailsCode" editMode="row" [tableStyle]="{'min-width': '50rem'}"
     [responsive]="true">
     <ng-template pTemplate="header">
         <tr>
             <th>
-                <p-checkbox (onChange)="onSelectAllRecords($event)" [value]="records"></p-checkbox>
+                <p-checkbox (onChange)="onSelectAllRecords($event)" [value]="records" ></p-checkbox>
             </th>
             <th fd-table-cell>Line</th>
             <th fd-table-cell pSortableColumn="modelSpecDetailsCode">Model.Spec.Code <p-sortIcon field="modelSpecDetailsCode"></p-sortIcon> </th>
-            
             <!-- <th fd-table-cell>Selection</th> -->
             <!-- <th fd-table-cell>LineIndex</th> -->
             <th fd-table-cell>Del.Ind</th>

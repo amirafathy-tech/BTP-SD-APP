@@ -5,7 +5,7 @@ import { ModelSpecDetails } from './model-details.model';
 import { ModelEntity } from '../model/model.model';
 import { Router } from '@angular/router';
 import { ApiService } from '../ApiService.service';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin } from 'rxjs';
 import { ServiceMaster } from '../service-master/service-master.model';
 import { ServiceType } from '../service-type/service-type.model';
 import { UnitOfMeasure } from '../models/unitOfMeasure.model';
@@ -19,30 +19,31 @@ import { Instant } from 'js-joda';
 })
 export class ModelDetailsComponent {
   public rowIndex = 0;
- searchTerm!: number;
-//  public isMatch(record: any, ri: number): boolean {
-//   const searchString = this.rowIndex + ri + 1;
-//   return searchString === this.searchTerm;
-// }
-public isMatch(record: any, ri: number): boolean {
-  if (!this.searchTerm) {
-    return true; // Display all records when search term is empty
+  searchTerm!: number;
+  //  public isMatch(record: any, ri: number): boolean {
+  //   const searchString = this.rowIndex + ri + 1;
+  //   return searchString === this.searchTerm;
+  // }
+  public isMatch(record: any, ri: number): boolean {
+    if (!this.searchTerm) {
+      return true; // Display all records when search term is empty
+    }
+    const searchString = this.rowIndex + ri + 1;
+    return searchString === this.searchTerm;
   }
-  const searchString = this.rowIndex + ri + 1;
-  return searchString === this.searchTerm;
-}
   subscription!: Subscription;
-  records!: ModelSpecDetails[];
+  records: ModelSpecDetails[] = [];
+  allRecords!: ModelSpecDetails[];
   recordsLength!: number
 
-  modelSpecRecord!: ModelEntity // hold ModelSpecRecord from previous screen
+  modelSpecRecord?: ModelEntity // hold ModelSpecRecord from previous screen
   currency: any
-  totalValue:number =0
+  totalValue: number = 0
   //fields for dropdown lists
   recordsServiceNumber!: ServiceMaster[];
   selectedServiceNumber!: number;
   updateSelectedServiceNumber!: number
-  selectedServiceNumberRecord?: ServiceMaster 
+  selectedServiceNumberRecord?: ServiceMaster
   updateSelectedServiceNumberRecord?: ServiceMaster
   shortText: string = '';
   updateShortText: string = '';
@@ -84,18 +85,18 @@ public isMatch(record: any, ri: number): boolean {
   }
 
   //Display Line Details:
-  selectedDetailsForDisplay?: ModelSpecDetails 
+  selectedDetailsForDisplay?: ModelSpecDetails
   visible: boolean = false;
   showDialog() {
-      this.visible = true;
+    this.visible = true;
   }
   // to handle selection checkbox
   selectedRecords: ModelSpecDetails[] = [];
   onRecordSelectionChange(event: any, record: ModelSpecDetails) {
     console.log(record);
     console.log(this.selectedDetailsForDisplay);
-    this.selectedDetailsForDisplay=record
-  console.log(this.selectedDetailsForDisplay);
+    this.selectedDetailsForDisplay = record
+    console.log(this.selectedDetailsForDisplay);
 
     console.log(event.checked);
     this.selectedRecords = event.checked
@@ -116,14 +117,23 @@ public isMatch(record: any, ri: number): boolean {
       console.log(this.selectedAllRecords);
     }
   }
+  modelSpecDetailsCodes: number[] = []
   constructor(private apiService: ApiService, private router: Router, private modelSpecDetailsService: ModelSpecDetailService, private messageService: MessageService, private confirmationService: ConfirmationService,) {
     this.modelSpecRecord = this.router.getCurrentNavigation()?.extras.state?.['Record'];
+    //this.modelSpecDetailsCodes= this.modelSpecRecord?.modelSpecDetailsCode
     console.log(this.modelSpecRecord);
+    console.log(this.modelSpecDetailsCodes);
+
     if (this.modelSpecRecord) {
+      this.modelSpecDetailsCodes = this.modelSpecRecord.modelSpecDetailsCode
+      console.log(this.modelSpecDetailsCodes);
       this.apiService.getID<any>('currencies', this.modelSpecRecord.currencyCode).subscribe(response => {
         this.currency = response
         console.log(this.currency);
       });
+    }
+    else {
+      this.modelSpecRecord = undefined
     }
   }
   retrievedUOM!: UnitOfMeasure
@@ -133,27 +143,27 @@ public isMatch(record: any, ri: number): boolean {
   updateRetrievedUOM!: UnitOfMeasure
   updateRetrievedMatGrp !: any
   updateRetrievedFormula: any
-  dontSelectServiceNumber: boolean =true
-  
-  selectedFormulaRecord :any
-  onFormulaSelect(event: any) { 
+  dontSelectServiceNumber: boolean = true
+
+  selectedFormulaRecord: any
+  onFormulaSelect(event: any) {
     const selectedRecord = this.recordsFormula.find(record => record.formulaCode === this.selectedFormula);
     console.log(selectedRecord);
 
     if (selectedRecord) {
       this.selectedFormulaRecord = selectedRecord
       console.log(this.selectedFormulaRecord);
-      
+
     }
     else {
       console.log("no Formula");
-      this.selectedFormulaRecord=undefined;
+      this.selectedFormulaRecord = undefined;
       console.log(this.selectedFormulaRecord);
-      
+
     }
   }
   //In Creation to handle shortTextChangeAlowlled Flag 
-  onServiceNumberChange(event: any) { 
+  onServiceNumberChange(event: any) {
     const selectedRecord = this.recordsServiceNumber.find(record => record.serviceNumberCode === this.selectedServiceNumber);
     console.log(selectedRecord);
 
@@ -181,8 +191,8 @@ public isMatch(record: any, ri: number): boolean {
     }
     else {
       console.log("no service number");
-      this.dontSelectServiceNumber=false
-      this.selectedServiceNumberRecord=undefined;
+      this.dontSelectServiceNumber = false
+      this.selectedServiceNumberRecord = undefined;
       console.log(this.dontSelectServiceNumber);
       // this.selectedServiceNumberRecord = {
       //   serviceNumberCode: 0, code: '', description: '', serviceText: '', shortTextChangeAllowed: false, deletionIndicator: false,
@@ -224,29 +234,34 @@ public isMatch(record: any, ri: number): boolean {
         console.log(this.updateRetrievedFormula);
       });
     }
-    else{
-      this.updateSelectedServiceNumberRecord=undefined;
+    else {
+      this.updateSelectedServiceNumberRecord = undefined;
     }
     //this.selectedServiceNumberRecord = selectedRecord ? selectedRecord: {} ;
   }
-
+  
   ngOnInit() {
-    this.modelSpecDetailsService.getRecords();
-    this.subscription = this.modelSpecDetailsService.recordsChanged.subscribe((records: ModelSpecDetails[]) => {
-      this.records = records;
-      this.filteredRecords = records
-      console.log(this.records);
-      for (const record of records) {
-        console.log(record.netValue);
-        this.totalValue += record.netValue;
-      }
-      console.log('Total Value:', this.totalValue);
-    });
+    //this.modelSpecDetailsService.getRecords();
+
+    if (this.modelSpecRecord) {
+      console.log(this.modelSpecRecord.modelSpecDetailsCode);
+      const detailObservables = this.modelSpecRecord.modelSpecDetailsCode.map(code =>
+        this.apiService.getID<ModelSpecDetails>('modelspecdetails', code)
+      );
+
+      forkJoin(detailObservables).subscribe(records => {
+        this.records = records;
+
+        this.totalValue = this.records.reduce((sum, record) => sum + record.netValue, 0);
+        console.log('Total Value:', this.totalValue);
+      });
+    }
+    console.log(this.records);
 
     this.apiService.get<ServiceMaster[]>('servicenumbers').subscribe(response => {
       console.log(response);
-     // this.recordsServiceNumber = response;
-     this.recordsServiceNumber= response.filter(record => record.deletionIndicator === false);
+      // this.recordsServiceNumber = response;
+      this.recordsServiceNumber = response.filter(record => record.deletionIndicator === false);
       console.log(this.recordsServiceNumber);
     });
     this.apiService.get<UnitOfMeasure[]>('measurements').subscribe(response => {
@@ -283,16 +298,22 @@ public isMatch(record: any, ri: number): boolean {
   // handle Deletion Record/ Records
   deleteRecord() {
     if (this.selectedRecords.length) {
+      console.log(this.selectedRecords);
+
       this.confirmationService.confirm({
         message: 'Are you sure you want to delete the selected record?',
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
           for (const record of this.selectedRecords) {
+            console.log(this.modelSpecRecord);
             this.apiService.delete<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode).subscribe(response => {
+
               console.log('model spec deleted:', response);
-              this.totalValue=0;
-              this.modelSpecDetailsService.getRecords();
+              this.updateModel()
+              this.totalValue = 0;
+              // this.modelSpecDetailsService.getRecords();
+              // this.ngOnInit()
             });
           }
           this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
@@ -300,7 +321,7 @@ public isMatch(record: any, ri: number): boolean {
         }
       });
     }
-    if (this.selectedAllRecords.length) {
+    if (this.selectedAllRecords.length > 0) {
       this.confirmationService.confirm({
         message: 'Are you sure you want to delete the selected record?',
         header: 'Confirm',
@@ -309,13 +330,29 @@ public isMatch(record: any, ri: number): boolean {
           for (const record of this.selectedAllRecords) {
             this.apiService.delete<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode).subscribe(response => {
               console.log('model spec deleted:', response);
-              this.totalValue=0;
-              this.modelSpecDetailsService.getRecords();
+              this.updateModel()
+              this.totalValue = 0;
+              // this.modelSpecDetailsService.getRecords();
+              //this.ngOnInit()
             });
           }
           this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
           this.selectedAllRecords = [];
         }
+      });
+    }
+  }
+  updateModel() {
+    if (this.modelSpecRecord) {
+      const excludedRecordCodes =  [...this.selectedRecords, ...this.selectedAllRecords].map(record => record.modelSpecDetailsCode);
+      console.log(excludedRecordCodes);
+      
+      this.modelSpecRecord.modelSpecDetailsCode = this.modelSpecRecord.modelSpecDetailsCode.filter(code => !excludedRecordCodes.includes(code));
+  console.log(this.modelSpecRecord.modelSpecDetailsCode);
+  
+      this.apiService.put<ModelEntity>('modelspecs', this.modelSpecRecord.modelSpecCode, this.modelSpecRecord).subscribe(updatedModel => {
+        console.log('Model updated:', updatedModel);
+        this.ngOnInit();
       });
     }
   }
@@ -351,8 +388,9 @@ public isMatch(record: any, ri: number): boolean {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Data' });
         }
         console.log(this.totalValue)
-        this.totalValue=0;
-      this.modelSpecDetailsService.getRecords();
+        this.totalValue = 0;
+        //this.modelSpecDetailsService.getRecords();
+        this.ngOnInit()
         console.log(this.totalValue)
       });
     }
@@ -365,8 +403,9 @@ public isMatch(record: any, ri: number): boolean {
         else {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid Data' });
         }
-        this.totalValue=0;
-        this.modelSpecDetailsService.getRecords();
+        this.totalValue = 0;
+        //this.modelSpecDetailsService.getRecords();
+        this.ngOnInit()
       });
     }
   }
@@ -414,11 +453,11 @@ public isMatch(record: any, ri: number): boolean {
         //serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
         unitOfMeasurementCode: this.selectedUnitOfMeasure,
-        currencyCode: this.modelSpecRecord.currencyCode,
+        currencyCode: this.modelSpecRecord?.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
         serviceTypeCode: this.selectedServiceType,
-         materialGroupCode:this.selectedMatGrp,
-          formulaCode:this.selectedFormula,
+        materialGroupCode: this.selectedMatGrp,
+        formulaCode: this.selectedFormula,
         deletionIndicator: this.newService.deletionIndicator,
         shortText: this.newService.shortText,
         quantity: this.newService.quantity,
@@ -429,7 +468,7 @@ public isMatch(record: any, ri: number): boolean {
         pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
         externalServiceNumber: this.newService.externalServiceNumber,
         netValue: this.newService.netValue,
-        serviceText:this.newService.serviceText,
+        serviceText: this.newService.serviceText,
         lineText: this.newService.lineText,
         lineNumber: this.newService.lineNumber,
         alternatives: this.newService.alternatives,
@@ -438,7 +477,7 @@ public isMatch(record: any, ri: number): boolean {
         lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
         dontUseFormula: this.newService.dontUseFormula
       }
-      if(this.newService.quantity===0 || this.newService.grossPrice===0){
+      if (this.newService.quantity === 0 || this.newService.grossPrice === 0) {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -450,7 +489,7 @@ public isMatch(record: any, ri: number): boolean {
       // Remove properties with empty or default values
       const filteredRecord = Object.fromEntries(
         Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0  && value !== undefined;
+          return value !== '' && value !== 0 && value !== undefined;
         })
       );
       console.log(filteredRecord);
@@ -459,10 +498,19 @@ public isMatch(record: any, ri: number): boolean {
         if (response) {
           this.resetNewService();
           console.log(this.newService);
+
+          const newDetail = response;
+          if (this.modelSpecRecord) {
+            this.modelSpecRecord.modelSpecDetailsCode.push(newDetail.modelSpecDetailsCode);
+            this.apiService.put<ModelEntity>('modelspecs', this.modelSpecRecord.modelSpecCode, this.modelSpecRecord).subscribe(updatedModel => {
+              console.log('Model updated:', updatedModel);
+            });
+          }
         }
         console.log(response);
-        this.totalValue=0;
-        this.modelSpecDetailsService.getRecords();
+        this.totalValue = 0;
+        // this.modelSpecDetailsService.getRecords();
+        this.ngOnInit()
       });
     }
     else if (!this.selectedServiceNumberRecord && this.selectedFormulaRecord) { // if user didn't select serviceNumber && select formula
@@ -470,11 +518,11 @@ public isMatch(record: any, ri: number): boolean {
         //serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
         unitOfMeasurementCode: this.selectedUnitOfMeasure,
-        currencyCode: this.modelSpecRecord.currencyCode,
+        currencyCode: this.modelSpecRecord?.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
         serviceTypeCode: this.selectedServiceType,
-         materialGroupCode:this.selectedMatGrp,
-          formulaCode:this.selectedFormula,
+        materialGroupCode: this.selectedMatGrp,
+        formulaCode: this.selectedFormula,
         deletionIndicator: this.newService.deletionIndicator,
         shortText: this.newService.shortText,
         quantity: this.selectedFormulaRecord.result,
@@ -485,7 +533,7 @@ public isMatch(record: any, ri: number): boolean {
         pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
         externalServiceNumber: this.newService.externalServiceNumber,
         netValue: this.newService.netValue,
-        serviceText:this.newService.serviceText,
+        serviceText: this.newService.serviceText,
         lineText: this.newService.lineText,
         lineNumber: this.newService.lineNumber,
         alternatives: this.newService.alternatives,
@@ -494,7 +542,7 @@ public isMatch(record: any, ri: number): boolean {
         lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
         dontUseFormula: this.newService.dontUseFormula
       }
-      if(this.newService.quantity===0 || this.newService.grossPrice===0){
+      if (this.newService.quantity === 0 || this.newService.grossPrice === 0) {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -506,7 +554,7 @@ public isMatch(record: any, ri: number): boolean {
       // Remove properties with empty or default values
       const filteredRecord = Object.fromEntries(
         Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0  && value !== undefined;
+          return value !== '' && value !== 0 && value !== undefined;
         })
       );
       console.log(filteredRecord);
@@ -515,10 +563,19 @@ public isMatch(record: any, ri: number): boolean {
         if (response) {
           this.resetNewService();
           console.log(this.newService);
+
+          const newDetail = response;
+          if (this.modelSpecRecord) {
+            this.modelSpecRecord.modelSpecDetailsCode.push(newDetail.modelSpecDetailsCode);
+            this.apiService.put<ModelEntity>('modelspecs', this.modelSpecRecord.modelSpecCode, this.modelSpecRecord).subscribe(updatedModel => {
+              console.log('Model updated:', updatedModel);
+            });
+          }
         }
         console.log(response);
-        this.totalValue=0;
-        this.modelSpecDetailsService.getRecords();
+        this.totalValue = 0;
+        //this.modelSpecDetailsService.getRecords();
+        this.ngOnInit()
       });
     }
     else if (this.selectedServiceNumberRecord && this.newService.dontUseFormula) {
@@ -527,12 +584,12 @@ public isMatch(record: any, ri: number): boolean {
       const newRecord = {
         serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
-         // will be updated in New Deployment
-        unitOfMeasurementCode:this.selectedServiceNumberRecord.baseUnitOfMeasurement,
-        currencyCode: this.modelSpecRecord.currencyCode,
+        // will be updated in New Deployment
+        unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
+        currencyCode: this.modelSpecRecord?.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
         serviceTypeCode: this.selectedServiceType,
-         materialGroupCode:this.selectedServiceNumberRecord.materialGroupCode,
+        materialGroupCode: this.selectedServiceNumberRecord.materialGroupCode,
         // formulaCode:this.selectedServiceNumberRecord.formulaCode,
         deletionIndicator: this.newService.deletionIndicator,
         shortText: this.selectedServiceNumberRecord.description,
@@ -544,7 +601,7 @@ public isMatch(record: any, ri: number): boolean {
         pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
         externalServiceNumber: this.newService.externalServiceNumber,
         netValue: this.newService.netValue,
-        serviceText:this.selectedServiceNumberRecord.serviceText,
+        serviceText: this.selectedServiceNumberRecord.serviceText,
         lineText: this.newService.lineText,
         lineNumber: this.newService.lineNumber,
         alternatives: this.newService.alternatives,
@@ -553,7 +610,7 @@ public isMatch(record: any, ri: number): boolean {
         lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
         dontUseFormula: this.newService.dontUseFormula
       }
-      if(this.newService.quantity===0 || this.newService.grossPrice===0){
+      if (this.newService.quantity === 0 || this.newService.grossPrice === 0) {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -574,10 +631,18 @@ public isMatch(record: any, ri: number): boolean {
         if (response) {
           this.resetNewService();
           console.log(this.newService);
+          const newDetail = response;
+          if (this.modelSpecRecord) {
+            this.modelSpecRecord.modelSpecDetailsCode.push(newDetail.modelSpecDetailsCode);
+            this.apiService.put<ModelEntity>('modelspecs', this.modelSpecRecord.modelSpecCode, this.modelSpecRecord).subscribe(updatedModel => {
+              console.log('Model updated:', updatedModel);
+            });
+          }
         }
         console.log(response);
-        this.totalValue=0;
-       this.modelSpecDetailsService.getRecords();
+        this.totalValue = 0;
+        //this.modelSpecDetailsService.getRecords();
+        this.ngOnInit()
       });
     }
     else if (this.selectedServiceNumberRecord && !this.newService.dontUseFormula) {
@@ -585,11 +650,11 @@ public isMatch(record: any, ri: number): boolean {
         serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
         unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
-        currencyCode: this.modelSpecRecord.currencyCode,
+        currencyCode: this.modelSpecRecord?.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
         serviceTypeCode: this.selectedServiceType,
         //  materialGroupCode:this.selectedServiceNumberRecord.materialGroupCode,
-         formulaCode:this.selectedServiceNumberRecord.formulaCode,
+        formulaCode: this.selectedServiceNumberRecord.formulaCode,
         deletionIndicator: this.newService.deletionIndicator,
         shortText: this.selectedServiceNumberRecord.description,
         quantity: this.retrievedFormula.result,
@@ -600,7 +665,7 @@ public isMatch(record: any, ri: number): boolean {
         pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
         externalServiceNumber: this.newService.externalServiceNumber,
         netValue: this.newService.netValue,
-        serviceText:this.selectedServiceNumberRecord.serviceText,
+        serviceText: this.selectedServiceNumberRecord.serviceText,
         lineText: this.newService.lineText,
         lineNumber: this.newService.lineNumber,
         alternatives: this.newService.alternatives,
@@ -609,7 +674,7 @@ public isMatch(record: any, ri: number): boolean {
         lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
         dontUseFormula: this.newService.dontUseFormula
       }
-      if(this.newService.grossPrice===0){
+      if (this.newService.grossPrice === 0) {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -621,7 +686,7 @@ public isMatch(record: any, ri: number): boolean {
       // Remove properties with empty or default values
       const filteredRecord = Object.fromEntries(
         Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0  && value !== undefined;
+          return value !== '' && value !== 0 && value !== undefined;
         })
       );
       console.log(filteredRecord);
@@ -630,10 +695,18 @@ public isMatch(record: any, ri: number): boolean {
         if (response) {
           this.resetNewService();
           console.log(this.newService);
+          const newDetail = response;
+          if (this.modelSpecRecord) {
+            this.modelSpecRecord.modelSpecDetailsCode.push(newDetail.modelSpecDetailsCode);
+            this.apiService.put<ModelEntity>('modelspecs', this.modelSpecRecord.modelSpecCode, this.modelSpecRecord).subscribe(updatedModel => {
+              console.log('Model updated:', updatedModel);
+            });
+          }
         }
         console.log(response);
-        this.totalValue=0;
-        this.modelSpecDetailsService.getRecords();
+        this.totalValue = 0;
+        // this.modelSpecDetailsService.getRecords();
+        this.ngOnInit()
       });
     }
     // else {
