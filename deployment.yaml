@@ -20,8 +20,8 @@ spec:
         kyma-grafana: enabled
     spec:
       containers:
-        - image: amirafathy/sdbtp
-          name: sdcontbtp
+        - image: amirafathy/sddev
+          name: sdcontdev
           ports:
             - containerPort: 4200
           envFrom:
@@ -36,7 +36,7 @@ metadata:
   creationTimestamp: null
   labels:
     app: angular
-  name: sdbtp
+  name: sddev
 spec:
   ports:
     - port: 4200
