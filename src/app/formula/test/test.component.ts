@@ -3,12 +3,13 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { FormulaService } from '../formula.service';
 import { ApiService } from 'src/app/ApiService.service';
 import { UnitOfMeasure } from 'src/app/models/unitOfMeasure.model';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-test',
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.css'],
-  providers: [FormulaService, ApiService]
+  providers: [FormulaService, ApiService, MessageService, ConfirmationService]
 })
 export class TestComponent implements OnInit {
   result: number = 0;
@@ -35,7 +36,8 @@ export class TestComponent implements OnInit {
   passedTestInfo: any;
   // resultUnitOfMeasurement:any;
 
-  constructor(private router: Router, private route: ActivatedRoute, public formulaService: FormulaService, private apiService: ApiService) {
+  constructor(private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,
+    private apiService: ApiService, private messageService: MessageService, private confirmationService: ConfirmationService) {
     this.formulaLogic = this.router.getCurrentNavigation()?.extras.state?.['formulaLogic'];
     this.passedCreateInfo = this.router.getCurrentNavigation()?.extras.state?.['passedCreateInfo'];
     this.passedParamInfo = this.router.getCurrentNavigation()?.extras.state?.['passedParamInfo'];
@@ -73,6 +75,8 @@ export class TestComponent implements OnInit {
   nextPage() {
 
     if (this.testInformation.variables) {
+      console.log(this.testInformation.variables);
+
       const valuesOnly = Object.values(this.testInformation.variables)
         .filter(value => typeof value === 'number') as number[];
       console.log(valuesOnly);
@@ -96,7 +100,7 @@ export class TestComponent implements OnInit {
         formula: this.passedCreateInfo.formula,
         description: this.passedCreateInfo.description,
         numberOfParameters: this.passedCreateInfo.numberOfParameters,
-    //  unitOfMeasurementCode: this.passedCreateInfo.unitOfMeasurementCode,
+        //  unitOfMeasurementCode: this.passedCreateInfo.unitOfMeasurementCode,
         parameterIds: this.parameterIds,
         parameterDescriptions: this.parameterDescriptions,
         formulaLogic: this.formulaLogic,
@@ -112,7 +116,7 @@ export class TestComponent implements OnInit {
         this.result = response.result
         //+this.resultUnitOfMeasurement.code;
         console.log(this.result);
-        
+
         this.visible = true;
       });
 
@@ -122,18 +126,67 @@ export class TestComponent implements OnInit {
     }
     this.submitted = true;
   }
-  showResult() {
-    try {
-      const result = eval(this.formulaLogic);
-      console.log(result);
+  // showResult() {
+  //   try {
+  //     const result = eval(this.formulaLogic);
+  //     console.log(result);
 
-      // this.messageService.add({ severity: 'success', summary: 'Result', detail: `The result is: ${result}` });
-    } catch (error) {
-      // this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid formula' });
+  //     // this.messageService.add({ severity: 'success', summary: 'Result', detail: `The result is: ${result}` });
+  //   } catch (error) {
+  //     // this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid formula' });
+  //   }
+  // }
+
+  // save() {
+  //   console.log(this.formulaService.formulaInformation);
+  // }
+
+  navigateAllFormulas() {
+    console.log(this.result);
+
+    if (this.result != 0) {
+      // this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Created', life: 3000 });
+      this.confirmationService.confirm({
+        message: 'Formula Created successfully. Click Accept to go to the Formulas Page.',
+        header: 'Added Successfully',
+        icon: 'pi pi-check',
+        accept: () => {
+          this.router.navigate(['/formulas']);
+        },
+        reject: () => {
+        }
+      });
+      // this.router.navigate(['/formulas']);
     }
-  }
+    else {
+      const formulaObject1: any = {
+        formula: this.passedCreateInfo.formula,
+        description: this.passedCreateInfo.description,
+        numberOfParameters: this.passedCreateInfo.numberOfParameters,
+        parameterIds: this.parameterIds,
+        parameterDescriptions: this.parameterDescriptions,
+        formulaLogic: this.formulaLogic,
+      };
+      console.log(formulaObject1);
 
-  save() {
-    console.log(this.formulaService.formulaInformation);
+      this.apiService.post<any>('formulas', formulaObject1).subscribe((response) => {
+        console.log('formula created:', response);
+        this.result = response.result
+        console.log(this.result);//Nan
+        // this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Created', life: 3000 });
+        // this.router.navigate(['/formulas']);
+        this.confirmationService.confirm({
+          message: 'Formula Created successfully. Click Accept to go to the Formulas Page.',
+          header: 'Added Successfully',
+          icon: 'pi pi-check',
+          accept: () => {
+            this.router.navigate(['/formulas']);
+          },
+          reject: () => {
+          }
+        });
+      });
+    }
+
   }
 }

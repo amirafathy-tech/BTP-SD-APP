@@ -8,20 +8,20 @@
         </div> -->
         <div class="field col-12 md:col-3">
             <label for="id">Service Number(ID):</label>
-            <input id="serviceNumberCode" name="serviceNumberCode" type="number" [(ngModel)]="selectedRecord.serviceNumberCode" [ngModel]="isSaving ? savedRecord.serviceNumberCode : selectedRecord.serviceNumberCode"
+            <input id="serviceNumberCode" name="serviceNumberCode" type="number" [(ngModel)]="selectedRecord.serviceNumberCode" [ngModel]="isSaving ?  savedRecord.serviceNumberCode :  selectedRecord.serviceNumberCode"
               (ngModelChange)="isSaving ? savedRecord.serviceNumberCode = $event : null" ngModel 
               class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"
               [disabled]="true">
           </div>
         <div class="field col-12 md:col-3">
-            <label for="code">SearchTerm:</label>
+            <label for="code">SearchTerm:<span style="color: red;">*</span></label>
                    <!-- will be renamed to searchTerm in New Deployment -->
-            <input id="searchTerm" name="searchTerm"  type="text" [(ngModel)]="selectedRecord.searchTerm" ngModel 
+            <input id="searchTerm" name="searchTerm" required type="text" [(ngModel)]="selectedRecord.searchTerm" ngModel 
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
 
         </div>
         <div class="field col-12 md:col-3">
-            <label for="description">Description:</label>
+            <label for="description">Description:<span style="color: red;">*</span></label>
 
             <input id="description" name="description" required type="text" [(ngModel)]="selectedRecord.description" ngModel 
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
@@ -52,7 +52,7 @@
 
     <div class="row m-2">
         <div class="field col-12 md:col-4">
-            <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedRecord.serviceTypeCode"  [ngModelOptions]="{standalone: true}"
+            <p-dropdown [options]="recordsServiceType" [required]=true [(ngModel)]="selectedRecord.serviceTypeCode"  [ngModelOptions]="{standalone: true}"
             optionValue="serviceTypeCode" optionLabel="serviceId"
                 [filter]="true" [filterFields]="['serviceId','description']" [showClear]="true"  placeholder="Select a ServiceType">
                 <ng-template let-record pTemplate="item">
@@ -61,11 +61,12 @@
                     </div>
                 </ng-template>
             </p-dropdown>
+            <span style="color: red;margin: 5px;">*</span>
         </div>
         <div class="field col-12 md:col-4">
 
             <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.baseUnitOfMeasurement"  [ngModelOptions]="{standalone: true}"
-            optionValue="code" optionLabel="code" [required]="true"
+            optionValue="code" optionLabel="code" 
                 [filter]="true" [filterFields]="['code','description']" [showClear]="true"
                  placeholder="Select Base UnitOfMeasure"
                  >
@@ -75,6 +76,7 @@
                     </div>
                 </ng-template>
             </p-dropdown>
+            <span style="color: red;margin: 5px;">*</span>
         </div>
     </div>
 
@@ -84,7 +86,7 @@
         <label for="numberToBeConverted">Conversion:</label>
         <div class="field col-12 md:col-2">
 
-            <input id="numberToBeConverted" name="numberToBeConverted" required type="number" [(ngModel)]="selectedRecord.numberToBeConverted" ngModel  
+            <input id="numberToBeConverted" name="numberToBeConverted"  type="number" [(ngModel)]="selectedRecord.numberToBeConverted" ngModel  
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
         </div>
         <div class="field col-12 md:col-3">
@@ -99,7 +101,7 @@
             </p-dropdown>
         </div>
         <div class="field col-12 md:col-2">
-            <input id="convertedNumber" name="convertedNumber" required type="number" [(ngModel)]="selectedRecord.convertedNumber" ngModel 
+            <input id="convertedNumber" name="convertedNumber"  type="number" [(ngModel)]="selectedRecord.convertedNumber" ngModel 
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
         </div>
         <div class="field col-12 md:col-3">
@@ -175,18 +177,16 @@
         </div>
 
     </div> -->
+    <p-messages position="top-left" *ngIf="addMessage" [(value)]="messageAdd" [enableService]="false"></p-messages>
     
+    <p-messages position="top-left" *ngIf="updateMessage" [(value)]="messageUpdate" [enableService]="false"></p-messages>
     <div class=" text-center m-3">
         <!-- <button pButton data-dismiss="modal" icon="pi pi-save" [disabled]="!f.valid">Save</button> -->
         <button pButton [disabled]="!f.valid">{{ editMode ?
             'Update' : 'Add' }}
         </button>
     </div>
-    <p-messages position="top-left" *ngIf="addMessage" [(value)]="messageAdd" [enableService]="false"></p-messages>
-    
-    <p-messages position="top-left" *ngIf="updateMessage" [(value)]="messageUpdate" [enableService]="false"></p-messages>
 </form>
-
 
 <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
 

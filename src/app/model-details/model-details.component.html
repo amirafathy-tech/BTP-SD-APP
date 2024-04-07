@@ -76,6 +76,7 @@
             <th fd-table-cell>PersonnelNumber</th>
             <th fd-table-cell>Line Type</th>
             <th fd-table-cell>Formula</th>
+            <th fd-table-cell>Formula Parameters</th>
             <th fd-table-cell>Don'tUseFormula</th>
             <th fd-table-cell>Line Number</th>
             <th fd-table-cell pResizableColumn>Alt</th>
@@ -100,10 +101,10 @@
             <td>
                 <p-cellEditor>
                     <ng-template pTemplate="input">
-                        {{record.modelSpecDetailsCode}}
+                        {{'M' + record.modelSpecDetailsCode}}
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{record.modelSpecDetailsCode}}
+                        {{'M' + record.modelSpecDetailsCode}}
                     </ng-template>
                 </p-cellEditor>
             </td>
@@ -415,6 +416,9 @@
                 </p-cellEditor>
             </td>
             <td>
+                Formula Parameters
+            </td>
+            <td>
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <input pInputText type="checkbox" [(ngModel)]="record.dontUseFormula">
@@ -536,17 +540,18 @@
                 <!-- <input pInputText type="text" [(ngModel)]="newService.shortText"> -->
             </td>
             <td>
-                <ng-container *ngIf="selectedServiceNumberRecord && retrievedFormula">
-                    {{ this.retrievedFormula.result }}
+                <ng-container *ngIf="selectedServiceNumberRecord && retrievedFormula && resultAfterTest">
+                    {{ resultAfterTest }}
                 </ng-container>
-                <ng-container *ngIf="!selectedServiceNumberRecord && selectedFormulaRecord">
-                    {{ this.selectedFormulaRecord.result }}
+                <ng-container *ngIf="!selectedServiceNumberRecord && selectedFormulaRecord && resultAfterTest">
+                    <!-- {{ this.selectedFormulaRecord.result }} -->
+                    {{resultAfterTest}}
                 </ng-container>
                 <ng-container *ngIf="!selectedServiceNumberRecord && !selectedFormulaRecord">
                     <input name="quantity" type="number" [min]="0" [(ngModel)]="newService.quantity">
                 </ng-container>
-                <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula ">
-                    <input name="quantity" type="number" [value]="retrievedFormula.result"
+                <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula && resultAfterTest ">
+                    <input name="quantity" type="number" [value]="resultAfterTest" 
                         [(ngModel)]="newService.quantity" [min]="0">
                 </ng-container>
 
@@ -635,7 +640,20 @@
                     [(ngModel)]="newService.externalServiceNumber">
             </td>
             <td>
-                <input name="netValue" type="number" [(ngModel)]="newService.netValue">
+                <ng-container *ngIf="selectedServiceNumberRecord && retrievedFormula && resultAfterTest">
+                    {{ resultAfterTest * newService.grossPrice }}
+                </ng-container>
+                <ng-container *ngIf="!selectedServiceNumberRecord && selectedFormulaRecord && resultAfterTest">
+                    <!-- {{ this.selectedFormulaRecord.result }} -->
+                    {{resultAfterTest * newService.grossPrice}}
+                </ng-container>
+                <ng-container *ngIf="!selectedServiceNumberRecord && !selectedFormulaRecord">
+                    {{ newService.quantity * newService.grossPrice }}
+                </ng-container>
+                <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula && resultAfterTest ">
+                    {{ newService.quantity * newService.grossPrice }}
+                </ng-container>
+                <!-- <input name="netValue" type="number" [(ngModel)]="newService.netValue"> -->
             </td>
             <td>
                 <ng-container *ngIf="selectedServiceNumberRecord">
@@ -691,6 +709,34 @@
                         </ng-template>
                     </p-dropdown>
                 </ng-container>
+            </td>
+            <td>
+                
+                <button class="mb-2" (click)="openPopup()">Enter Parameters</button>
+                <ng-container *ngIf="showPopup && selectedServiceNumberRecord && retrievedFormula && !newService.dontUseFormula">
+                    <div class="popup">
+                        <h3>Enter Parameters</h3>
+                        <div *ngFor="let parameterId of retrievedFormula.parameterIds">
+                            <label class="form-label">{{ parameterId }}:</label>
+                            <input class="form-input" type="number" [min]="0" [(ngModel)]="parameterValues[parameterId]">
+                        </div>
+                        <button class="form-button" (click)="saveParameters()">Save</button>
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="showPopup && !selectedServiceNumberRecord && selectedFormulaRecord && !newService.dontUseFormula">
+                    <div class="popup">
+                        <h3>Enter Parameters</h3>
+                        <div *ngFor="let parameterId of selectedFormulaRecord.parameterIds">
+                            <label class="form-label">{{ parameterId }}:</label>
+                            <input class="form-input" type="number" [min]="0" [(ngModel)]="parameterValues[parameterId]">
+                        </div>
+                        <button class="form-button" (click)="saveParameters()">Save</button>
+                    </div>
+                </ng-container>  
+                <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula">
+                    <h5>No Parameters</h5>
+                </ng-container>
+               
             </td>
             <td>
                 <input name="dontUseFormula" type="checkbox" [(ngModel)]="newService.dontUseFormula">

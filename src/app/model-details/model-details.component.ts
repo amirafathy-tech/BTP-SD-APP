@@ -11,6 +11,7 @@ import { ServiceType } from '../service-type/service-type.model';
 import { UnitOfMeasure } from '../models/unitOfMeasure.model';
 import { PersonnelNumber } from '../models/personnelNumber.model';
 import { Instant } from 'js-joda';
+import { Formula } from '../formulas/formulas.model';
 @Component({
   selector: 'app-model-details',
   templateUrl: './model-details.component.html',
@@ -239,7 +240,7 @@ export class ModelDetailsComponent {
     }
     //this.selectedServiceNumberRecord = selectedRecord ? selectedRecord: {} ;
   }
-  
+
   ngOnInit() {
     //this.modelSpecDetailsService.getRecords();
 
@@ -344,12 +345,12 @@ export class ModelDetailsComponent {
   }
   updateModel() {
     if (this.modelSpecRecord) {
-      const excludedRecordCodes =  [...this.selectedRecords, ...this.selectedAllRecords].map(record => record.modelSpecDetailsCode);
+      const excludedRecordCodes = [...this.selectedRecords, ...this.selectedAllRecords].map(record => record.modelSpecDetailsCode);
       console.log(excludedRecordCodes);
-      
+
       this.modelSpecRecord.modelSpecDetailsCode = this.modelSpecRecord.modelSpecDetailsCode.filter(code => !excludedRecordCodes.includes(code));
-  console.log(this.modelSpecRecord.modelSpecDetailsCode);
-  
+      console.log(this.modelSpecRecord.modelSpecDetailsCode);
+
       this.apiService.put<ModelEntity>('modelspecs', this.modelSpecRecord.modelSpecCode, this.modelSpecRecord).subscribe(updatedModel => {
         console.log('Model updated:', updatedModel);
         this.ngOnInit();
@@ -513,7 +514,7 @@ export class ModelDetailsComponent {
         this.ngOnInit()
       });
     }
-    else if (!this.selectedServiceNumberRecord && this.selectedFormulaRecord) { // if user didn't select serviceNumber && select formula
+    else if (!this.selectedServiceNumberRecord && this.selectedFormulaRecord && this.resultAfterTest) { // if user didn't select serviceNumber && select formula
       const newRecord = {
         //serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
@@ -525,7 +526,8 @@ export class ModelDetailsComponent {
         formulaCode: this.selectedFormula,
         deletionIndicator: this.newService.deletionIndicator,
         shortText: this.newService.shortText,
-        quantity: this.selectedFormulaRecord.result,
+        // quantity: this.selectedFormulaRecord.result,
+        quantity: this.resultAfterTest,
         grossPrice: this.newService.grossPrice,
         overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
         priceChangedAllowed: this.newService.priceChangedAllowed,
@@ -645,7 +647,7 @@ export class ModelDetailsComponent {
         this.ngOnInit()
       });
     }
-    else if (this.selectedServiceNumberRecord && !this.newService.dontUseFormula) {
+    else if (this.selectedServiceNumberRecord && !this.newService.dontUseFormula && this.resultAfterTest) {
       const newRecord = {
         serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
@@ -657,7 +659,8 @@ export class ModelDetailsComponent {
         formulaCode: this.selectedServiceNumberRecord.formulaCode,
         deletionIndicator: this.newService.deletionIndicator,
         shortText: this.selectedServiceNumberRecord.description,
-        quantity: this.retrievedFormula.result,
+        // quantity: this.retrievedFormula.result,
+        quantity: this.resultAfterTest,
         grossPrice: this.newService.grossPrice,
         overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
         priceChangedAllowed: this.newService.priceChangedAllowed,
@@ -800,5 +803,83 @@ export class ModelDetailsComponent {
       dontUseFormula: false,
       modelSpecDetailsCode: 0
     };
+  }
+  // handle Formula Parameters Entrance
+  showPopup: boolean = false;
+  parameterValues: { [key: string]: number } = {};
+
+  openPopup() {
+    if (this.selectedServiceNumberRecord && this.retrievedFormula) {
+      this.showPopup = true;
+      for (const parameterId of this.retrievedFormula.parameterIds) {
+        this.parameterValues[parameterId] = 0;
+        console.log(this.parameterValues);
+      }
+    }
+    else if (!this.selectedServiceNumberRecord && this.selectedFormulaRecord) {
+      this.showPopup = true;
+      for (const parameterId of this.selectedFormulaRecord.parameterIds) {
+        this.parameterValues[parameterId] = 0;
+        console.log(this.parameterValues);
+      }
+    }
+    else {
+      this.showPopup = false;
+    }
+  }
+
+  resultAfterTest!: number
+  saveParameters() {
+    console.log(this.parameterValues);
+    const valuesOnly = Object.values(this.parameterValues)
+      .filter(value => typeof value === 'number') as number[];
+    console.log(valuesOnly);
+    console.log(this.resultAfterTest);
+
+    if (this.selectedServiceNumberRecord && this.retrievedFormula) {
+      const formulaObject: any = {
+        formula: this.retrievedFormula.formula,
+        description: this.retrievedFormula.description,
+        numberOfParameters: this.retrievedFormula.numberOfParameters,
+        parameterIds: this.retrievedFormula.parameterIds,
+        parameterDescriptions: this.retrievedFormula.parameterDescriptions,
+        formulaLogic: this.retrievedFormula.formulaLogic,
+        testParameters: valuesOnly
+      };
+      console.log(formulaObject);
+      this.apiService.put<any>('formulas', this.retrievedFormula.formulaCode, formulaObject).subscribe((response: Formula) => {
+        console.log('formula updated:', response);
+        this.resultAfterTest = response.result;
+        console.log(this.resultAfterTest);
+
+      });
+    }
+    else if (!this.selectedServiceNumberRecord && this.selectedFormulaRecord) {
+      const formulaObject: any = {
+        formula: this.selectedFormulaRecord.formula,
+        description: this.selectedFormulaRecord.description,
+        numberOfParameters: this.selectedFormulaRecord.numberOfParameters,
+        parameterIds: this.selectedFormulaRecord.parameterIds,
+        parameterDescriptions: this.selectedFormulaRecord.parameterDescriptions,
+        formulaLogic: this.selectedFormulaRecord.formulaLogic,
+        testParameters: valuesOnly
+      };
+      console.log(formulaObject);
+      this.apiService.put<any>('formulas', this.selectedFormulaRecord.formulaCode, formulaObject).subscribe((response: Formula) => {
+        console.log('formula updated:', response);
+        this.resultAfterTest = response.result;
+        console.log(this.resultAfterTest);
+      });
+    }
+
+
+
+
+
+
+    // Perform any validation or processing of the parameter values as needed
+
+    // Close the pop-up
+    this.showPopup = false;
   }
 }

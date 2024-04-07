@@ -70,6 +70,7 @@ export class ServiceMasterComponent implements OnInit {
         this.cd.markForCheck();
 
         this.cols = [
+            { field: 'serviceNumberCode', header: 'Service Master Code' },
             { field: 'searchTerm', header: 'Search Term' },
             // { field: 'unitOfMeasure', header: 'Unit Of Measure' },
             { field: 'description', header: 'Description' },

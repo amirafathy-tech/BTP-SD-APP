@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <p-card>
     <ng-template pTemplate="content">
         <div *ngFor="let variable of getVariables(formulaLogic)" class="field">
@@ -15,10 +16,12 @@
     <ng-template pTemplate="footer">
         <div class="flex justify-content-end flex-wrap">
             <!-- <p-button label="Back" (onClick)="prevPage()" icon="pi pi-angle-left"></p-button> -->
-            <p-button label="Exit"  iconPos="right"></p-button>
+            <p-button label="Confirm & Save" (onClick)="navigateAllFormulas()"  iconPos="right"></p-button>
         </div>
     </ng-template>
 </p-card>
+
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
 
 <p-dialog header="Test Result" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
    <p> The Result is {{result}}</p>
