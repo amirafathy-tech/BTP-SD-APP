@@ -7,23 +7,24 @@ import { ApiService } from '../ApiService.service';
 
 @Component({
   selector: 'app-service-type',
-  templateUrl: './service-type-new.component.html',
+  templateUrl: './service-type.component.html',
   styleUrls: ['./service-type.component.css'],
   providers: [ServiceTypeService, MessageService, ConfirmationService]
 })
 export class ServiceTypeComponent {
-
-  // records!: ServiceType[];
   records!: ServiceType[];
   private subscription!: Subscription;
   constructor(private apiService: ApiService, private serviceTypeService: ServiceTypeService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
-  //response:Observable<Company[]>;
+ 
   ngOnInit() {
-    //this.records=this.companyService.getApiRecords();
     console.log(this.serviceTypeService.getApiRecords());
     this.serviceTypeService.getApiRecords();
     this.subscription = this.serviceTypeService.recordsChanged.subscribe((records: ServiceType[]) => {
-      this.records = records;
+     // this.records = records;
+     
+    // Sort the records based on lastChangeDate
+   // this.records = records.sort((a, b) => new Date(b.lastChangeDate).getTime() - new Date(a.lastChangeDate).getTime());
+   this.records = records.sort((a, b) => b.serviceTypeCode - a.serviceTypeCode);
       console.log(this.records);
     });
   }
@@ -84,7 +85,8 @@ export class ServiceTypeComponent {
   newServiceType: ServiceType = {
     serviceTypeCode: 0,
     serviceId: '',
-    description: ''
+    description: '',
+    lastChangeDate: new Date(),
   }
   addRow() {
     console.log(this.newServiceType);
@@ -116,7 +118,8 @@ export class ServiceTypeComponent {
     this.newServiceType = {
       serviceTypeCode: 0,
       serviceId: '',
-      description: ''
+      description: '',
+      lastChangeDate: new Date(),
     };
   }
 }

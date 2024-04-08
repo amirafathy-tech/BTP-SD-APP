@@ -39,7 +39,7 @@ export class ModelDetailsComponent {
 
   modelSpecRecord?: ModelEntity // hold ModelSpecRecord from previous screen
   currency: any
-  totalValue: number = 0
+  totalValue: number = 0.0
   //fields for dropdown lists
   recordsServiceNumber!: ServiceMaster[];
   selectedServiceNumber!: number;
@@ -251,8 +251,10 @@ export class ModelDetailsComponent {
       );
 
       forkJoin(detailObservables).subscribe(records => {
-        this.records = records;
-
+       // this.records = records;
+       this.records =  records.sort((a, b) => b.modelSpecDetailsCode - a.modelSpecDetailsCode);
+       console.log(this.records);
+      
         this.totalValue = this.records.reduce((sum, record) => sum + record.netValue, 0);
         console.log('Total Value:', this.totalValue);
       });

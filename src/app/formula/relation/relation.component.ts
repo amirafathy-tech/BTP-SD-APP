@@ -14,18 +14,18 @@ export class RelationComponent implements OnInit {
   passedParamInfo: any;
   relationInformation: any;
   submitted: boolean = false;
-  
+
   parameterIds: string[] = [];
   parameterDescriptions: string[] = []
 
-  operations:string[]=['+','-','*','/','%','π','^']
+  operations: string[] = ['+', '-', '*', '/', '%', 'π', '^']
 
-  constructor(private apiService: ApiService,private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,) {
+  constructor(private apiService: ApiService, private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,) {
     this.passedCreateInfo = this.router.getCurrentNavigation()?.extras.state?.['passedCreateInfo'];
     this.passedParamInfo = this.router.getCurrentNavigation()?.extras.state?.['passedParamInfo'];
     console.log(this.passedCreateInfo);
     console.log(this.passedParamInfo);
-    
+
     this.parameterIds = this.passedParamInfo.map((item: { paramID: any; }) => item.paramID);
     this.parameterDescriptions = this.passedParamInfo.map((item: { paramDescription: any; }) => item.paramDescription);
     console.log(this.parameterIds);
@@ -33,19 +33,29 @@ export class RelationComponent implements OnInit {
 
   }
 
-  paramClick(param:string){
-    this.relationInformation.formulaLogic +=param;
+  paramClick(param: string) {
+
+    this.relationInformation.formulaLogic += param;
     console.log(this.relationInformation.formulaLogic);
-    
+
     console.log(param);
-    
+
   }
-  operationClick(operation:string){
-    this.relationInformation.formulaLogic +=operation;
+  operationClick(operation: string) {
+    // if(operation=='π (22/7)'){
+    //   this.relationInformation.formulaLogic +='22/7'
+    // }
+    // else if(operation=='^'){
+    //   this.relationInformation.formulaLogic +='**'
+    // }
+    // else{
+    this.relationInformation.formulaLogic += operation;
+    //}
+
     console.log(this.relationInformation.formulaLogic);
-    
+
     console.log(operation);
-    
+
   }
   ngOnInit() {
     this.relationInformation = this.formulaService.getFormulaInformation().relationInformation;
@@ -53,8 +63,17 @@ export class RelationComponent implements OnInit {
 
   nextPage() {
     if (this.relationInformation.formulaLogic) {
+      console.log(this.relationInformation);
+      console.log(this.relationInformation.formulaLogic);
+      // Replace 'π' with '22/7'
+      this.relationInformation.formulaLogic = this.relationInformation.formulaLogic.replace(/π/g, '22/7');
+      // Replace '^' with '**'
+      this.relationInformation.formulaLogic = this.relationInformation.formulaLogic.replace(/\^/g, '**');
+      console.log(this.relationInformation.formulaLogic);
       this.formulaService.formulaInformation.relationInformation = this.relationInformation;
       console.log(this.formulaService.formulaInformation);
+      console.log(this.formulaService.formulaInformation.relationInformation);
+
       const navigationExtras: NavigationExtras = {
         state: {
           formulaLogic: this.relationInformation.formulaLogic,

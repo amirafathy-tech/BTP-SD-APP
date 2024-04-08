@@ -23,7 +23,7 @@ export class ServiceMasterAddComponent implements OnInit {
     numberToBeConverted: 0, convertedNumber: 0, mainItem: false,
     formulaCode: 0,
     //unitOfMeasurementCode:0,
-    serviceTypeCode: 0, materialGroupCode: 0,
+    serviceTypeCode: '', materialGroupCode: 0,
     lastChangeDate: Instant.now(), baseUnitOfMeasurement: '', toBeConvertedUnitOfMeasurement: '', defaultUnitOfMeasurement: ''
   };
 
@@ -117,7 +117,7 @@ export class ServiceMasterAddComponent implements OnInit {
     const value = form.value;
     console.log(this.selectedServiceType);
     console.log(this.selectedRecord);
-    
+
 
     if (this.editMode) {
       const updatedRecord = {
@@ -141,9 +141,19 @@ export class ServiceMasterAddComponent implements OnInit {
         // defaultUnitOfMeasurement:this.selectedConvertedMeasure
       };
       console.log(updatedRecord);
-
-      this.serviceMasterService.updateRecord(this.selectedRecord.serviceNumberCode, updatedRecord);
-      this.updateMessage = true;
+      if (updatedRecord.serviceTypeCode === "" || updatedRecord.serviceTypeCode === null || updatedRecord.baseUnitOfMeasurement === "" || updatedRecord.baseUnitOfMeasurement === null) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'ServiceType and BaseUnitMeasurement are required',
+          life: 5000
+        });
+      }
+      else {
+        this.serviceMasterService.updateRecord(this.selectedRecord.serviceNumberCode, updatedRecord);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'ServiceMaster Updated Successfully' });
+       // this.updateMessage = true;
+      }
     } else {
       //this.serviceMasterService.addRecord(newRecord);
       // this.savedRecord=this.serviceMasterService.addRecord(newRecord);
@@ -160,32 +170,37 @@ export class ServiceMasterAddComponent implements OnInit {
         //this.baseUnitOfMeasurement,this.selectedToBeConvertedMeasure,this.selectedConvertedMeasure
         this.selectedRecord.baseUnitOfMeasurement, this.selectedRecord.toBeConvertedUnitOfMeasurement, this.selectedRecord.defaultUnitOfMeasurement);
       console.log(newRecord);
-      if (this.selectedRecord.serviceTypeCode ===0 || this.selectedRecord.baseUnitOfMeasurement ==="") {
+      console.log(this.selectedRecord.serviceTypeCode);
+      console.log(this.selectedRecord.baseUnitOfMeasurement);
+      if (this.selectedRecord.serviceTypeCode === "" || this.selectedRecord.baseUnitOfMeasurement === "") {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
           detail: 'ServiceType and BaseUnitMeasurement are required',
-          life: 3000
+          life: 5000
         });
       }
-       // Remove properties with empty or default values
-       const filteredRecord = Object.fromEntries(
-        Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== undefined && value !== null;
-        })
-      );
-      console.log(filteredRecord);
-      this.apiService.post<ServiceMaster>('servicenumbers', filteredRecord).subscribe((response: ServiceMaster) => {
-        console.log('service master created:', response);
-        this.isSaving = true;
-        this.serviceMasterService.getRecords();
-        this.savedRecord = response
-        console.log(this.savedRecord);
-      });
-      this.addMessage = true;
+      else {
+        // Remove properties with empty or default values
+        const filteredRecord = Object.fromEntries(
+          Object.entries(newRecord).filter(([_, value]) => {
+            return value !== '' && value !== 0 && value !== undefined && value !== null;
+          })
+        );
+        console.log(filteredRecord);
+        this.apiService.post<ServiceMaster>('servicenumbers', filteredRecord).subscribe((response: ServiceMaster) => {
+          console.log('service master created:', response);
+          if (response) {
+
+            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'ServiceMaster Added Successfully' });
+          }
+          this.isSaving = true;
+          this.serviceMasterService.getRecords();
+          this.savedRecord = response
+          console.log(this.savedRecord);
+        });
+        //this.addMessage = true;
+      }
     }
-    //this.editMode = false;
-    // this.serviceMasterService.addRecord(newRecord);
-    //  this.addMessage = true;
   }
 }

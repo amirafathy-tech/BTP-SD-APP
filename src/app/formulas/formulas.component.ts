@@ -23,7 +23,8 @@ export class FormulasComponent {
     console.log(this.formulasService.getApiRecords());
     this.formulasService.getApiRecords();
     this.subscription = this.formulasService.recordsChanged.subscribe((records: Formula[]) => {
-      this.records = records;
+      // this.records = records;
+      this.records =  records.sort((a, b) => b.formulaCode - a.formulaCode);
       console.log(this.records);
     });
   }

@@ -13,7 +13,7 @@ interface Column {
 }
 @Component({
     selector: 'app-service-master',
-    templateUrl: './service-master-test.component.html',
+    templateUrl: './service-master.component.html',
     styleUrls: ['./service-master.component.scss'],
     providers: [MessageService, ConfirmationService, ServiceMasterService]
 })
@@ -62,8 +62,9 @@ export class ServiceMasterComponent implements OnInit {
         this.serviceMasterService.getRecords();
         this.subscription = this.serviceMasterService.recordsChanged.subscribe((records: ServiceMaster[]) => {
           this.serviceRecords = records;
-          this.filteredRecords = records
+          this.filteredRecords =  records.sort((a, b) => b.serviceNumberCode - a.serviceNumberCode);
           console.log(this.serviceRecords);
+          console.log(this.filteredRecords);
         });
         //this.serviceRecords = this.serviceMasterService.getRecords();
         //console.log(this.serviceRecords);

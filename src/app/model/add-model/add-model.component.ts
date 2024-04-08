@@ -47,9 +47,12 @@ export class AddModelComponent implements OnInit {
       value.searchTerm);
       this.apiService.post<ModelEntity>('modelspecs', newRecord).subscribe((response: ModelEntity) => {
         console.log('model specs created:', response);
+        if(response){
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Model Added Successfully' });
+        }
         this.modelService.getRecords();
       });
     //this.modelService.addRecord(newRecord);
-    this.successMessage=true;
+    //this.successMessage=true;
   }
 }

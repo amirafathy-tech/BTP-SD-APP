@@ -1,16 +1,82 @@
-<div class="row">
-    <div class="col">
-        <app-service-type-edit></app-service-type-edit>
-        <hr>
-        <ul class="list-group">
-            <a class="list-group-item" style="cursor: pointer" *ngFor="let record of records; " 
-           
-                (click)="onEditItem(record.serviceTypeCode)">
-                <span class="fw-bold">ID:</span> {{ record.serviceTypeCode}} -
-                 <span class="fw-bold">Code:</span> {{
-                record.serviceId}} - <span class="fw-bold"> Description:</span> {{ record.description }}
-            </a>
-        </ul>
-    </div>
-</div>
-<!-- <ng-http-loader></ng-http-loader> -->
+
+    <p-toast></p-toast>
+    <p-table [value]="records"  dataKey="serviceTypeCode" styleClass="p-datatable-gridlines" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                Service Types:
+                <!-- <p-button icon="pi pi-refresh"></p-button> -->
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <!-- <th style="width: 4rem">
+                    <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                </th> -->
+                <th fd-table-cell>Code</th>
+                <th fd-table-cell>Description</th>
+                <th fd-table-cell>Actions</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-record let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="record">
+                <!-- <td>
+                    <p-tableCheckbox [value]="record"></p-tableCheckbox>
+                </td> -->
+
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.serviceId">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.serviceId}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template pTemplate="input">
+                            <input pInputText type="text" [(ngModel)]="record.description">
+                        </ng-template>
+                        <ng-template pTemplate="output">
+                            {{record.description}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <div class="flex align-items-center justify-content-center gap-2">
+                        <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(record)" class="p-button-rounded p-button-text"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(record.serviceTypeCode,record)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                        <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(record, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+                        
+                    <button pButton pRipple type="button" class="p-button-rounded p-button-text p-button-danger" icon="pi pi-trash" severity="danger" (click)="deleteRecord(record)"></button>
+                    </div>
+
+                    <!-- <p-button icon="pi pi-trash" severity="danger" (click)="deleteRecord(record)"></p-button> -->
+<!--                     
+                    <button pButton pRipple type="button" class="p-button-rounded p-button-text p-button-danger" icon="pi pi-trash" severity="danger" (click)="deleteRecord(record)"></button> -->
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer" class="m-3">
+            <tr>
+            <!-- <td>
+                <p-checkbox [value]="newServiceType"></p-checkbox>
+            </td> -->
+            <td>
+                <input name="serviceId" type="text" [(ngModel)]="newServiceType.serviceId">
+            </td>
+            <td>
+                <input name="description" type="text" [(ngModel)]="newServiceType.description">
+            </td>
+            <td>
+                <button pButton type="button" icon="pi pi-plus" class="ui-button-info" label="Add"
+                    [disabled]="" (click)="addRow()">
+                </button>
+            </td>
+            </tr>
+            </ng-template>
+    </p-table>
+
+    
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

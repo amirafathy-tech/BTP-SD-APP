@@ -1,5 +1,5 @@
-<p-messages position="top-left" *ngIf="successMessage" [(value)]="messages" [enableService]="false"></p-messages>
-<!-- <p-toast position="top-left" ></p-toast> -->
+<!-- <p-messages position="top-left" *ngIf="successMessage" [(value)]="messages" [enableService]="false"></p-messages> -->
+<p-toast></p-toast>
 
 <form #f="ngForm" (ngSubmit)="onSubmit(f)">
     <div class="row formgrid grid">
@@ -22,35 +22,7 @@
                 <input id="serviceSelection" name="serviceSelection" type="checkbox" ngModel>
             </div>
         </div>
-        <!-- <div class="form-group col-6">
-            <label for="modelServSpec">ModelServSpec:</label>
-            <div class="input-group">
-                <input id="modelServSpec" name="modelServSpec" required type="text" class="form-control" ngModel>
-            </div>
-        </div>
-      
-        <div class="form-group col-6">
-            <label for="blockingIndicator">BlockingIndicator:</label>
-            <div class="input-group">
-                <input id="blockingIndicator" name="blockingIndicator" type="checkbox" ngModel>
-            </div>
-        </div> -->
     </div>
-    <!-- <div class="row m-2">
-        <div class="form-group">
-            <label for="blockingIndicator">BlockingIndicator:</label>
-            <div class="input-group">
-                <input id="blockingIndicator" name="blockingIndicator" type="checkbox" ngModel>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="serviceSelection">ServiceSelection:</label>
-            <div class="input-group">
-                <input id="serviceSelection" name="serviceSelection" type="checkbox" ngModel>
-            </div>
-        </div>
-    </div> -->
-
     <p-card header="General Data:" class="row mt-2">
         <div class="field grid">
             <label for="description" class="col-12 mb-2 md:col-2 md:mb-0">Description:</label>
@@ -78,102 +50,7 @@
                 </ng-template>
             </p-dropdown>
         </div>
-        <!-- <div class="form-group">
-            <label for="description">Description:</label>
-            <div class="input-group">
-                <input id="description" name="description" required type="text" class="form-control" ngModel>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="searchTerm">SearchTerm:</label>
-            <div class="input-group">
-                <input id="searchTerm" name="searchTerm" type="text" class="form-control" ngModel>
-            </div>
-        </div> -->
-
     </p-card>
-
-    <!-- <p-card header="Adminstrative Data:" class="row mt-2">
-        <div class="field grid">
-            <label for="createdOn" class="col-12 mb-2 md:col-2 md:mb-0">Created On:</label>
-            <div class="col-12 md:col-10 input-group">
-                <input id="description" name="description" required type="date" class="form-control" ngModel class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary" >
-            </div>
-        </div>
-         <div class="field grid">
-            <label for="createdOn" class="col-12 mb-2 md:col-2 md:mb-0">Created By:</label>
-            <div class="col-12 md:col-10 input-group">
-                <input id="description" name="description" required type="text" class="form-control" ngModel class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary" >
-            </div>
-        </div>
-        <div class="field grid">
-            <label for="createdOn" class="col-12 mb-2 md:col-2 md:mb-0">Changed On:</label>
-            <div class="col-12 md:col-10 input-group">
-                <input id="description" name="description" required type="date" class="form-control" ngModel class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary" >
-            </div>
-        </div>
-         <div class="field grid">
-            <label for="createdOn" class="col-12 mb-2 md:col-2 md:mb-0">changed By:</label>
-            <div class="col-12 md:col-10 input-group">
-                <input id="description" name="description" required type="text" class="form-control" ngModel class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary" >
-            </div>
-        </div>
-    </p-card> -->
-
-    <!-- <div class="row card flex ">
-
-        <h3>General Data:</h3>
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <div class="input-group">
-                <input id="description" name="description" required type="text" class="form-control" ngModel>
-            </div>
-        </div>
-        <div class="form-group">
-            <label for="searchTerm">SearchTerm:</label>
-            <div class="input-group">
-                <input id="searchTerm" name="searchTerm" type="text" class="form-control" ngModel>
-            </div>
-        </div>
-    </div> -->
-
-
-
-    <!-- <div class="row m-2"> -->
-    <!-- <div class="form-group">
-            <label for="purchaseOrgnization">PurchaseOrgnization:</label>
-            <div class="input-group">
-                <input id="purchaseOrgnization" name="purchaseOrgnization" type="text" class="form-control" ngModel>
-            </div>
-        </div> -->
-    <!-- <div class="form-group">
-            <label for="contract">Contract:</label>
-            <div class="input-group">
-                <input id="contract" name="contract" type="text" class="form-control" ngModel>
-            </div>
-        </div> -->
-    <!-- </div> -->
-
-    <!-- <p-card header="Default Data for purchase requisition:" class="row mt-2">
-        <div class="field grid">
-            <label for="PurchaseOrgnization" class="col-12 mb-2 md:col-2 md:mb-0">PurchaseOrgnization:</label>
-            <div class="col-12 md:col-10 input-group">
-                <input id="PurchaseOrgnization" name="PurchaseOrgnization" required type="text" class="form-control"
-                    ngModel
-                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary">
-            </div>
-        </div>
-
-        <div class="field grid">
-            <label for="contract" class="col-12 mb-2 md:col-2 md:mb-0">Contract:</label>
-            <div class="col-12 md:col-10 input-group">
-                <input id="contract" name="contract" required type="text" class="form-control" ngModel
-                    class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary">
-            </div>
-        </div>
-    </p-card> -->
-
-
     <div class=" text-center m-3">
         <button pButton data-dismiss="modal" icon="pi pi-save" [disabled]="!f.valid">Add Model</button>
     </div>

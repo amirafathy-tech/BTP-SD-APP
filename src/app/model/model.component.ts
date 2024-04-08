@@ -12,7 +12,7 @@ import { ApiService } from '../ApiService.service';
   selector: 'app-model',
   templateUrl: './model.component.html',
   styleUrls: ['./model.component.css'],
-  providers:[ModelService,MessageService, ConfirmationService]
+  providers: [ModelService, MessageService, ConfirmationService]
 })
 export class ModelComponent implements OnInit {
 
@@ -28,91 +28,83 @@ export class ModelComponent implements OnInit {
   selectedCurrency!: number;
 
   navigateModelAdd() {
-      //this.modalVisible = true;
-      this.router.navigate(['/add-model']);
+    //this.modalVisible = true;
+    this.router.navigate(['/add-model']);
   }
   deleteDialog: boolean = false;
 
   showDeleteDialog() {
-      this.deleteDialog = true;
+    this.deleteDialog = true;
   }
 
   editMode = false;
 
   clonedRecords: { [s: number]: ModelEntity; } = {};
-  
+
   onRowEditInit(record: ModelEntity) {
-    this.clonedRecords[record.modelSpecCode] = {...record};
-}
+    this.clonedRecords[record.modelSpecCode] = { ...record };
+  }
 
-onRowEditSave(index: number,record: ModelEntity) {
-  console.log(index);
-  console.log(record);
-  
-  this.modelService.updateRecord(index,record);
-  this.ngOnInit(); //reload the table
-  this.editMode = false;
-        delete this.clonedRecords[record.modelSpecCode];
-        this.messageService.add({severity:'success', summary: 'Success', detail:'Record is updated'});
+  onRowEditSave(index: number, record: ModelEntity) {
+    console.log(index);
+    console.log(record);
+    this.modelService.updateRecord(index, record);
     
-}
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
+    this.ngOnInit(); //reload the table
+    this.editMode = false;
+    delete this.clonedRecords[record.modelSpecCode];
+    //this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
+  }
 
-onRowEditCancel(record: ModelEntity, index: number) {
+  onRowEditCancel(record: ModelEntity, index: number) {
     this.records[index] = this.clonedRecords[record.modelSpecCode];
     delete this.clonedRecords[record.modelSpecCode];
-}
+  }
 
-
-  saveRecord(index:number,record: ModelEntity) {
-    this.modelService.updateRecord(index,record);
+  saveRecord(index: number, record: ModelEntity) {
+    this.modelService.updateRecord(index, record);
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Model Updated Successfully' });
     this.ngOnInit(); //reload the table
     this.editMode = false;
   }
 
-  constructor(private apiService: ApiService,private modelService: ModelService, private messageService: MessageService, private confirmationService: ConfirmationService, private modalService: NgbModal, private fb: FormBuilder,
+  constructor(private apiService: ApiService, private modelService: ModelService, private messageService: MessageService, private confirmationService: ConfirmationService, private modalService: NgbModal, private fb: FormBuilder,
     private router: Router) {
   }
-  navigateServices(record:ModelEntity){
+  navigateServices(record: ModelEntity) {
     console.log(record);
     const navigationExtras: NavigationExtras = {
       state: {
-        Record:record
+        Record: record
       }
     };
-    this.router.navigate(['/modelSpecDetails'],navigationExtras);
+    this.router.navigate(['/modelSpecDetails'], navigationExtras);
   }
 
-  // deleteRecord(index:number){
-  //   this.modelService.deleteRecord(index);
-  //   this.ngOnInit(); //reload the table
-  // }
   deleteRecord(record: ModelEntity) {
-        // const index = this.records.indexOf(record);
-        // if (index !== -1) {
-        //   this.records.splice(index, 1);
-        // }
-        this.confirmationService.confirm({
-          message: 'Are you sure you want to delete the selected record?',
-          header: 'Confirm',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-           // for (const record of this.selectedAllRecords) {
-              this.apiService.delete<ModelEntity>('modelspecs', record.modelSpecCode).subscribe(response => {
-                console.log('model spec deleted:', response);
-                this.modelService.getRecords();
-              });
-           // }
-            this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
-            //this.selectedAllRecords = [];
-          }
+    this.confirmationService.confirm({
+      message: 'Are you sure you want to delete the selected record?',
+      header: 'Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        // for (const record of this.selectedAllRecords) {
+        this.apiService.delete<ModelEntity>('modelspecs', record.modelSpecCode).subscribe(response => {
+          console.log('model spec deleted:', response);
+          this.modelService.getRecords();
         });
+        // }
+        this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
+        //this.selectedAllRecords = [];
+      }
+    });
   }
 
- 
   ngOnInit() {
     this.modelService.getRecords();
     this.subscription = this.modelService.recordsChanged.subscribe((records: ModelEntity[]) => {
-      this.records = records;
+      // this.records = records;
+      this.records =  records.sort((a, b) => b.modelSpecCode - a.modelSpecCode);
       console.log(this.records);
     });
 
@@ -130,13 +122,5 @@ onRowEditCancel(record: ModelEntity, index: number) {
     //   profit: [''],
     // })
   }
-
-  // onSubmit(form: NgForm) {
-  //   const value = form.value;
-  //   const newRecord = new ModelEntity(value.id, value.modelServSpec, value.blockingIndicator, value.serviceSelection, value.description,
-  //     value.searchTerm,value.purchaseOrgnization,value.contract);
-  //  this.modelService.addRecord(newRecord);
-  //   this.ngOnInit(); //reload the table
-  // }
 }
 

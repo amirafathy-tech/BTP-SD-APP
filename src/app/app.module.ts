@@ -45,7 +45,6 @@ import { ParameterComponent } from './formula/parameter/parameter.component';
 import { RelationComponent } from './formula/relation/relation.component';
 import { TestComponent } from './formula/test/test.component';
 import { ServiceMasterComponent } from './service-master/service-master.component';
-import { ServiceTypeEditComponent } from './service-type/service-type-edit/service-type-edit.component';
 import { ServiceMasterAddComponent } from './service-master/service-master-add/service-master-add.component';
 import { FormulaService } from './formula/formula.service';
 import { FormulasComponent } from './formulas/formulas.component';
@@ -65,7 +64,6 @@ import { FormulasComponent } from './formulas/formulas.component';
     RelationComponent,
     TestComponent,
     ServiceMasterComponent,
-    ServiceTypeEditComponent,
     ServiceMasterAddComponent,
     FormulasComponent,
   ],
