@@ -645,6 +645,8 @@ export class ModelDetailsComponent {
         }
         console.log(response);
         this.totalValue = 0;
+        this.selectedServiceNumber=0
+        this.selectedServiceNumberRecord = undefined;
         //this.modelSpecDetailsService.getRecords();
         this.ngOnInit()
       });
@@ -710,6 +712,8 @@ export class ModelDetailsComponent {
         }
         console.log(response);
         this.totalValue = 0;
+        this.selectedServiceNumber=0
+        this.selectedServiceNumberRecord = undefined;
         // this.modelSpecDetailsService.getRecords();
         this.ngOnInit()
       });

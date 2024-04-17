@@ -48,13 +48,18 @@ export class ModelComponent implements OnInit {
   onRowEditSave(index: number, record: ModelEntity) {
     console.log(index);
     console.log(record);
+    // this.apiService.put<ModelEntity>('modelspecs', index, record).subscribe(response => {
+    //   console.log('modelspecs updated:', response);
+    //   if (response) {
+    //     this.messageService.add({ severity: 'success', summary: 'Success', detail: `Model ${response.modelSpecCode} Updated Successfully` });
+    //   }
+    //   this.modelService.getRecords();
+    // });
     this.modelService.updateRecord(index, record);
-    
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
     this.ngOnInit(); //reload the table
     this.editMode = false;
     delete this.clonedRecords[record.modelSpecCode];
-    //this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: `Model ${record.modelSpecCode} Updated Successfully` });
   }
 
   onRowEditCancel(record: ModelEntity, index: number) {
@@ -62,12 +67,7 @@ export class ModelComponent implements OnInit {
     delete this.clonedRecords[record.modelSpecCode];
   }
 
-  saveRecord(index: number, record: ModelEntity) {
-    this.modelService.updateRecord(index, record);
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Model Updated Successfully' });
-    this.ngOnInit(); //reload the table
-    this.editMode = false;
-  }
+ 
 
   constructor(private apiService: ApiService, private modelService: ModelService, private messageService: MessageService, private confirmationService: ConfirmationService, private modalService: NgbModal, private fb: FormBuilder,
     private router: Router) {
@@ -104,7 +104,7 @@ export class ModelComponent implements OnInit {
     this.modelService.getRecords();
     this.subscription = this.modelService.recordsChanged.subscribe((records: ModelEntity[]) => {
       // this.records = records;
-      this.records =  records.sort((a, b) => b.modelSpecCode - a.modelSpecCode);
+      this.records = records.sort((a, b) => b.modelSpecCode - a.modelSpecCode);
       console.log(this.records);
     });
 

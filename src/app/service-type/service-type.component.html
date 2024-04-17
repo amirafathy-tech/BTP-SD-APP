@@ -14,6 +14,7 @@
                 </th> -->
                 <th fd-table-cell>Code</th>
                 <th fd-table-cell>Description</th>
+                <th fd-table-cell>Created On</th>
                 <th fd-table-cell>Actions</th>
             </tr>
         </ng-template>
@@ -24,14 +25,7 @@
                 </td> -->
 
                 <td>
-                    <p-cellEditor>
-                        <ng-template pTemplate="input">
-                            <input pInputText type="text" [(ngModel)]="record.serviceId">
-                        </ng-template>
-                        <ng-template pTemplate="output">
                             {{record.serviceId}}
-                        </ng-template>
-                    </p-cellEditor>
                 </td>
                 <td>
                     <p-cellEditor>
@@ -42,6 +36,9 @@
                             {{record.description}}
                         </ng-template>
                     </p-cellEditor>
+                </td>
+                <td>
+                            {{record.lastChangeDate}}  
                 </td>
                 <td>
                     <div class="flex align-items-center justify-content-center gap-2">
@@ -68,6 +65,9 @@
             </td>
             <td>
                 <input name="description" type="text" [(ngModel)]="newServiceType.description">
+            </td>
+            <td>
+              
             </td>
             <td>
                 <button pButton type="button" icon="pi pi-plus" class="ui-button-info" label="Add"

@@ -51,7 +51,7 @@ export class ServiceTypeComponent {
     this.ngOnInit(); //reload the table
     this.editMode = false;
     delete this.clonedRecords[record.serviceTypeCode];
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Record is updated' });
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: `ServiceType Updated Successfully` });
 
   }
 
@@ -106,7 +106,7 @@ export class ServiceTypeComponent {
       if (response) {
         this.resetNewService();
         
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'ServiceType added Successfully' });
+        this.messageService.add({ severity: 'success', summary: 'Success', detail:  `ServiceType Added Successfully` });
         console.log(this.newServiceType);
 
       }

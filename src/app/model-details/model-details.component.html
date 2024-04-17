@@ -554,6 +554,10 @@
                     <input name="quantity" type="number" [value]="resultAfterTest" 
                         [(ngModel)]="newService.quantity" [min]="0">
                 </ng-container>
+                <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula">
+                    <input name="quantity" type="number"  
+                        [(ngModel)]="newService.quantity" [min]="0">
+                </ng-container>
 
             </td>
             <td>

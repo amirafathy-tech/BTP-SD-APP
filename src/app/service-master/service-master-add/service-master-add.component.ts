@@ -80,7 +80,7 @@ export class ServiceMasterAddComponent implements OnInit {
   }
 
   constructor(private apiService: ApiService, private serviceMasterService: ServiceMasterService
-    , private messageService: MessageService, private router: Router, private route: ActivatedRoute) {
+    , private messageService: MessageService, private router: Router,private confirmationService: ConfirmationService, private route: ActivatedRoute) {
 
     if (this.router.getCurrentNavigation()?.extras.state) {
       const state = this.router.getCurrentNavigation()?.extras.state?.['Record'];
@@ -151,7 +151,19 @@ export class ServiceMasterAddComponent implements OnInit {
       }
       else {
         this.serviceMasterService.updateRecord(this.selectedRecord.serviceNumberCode, updatedRecord);
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'ServiceMaster Updated Successfully' });
+        this.serviceMasterService.getRecords();
+        this.confirmationService.confirm({
+          message: `ServiceMaster ${this.selectedRecord.serviceNumberCode} Updated successfully. Click Yes to go to the Main Page.`,
+          header: 'Updated Successfully',
+          icon: 'pi pi-check',
+          accept: () => {
+            this.router.navigate(['/servicemaster']);
+          },
+          reject:undefined
+        });
+       // this.messageService.add({ severity: 'success', summary: 'Success', detail: `ServiceMaster ${this.selectedRecord.serviceNumberCode} Updated Successfully`, life: 4000 });
+        // this.serviceMasterService.getRecords();
+        // this.router.navigate(['/servicemaster']);
        // this.updateMessage = true;
       }
     } else {
@@ -192,7 +204,19 @@ export class ServiceMasterAddComponent implements OnInit {
           console.log('service master created:', response);
           if (response) {
 
-            this.messageService.add({ severity: 'success', summary: 'Success', detail: 'ServiceMaster Added Successfully' });
+            this.confirmationService.confirm({
+              message: `ServiceMaster ${response.serviceNumberCode} Added successfully. Click Yes to go to the Main Page.`,
+              header: 'Added Successfully',
+              icon: 'pi pi-check',
+              accept: () => {
+                this.router.navigate(['/servicemaster']);
+              },
+              reject: () => {
+              }
+            });
+
+           // this.messageService.add({ severity: 'success', summary: 'Success', detail:  `ServiceMaster ${response.serviceNumberCode} Added Successfully`,life:4000 });
+           
           }
           this.isSaving = true;
           this.serviceMasterService.getRecords();
