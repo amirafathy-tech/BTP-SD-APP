@@ -48,6 +48,7 @@ import { ServiceMasterComponent } from './service-master/service-master.componen
 import { ServiceMasterAddComponent } from './service-master/service-master-add/service-master-add.component';
 import { FormulaService } from './formula/formula.service';
 import { FormulasComponent } from './formulas/formulas.component';
+import { ServiceMasterDetailComponent } from './service-master/service-master-detail/service-master-detail.component';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,7 @@ import { FormulasComponent } from './formulas/formulas.component';
     ServiceMasterComponent,
     ServiceMasterAddComponent,
     FormulasComponent,
+    ServiceMasterDetailComponent,
   ],
   imports: [
     FundamentalNgxCoreModule,

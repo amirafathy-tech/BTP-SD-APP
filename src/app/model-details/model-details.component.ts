@@ -179,16 +179,22 @@ export class ModelDetailsComponent {
       //   this.retrievedUOM = response;
       //   console.log(this.retrievedUOM);
       // });
-      this.apiService.getID<any>('materialgroups', this.selectedServiceNumberRecord.materialGroupCode).subscribe(response => {
-        console.log(response);
-        this.retrievedMatGrp = response;
-        console.log(this.retrievedMatGrp);
-      });
-      this.apiService.getID<any>('formulas', this.selectedServiceNumberRecord.formulaCode).subscribe(response => {
-        console.log(response);
-        this.retrievedFormula = response;
-        console.log(this.retrievedFormula);
-      });
+      if (this.selectedServiceNumberRecord.materialGroupCode) {
+        this.apiService.getID<any>('materialgroups', this.selectedServiceNumberRecord.materialGroupCode).subscribe(response => {
+          console.log(response);
+          this.retrievedMatGrp = response;
+          console.log(this.retrievedMatGrp);
+        });
+      }
+
+      if (this.selectedServiceNumberRecord.formulaCode) {
+
+        this.apiService.getID<any>('formulas', this.selectedServiceNumberRecord.formulaCode).subscribe(response => {
+          console.log(response);
+          this.retrievedFormula = response;
+          console.log(this.retrievedFormula);
+        });
+      }
     }
     else {
       console.log("no service number");
@@ -251,11 +257,12 @@ export class ModelDetailsComponent {
       );
 
       forkJoin(detailObservables).subscribe(records => {
-       // this.records = records;
-       this.records =  records.sort((a, b) => b.modelSpecDetailsCode - a.modelSpecDetailsCode);
-       console.log(this.records);
-      
-        this.totalValue = this.records.reduce((sum, record) => sum + record.netValue, 0);
+        // this.records = records;
+        this.records = records.sort((a, b) => b.modelSpecDetailsCode - a.modelSpecDetailsCode);
+        console.log(this.records);
+        const filteredRecords = records.filter(record => record.deletionIndicator != true);
+        console.log(filteredRecords);
+        this.totalValue = filteredRecords.reduce((sum, record) => sum + record.netValue, 0);
         console.log('Total Value:', this.totalValue);
       });
     }
@@ -298,6 +305,7 @@ export class ModelDetailsComponent {
       console.log(this.recordsMatGrp);
     });
   }
+
   // handle Deletion Record/ Records
   deleteRecord() {
     if (this.selectedRecords.length) {
@@ -310,11 +318,16 @@ export class ModelDetailsComponent {
         accept: () => {
           for (const record of this.selectedRecords) {
             console.log(this.modelSpecRecord);
-            this.apiService.delete<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode).subscribe(response => {
+            const updatedRecord: ModelSpecDetails = {
+              ...record, // Copy all properties from the original record
+              deletionIndicator: true
+            }
+            this.apiService.put<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode, updatedRecord).subscribe(response => {
 
-              console.log('model spec deleted:', response);
-              this.updateModel()
+              console.log('model spec marked deleted and updated in DB:', response);
+              //this.updateModel()
               this.totalValue = 0;
+              this.ngOnInit();
               // this.modelSpecDetailsService.getRecords();
               // this.ngOnInit()
             });
@@ -331,10 +344,15 @@ export class ModelDetailsComponent {
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
           for (const record of this.selectedAllRecords) {
-            this.apiService.delete<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode).subscribe(response => {
-              console.log('model spec deleted:', response);
-              this.updateModel()
+            const updatedRecord: ModelSpecDetails = {
+              ...record, // Copy all properties from the original record
+              deletionIndicator: true
+            }
+            this.apiService.put<ModelSpecDetails>('modelspecdetails', record.modelSpecDetailsCode, updatedRecord).subscribe(response => {
+              console.log('model spec marked deleted and updated in DB:', response);
+              //this.updateModel()
               this.totalValue = 0;
+              this.ngOnInit()
               // this.modelSpecDetailsService.getRecords();
               //this.ngOnInit()
             });
@@ -492,7 +510,7 @@ export class ModelDetailsComponent {
       // Remove properties with empty or default values
       const filteredRecord = Object.fromEntries(
         Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== undefined;
+          return value !== '' && value !== 0 && value !== undefined && value !== null;
         })
       );
       console.log(filteredRecord);
@@ -558,7 +576,7 @@ export class ModelDetailsComponent {
       // Remove properties with empty or default values
       const filteredRecord = Object.fromEntries(
         Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== undefined;
+          return value !== '' && value !== 0 && value !== undefined && value !== null;
         })
       );
       console.log(filteredRecord);
@@ -588,11 +606,10 @@ export class ModelDetailsComponent {
       const newRecord = {
         serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
-        // will be updated in New Deployment
         unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
         currencyCode: this.modelSpecRecord?.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
-        serviceTypeCode: this.selectedServiceType,
+        serviceTypeCode: this.selectedServiceNumberRecord.serviceTypeCode,
         materialGroupCode: this.selectedServiceNumberRecord.materialGroupCode,
         // formulaCode:this.selectedServiceNumberRecord.formulaCode,
         deletionIndicator: this.newService.deletionIndicator,
@@ -626,7 +643,7 @@ export class ModelDetailsComponent {
       // Remove properties with empty or default values
       const filteredRecord = Object.fromEntries(
         Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== false && value !== undefined;
+          return value !== '' && value !== 0 && value !== false && value !== undefined && value !== null;
         })
       );
       console.log(filteredRecord);
@@ -645,7 +662,76 @@ export class ModelDetailsComponent {
         }
         console.log(response);
         this.totalValue = 0;
-        this.selectedServiceNumber=0
+        this.selectedServiceNumber = 0
+        this.selectedServiceNumberRecord = undefined;
+        //this.modelSpecDetailsService.getRecords();
+        this.ngOnInit()
+      });
+    }
+    else if (this.selectedServiceNumberRecord && !this.retrievedFormula) {
+
+      console.log(this.selectedServiceNumberRecord.description);
+      const newRecord = {
+        serviceNumberCode: this.selectedServiceNumber,
+        lineTypeCode: this.selectedLineType,
+        // will be updated in New Deployment
+        unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
+        currencyCode: this.modelSpecRecord?.currencyCode,
+        personnelNumberCode: this.selectedPersonnelNumber,
+        serviceTypeCode: this.selectedServiceNumberRecord.serviceTypeCode,
+        materialGroupCode: this.selectedServiceNumberRecord.materialGroupCode,
+        // formulaCode:this.selectedServiceNumberRecord.formulaCode,
+        deletionIndicator: this.newService.deletionIndicator,
+        shortText: this.selectedServiceNumberRecord.description,
+        quantity: this.newService.quantity,
+        grossPrice: this.newService.grossPrice,
+        overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
+        priceChangedAllowed: this.newService.priceChangedAllowed,
+        unlimitedOverFulfillment: this.newService.unlimitedOverFulfillment,
+        pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
+        externalServiceNumber: this.newService.externalServiceNumber,
+        netValue: this.newService.netValue,
+        serviceText: this.selectedServiceNumberRecord.serviceText,
+        lineText: this.newService.lineText,
+        lineNumber: this.newService.lineNumber,
+        alternatives: this.newService.alternatives,
+        biddersLine: this.newService.biddersLine,
+        supplementaryLine: this.newService.supplementaryLine,
+        lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
+        dontUseFormula: this.newService.dontUseFormula
+      }
+      if (this.newService.quantity === 0 || this.newService.grossPrice === 0) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Quantity and GrossPrice are required',
+          life: 3000
+        });
+      }
+      console.log(newRecord);
+      // Remove properties with empty or default values
+      const filteredRecord = Object.fromEntries(
+        Object.entries(newRecord).filter(([_, value]) => {
+          return value !== '' && value !== 0 && value !== false && value !== undefined && value !== null;
+        })
+      );
+      console.log(filteredRecord);
+      this.apiService.post<ModelSpecDetails>('modelspecdetails', filteredRecord).subscribe((response: ModelSpecDetails) => {
+        console.log('modelspecdetails created:', response);
+        if (response) {
+          this.resetNewService();
+          console.log(this.newService);
+          const newDetail = response;
+          if (this.modelSpecRecord) {
+            this.modelSpecRecord.modelSpecDetailsCode.push(newDetail.modelSpecDetailsCode);
+            this.apiService.put<ModelEntity>('modelspecs', this.modelSpecRecord.modelSpecCode, this.modelSpecRecord).subscribe(updatedModel => {
+              console.log('Model updated:', updatedModel);
+            });
+          }
+        }
+        console.log(response);
+        this.totalValue = 0;
+        this.selectedServiceNumber = 0
         this.selectedServiceNumberRecord = undefined;
         //this.modelSpecDetailsService.getRecords();
         this.ngOnInit()
@@ -658,8 +744,8 @@ export class ModelDetailsComponent {
         unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
         currencyCode: this.modelSpecRecord?.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
-        serviceTypeCode: this.selectedServiceType,
-        //  materialGroupCode:this.selectedServiceNumberRecord.materialGroupCode,
+        serviceTypeCode: this.selectedServiceNumberRecord.serviceTypeCode,
+        materialGroupCode: this.selectedServiceNumberRecord.materialGroupCode,
         formulaCode: this.selectedServiceNumberRecord.formulaCode,
         deletionIndicator: this.newService.deletionIndicator,
         shortText: this.selectedServiceNumberRecord.description,
@@ -693,7 +779,7 @@ export class ModelDetailsComponent {
       // Remove properties with empty or default values
       const filteredRecord = Object.fromEntries(
         Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== undefined;
+          return value !== '' && value !== 0 && value !== undefined && value !== null;
         })
       );
       console.log(filteredRecord);
@@ -712,7 +798,7 @@ export class ModelDetailsComponent {
         }
         console.log(response);
         this.totalValue = 0;
-        this.selectedServiceNumber=0
+        this.selectedServiceNumber = 0
         this.selectedServiceNumberRecord = undefined;
         // this.modelSpecDetailsService.getRecords();
         this.ngOnInit()

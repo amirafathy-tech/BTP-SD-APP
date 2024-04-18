@@ -14,6 +14,7 @@ import { TestComponent } from './formula/test/test.component';
 import { ServiceMasterComponent } from './service-master/service-master.component';
 import { ServiceMasterAddComponent } from './service-master/service-master-add/service-master-add.component';
 import { FormulasComponent } from './formulas/formulas.component';
+import { ServiceMasterDetailComponent } from './service-master/service-master-detail/service-master-detail.component';
 
 
 const routes: Routes = [
@@ -27,6 +28,8 @@ const routes: Routes = [
   
   { path: 'servicemaster', component: ServiceMasterComponent },
   { path: 'add-servicemaster', component: ServiceMasterAddComponent },
+  
+  { path: 'detail-servicemaster', component: ServiceMasterDetailComponent },
   
   { path: 'formulas', component: FormulasComponent },
 //   {

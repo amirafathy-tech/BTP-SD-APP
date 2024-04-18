@@ -132,6 +132,18 @@ export class ServiceMasterComponent implements OnInit {
     navigateAddServices() {
         this.router.navigate(['/add-servicemaster']);
     }
+    navigateDetailServices() {
+        const navigationExtras: NavigationExtras = {
+            state: {
+                RecordDetails: this.selectedRecord,
+            }
+        };
+        console.log(this.selectedRecord);
+        console.log(navigationExtras);
+        if (this.selectedRecords.length > 0) {
+            this.router.navigate(['/detail-servicemaster'], navigationExtras);
+        }
+    }
 
     // Export Data to Excel Sheet
     // exportExcel() {

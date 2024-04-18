@@ -10,6 +10,7 @@
         </div>
         <div class="form-group col-6">
             <label for="totalValue" class="fw-bold mr-2">TotalValue:</label>
+
             <div class="inline-element border border-1 border-black">
                 {{totalValue}}
             </div>
@@ -37,7 +38,7 @@
         <div class="field">
             <input pInputText type="number" placeholder="Search for Line..."
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary "
-                [(ngModel)]="searchTerm"/>
+                [(ngModel)]="searchTerm" />
         </div>
     </ng-template>
 </p-toolbar>
@@ -45,15 +46,17 @@
 <!-- <div class="card"> -->
 <p-toast></p-toast>
 
-<p-table [value]="records"  [scrollable]="true"   styleClass="p-datatable-gridlines" responsiveLayout="stack" [breakpoint]="'960px'" dataKey="modelSpecDetailsCode" editMode="row" [tableStyle]="{'min-width': '50rem'}"
+<p-table [value]="records" [scrollable]="true" styleClass="p-datatable-gridlines" responsiveLayout="stack"
+    [breakpoint]="'960px'" dataKey="modelSpecDetailsCode" editMode="row" [tableStyle]="{'min-width': '50rem'}"
     [responsive]="true">
     <ng-template pTemplate="header">
         <tr>
             <th>
-                <p-checkbox (onChange)="onSelectAllRecords($event)" [value]="records" ></p-checkbox>
+                <p-checkbox (onChange)="onSelectAllRecords($event)" [value]="records"></p-checkbox>
             </th>
             <th fd-table-cell>Line</th>
-            <th fd-table-cell pSortableColumn="modelSpecDetailsCode">Model.Spec.Code <p-sortIcon field="modelSpecDetailsCode"></p-sortIcon> </th>
+            <!-- <th fd-table-cell pSortableColumn="modelSpecDetailsCode">Model.Spec.Code <p-sortIcon
+                    field="modelSpecDetailsCode"></p-sortIcon> </th> -->
             <!-- <th fd-table-cell>Selection</th> -->
             <!-- <th fd-table-cell>LineIndex</th> -->
             <th fd-table-cell>Del.Ind</th>
@@ -86,8 +89,8 @@
             <th fd-table-cell>Actions</th>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body"  let-record let-editing="editing" let-ri="rowIndex">
-        <tr [pEditableRow]="record" *ngIf="isMatch(record, ri)" >
+    <ng-template pTemplate="body" let-record let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="record" *ngIf="isMatch(record, ri)">
             <td>
                 <!-- <p-tableCheckbox (onHeaderCheckboxToggle)="onRecordSelectionChange($event, record)" [value]="record"></p-tableCheckbox> -->
                 <p-checkbox [(ngModel)]="selectedAllRecords" (onChange)="onRecordSelectionChange($event, record)"
@@ -98,7 +101,7 @@
             <td>
                 {{ rowIndex + ri + 1 }}
             </td>
-            <td>
+            <!-- <td>
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         {{'M' + record.modelSpecDetailsCode}}
@@ -107,14 +110,14 @@
                         {{'M' + record.modelSpecDetailsCode}}
                     </ng-template>
                 </p-cellEditor>
-            </td>
+            </td> -->
             <td pEditableColumn>
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <input pInputText type="checkbox" [(ngModel)]="record.deletionIndicator">
                     </ng-template>
                     <ng-template pTemplate="output">
-                        
+
                         {{record.deletionIndicator}}
                     </ng-template>
                 </p-cellEditor>
@@ -123,9 +126,10 @@
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="recordsServiceNumber" [(ngModel)]="record.serviceNumberCode"
-                            [ngModelOptions]="{standalone: true}" optionValue="serviceNumberCode" optionLabel="description"
-                            [filter]="true" [filterFields]="['searchTerm','description']" [showClear]="true"
-                            placeholder="Select SeviceNumber" [appendTo]="'body'" (onChange)="onServiceNumberUpdateChange($event)">
+                            [ngModelOptions]="{standalone: true}" optionValue="serviceNumberCode"
+                            optionLabel="description" [filter]="true" [filterFields]="['searchTerm','description']"
+                            [showClear]="true" placeholder="Select SeviceNumber" [appendTo]="'body'"
+                            (onChange)="onServiceNumberUpdateChange($event)">
                             <ng-template let-record pTemplate="item">
                                 <div class="flex align-items-center gap-2">
                                     <div>{{ record.searchTerm }}::{{ record.description }}</div>
@@ -195,7 +199,8 @@
                             <p-dropdown [options]="recordsUnitOfMeasure" [(ngModel)]="record.unitOfMeasurementCode"
                                 [ngModelOptions]="{standalone: true}" optionValue="unitOfMeasurementCode"
                                 optionLabel="code" [filter]="true" [filterFields]="['code','description']"
-                                [showClear]="true" placeholder="Select UnitOfMeasure" [required]="true" [appendTo]="'body'">
+                                [showClear]="true" placeholder="Select UnitOfMeasure" [required]="true"
+                                [appendTo]="'body'">
                                 <ng-template let-record pTemplate="item">
                                     <div class="flex align-items-center gap-2">
                                         <div>{{ record.code }}::{{ record.description }}</div>
@@ -296,8 +301,8 @@
                         <p-dropdown [options]="recordsServiceType" [(ngModel)]="record.serviceTypeCode"
                             [ngModelOptions]="{standalone: true}" optionValue="serviceTypeCode" optionLabel="serviceId"
                             [filter]="true" [filterFields]="['serviceId','description']" [showClear]="true"
-                            [virtualScroll]="true" [virtualScrollItemSize]="38"
-                             placeholder="Select ServiceType" [appendTo]="'body'">
+                            [virtualScroll]="true" [virtualScrollItemSize]="38" placeholder="Select ServiceType"
+                            [appendTo]="'body'">
                             <ng-template let-record pTemplate="item">
                                 <div class="flex align-items-center gap-2">
                                     <div>{{ record.serviceId }}::{{ record.description }}</div>
@@ -501,21 +506,13 @@
             <td>
             </td>
             <td>
-                <!-- incremented -->
-                <!-- <input pInputText type="number" [(ngModel)]="newService.modelSpecDetailsCode"> -->
-                <!-- <ng-container *ngIf="newService">
-                        {{newService.modelSpecDetailsCode}}
-                    </ng-container> -->
-            </td>
-            <td>
                 <input name="deletionIndicator" type="checkbox" [(ngModel)]="newService.deletionIndicator">
             </td>
             <td>
                 <p-dropdown [options]="recordsServiceNumber" [(ngModel)]="selectedServiceNumber"
                     [ngModelOptions]="{standalone: true}" optionValue="serviceNumberCode" optionLabel="description"
-                    [filter]="true" [filterFields]="['searchTerm','description']" [showClear]="true" 
-                     placeholder="Select SeviceNumber"
-                    (onChange)="onServiceNumberChange($event)" [appendTo]="'body'">
+                    [filter]="true" [filterFields]="['searchTerm','description']" [showClear]="true"
+                    placeholder="Select SeviceNumber" (onChange)="onServiceNumberChange($event)" [appendTo]="'body'">
                     <ng-template let-record pTemplate="item">
                         <div class="flex align-items-center gap-2">
                             <div>{{ record.searchTerm }}::{{ record.description }}</div>
@@ -543,6 +540,9 @@
                 <ng-container *ngIf="selectedServiceNumberRecord && retrievedFormula && resultAfterTest">
                     {{ resultAfterTest }}
                 </ng-container>
+                <ng-container *ngIf="selectedServiceNumberRecord && !retrievedFormula ">
+                    <input name="quantity" type="number" [min]="0" [(ngModel)]="newService.quantity">
+                </ng-container>
                 <ng-container *ngIf="!selectedServiceNumberRecord && selectedFormulaRecord && resultAfterTest">
                     <!-- {{ this.selectedFormulaRecord.result }} -->
                     {{resultAfterTest}}
@@ -551,12 +551,11 @@
                     <input name="quantity" type="number" [min]="0" [(ngModel)]="newService.quantity">
                 </ng-container>
                 <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula && resultAfterTest ">
-                    <input name="quantity" type="number" [value]="resultAfterTest" 
-                        [(ngModel)]="newService.quantity" [min]="0">
+                    <input name="quantity" type="number" [value]="resultAfterTest" [(ngModel)]="newService.quantity"
+                        [min]="0">
                 </ng-container>
                 <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula">
-                    <input name="quantity" type="number"  
-                        [(ngModel)]="newService.quantity" [min]="0">
+                    <input name="quantity" type="number" [(ngModel)]="newService.quantity" [min]="0">
                 </ng-container>
 
             </td>
@@ -568,9 +567,9 @@
 
                 <ng-container *ngIf="!selectedServiceNumberRecord">
                     <p-dropdown [options]="recordsUnitOfMeasure" [(ngModel)]="selectedUnitOfMeasure"
-                        [ngModelOptions]="{standalone: true}" optionValue="code" optionLabel="code"
-                        [filter]="true" [filterFields]="['code','description']" [showClear]="true"
-                        placeholder="Select UnitOfMeasure" [required]="true" [appendTo]="'body'">
+                        [ngModelOptions]="{standalone: true}" optionValue="code" optionLabel="code" [filter]="true"
+                        [filterFields]="['code','description']" [showClear]="true" placeholder="Select UnitOfMeasure"
+                        [required]="true" [appendTo]="'body'">
                         <ng-template let-record pTemplate="item">
                             <div class="flex align-items-center gap-2">
                                 <div>{{ record.code }}::{{ record.description }}</div>
@@ -588,7 +587,8 @@
                 </ng-container>
             </td>
             <td>
-                <input name="overFulfilmentPercentage" type="number" [min]="0" [(ngModel)]="newService.overFulfilmentPercentage">
+                <input name="overFulfilmentPercentage" type="number" [min]="0"
+                    [(ngModel)]="newService.overFulfilmentPercentage">
             </td>
             <td>
                 <input name="priceChangedAllowed" type="checkbox" [(ngModel)]="newService.priceChangedAllowed">
@@ -628,24 +628,34 @@
                 </ng-container>
             </td>
             <td>
-                <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType"
-                    [ngModelOptions]="{standalone: true}" optionValue="serviceTypeCode" optionLabel="serviceId"
-                    [filter]="true" [filterFields]="['serviceId','description']" [showClear]="true"
-                    placeholder="Select ServiceType" [appendTo]="'body'">
-                    <ng-template let-record pTemplate="item">
-                        <div class="flex align-items-center gap-2">
-                            <div>{{ record.serviceId }}::{{ record.description }}</div>
-                        </div>
-                    </ng-template>
-                </p-dropdown>
+                <ng-container *ngIf="selectedServiceNumberRecord">
+                    {{ selectedServiceNumberRecord.serviceTypeCode }}
+                </ng-container>
+                <ng-container *ngIf="!selectedServiceNumberRecord">
+
+                    <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType"
+                        [ngModelOptions]="{standalone: true}" optionValue="serviceTypeCode" optionLabel="serviceId"
+                        [filter]="true" [filterFields]="['serviceId','description']" [showClear]="true"
+                        placeholder="Select ServiceType" [appendTo]="'body'">
+                        <ng-template let-record pTemplate="item">
+                            <div class="flex align-items-center gap-2">
+                                <div>{{ record.serviceId }}::{{ record.description }}</div>
+                            </div>
+                        </ng-template>
+                    </p-dropdown>
+                </ng-container>
             </td>
             <td>
                 <input pInputText name="externalServiceNumber" type="text"
                     [(ngModel)]="newService.externalServiceNumber">
             </td>
             <td>
+                <ng-container *ngIf="selectedServiceNumberRecord && !retrievedFormula">
+                    {{ newService.quantity * newService.grossPrice }}
+                </ng-container>
                 <ng-container *ngIf="selectedServiceNumberRecord && retrievedFormula && resultAfterTest">
                     {{ resultAfterTest * newService.grossPrice }}
+
                 </ng-container>
                 <ng-container *ngIf="!selectedServiceNumberRecord && selectedFormulaRecord && resultAfterTest">
                     <!-- {{ this.selectedFormulaRecord.result }} -->
@@ -655,6 +665,9 @@
                     {{ newService.quantity * newService.grossPrice }}
                 </ng-container>
                 <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula && resultAfterTest ">
+                    {{ newService.quantity * newService.grossPrice }}
+                </ng-container>
+                <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula ">
                     {{ newService.quantity * newService.grossPrice }}
                 </ng-container>
                 <!-- <input name="netValue" type="number" [(ngModel)]="newService.netValue"> -->
@@ -685,8 +698,9 @@
             <td>
                 <p-dropdown [options]="recordsLineType" [(ngModel)]="selectedLineType"
                     [ngModelOptions]="{standalone: true}" optionValue="lineTypeCode" optionLabel="code" [filter]="true"
-                    [filterFields]="['code','description']" [showClear]="true" placeholder="Select LineType" [appendTo]="'body'">
-                    <ng-template let-record pTemplate="item" >
+                    [filterFields]="['code','description']" [showClear]="true" placeholder="Select LineType"
+                    [appendTo]="'body'">
+                    <ng-template let-record pTemplate="item">
                         <div class="flex align-items-center gap-2">
                             <div>{{ record.code }}::{{ record.description }}</div>
                         </div>
@@ -698,6 +712,9 @@
                 <ng-container *ngIf="selectedServiceNumberRecord && retrievedFormula">
                     {{ retrievedFormula.formula }}
                 </ng-container>
+                <ng-container *ngIf="selectedServiceNumberRecord && !retrievedFormula">
+                    {{ "No Retrieved Formula"}}
+                </ng-container>
                 <ng-container *ngIf="newService.dontUseFormula">
                     {{ "Not Selected"}}
                 </ng-container>
@@ -705,7 +722,8 @@
                     <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedFormula"
                         [ngModelOptions]="{standalone: true}" optionValue="formulaCode" optionLabel="formula"
                         [filter]="true" [filterFields]="['formula','description']" [showClear]="true"
-                        placeholder="Select Formula" [required]="true"  (onChange)="onFormulaSelect($event)" [appendTo]="'body'">
+                        placeholder="Select Formula" [required]="true" (onChange)="onFormulaSelect($event)"
+                        [appendTo]="'body'">
                         <ng-template let-record pTemplate="item">
                             <div class="flex align-items-center gap-2">
                                 <div>{{ record.formula }}::{{ record.description }}</div>
@@ -715,32 +733,36 @@
                 </ng-container>
             </td>
             <td>
-                
+
                 <button class="mb-2" (click)="openPopup()">Enter Parameters</button>
-                <ng-container *ngIf="showPopup && selectedServiceNumberRecord && retrievedFormula && !newService.dontUseFormula">
+                <ng-container
+                    *ngIf="showPopup && selectedServiceNumberRecord && retrievedFormula && !newService.dontUseFormula">
                     <div class="popup">
                         <h3>Enter Parameters</h3>
                         <div *ngFor="let parameterId of retrievedFormula.parameterIds">
                             <label class="form-label">{{ parameterId }}:</label>
-                            <input class="form-input" type="number" [min]="0" [(ngModel)]="parameterValues[parameterId]">
+                            <input class="form-input" type="number" [min]="0"
+                                [(ngModel)]="parameterValues[parameterId]">
                         </div>
                         <button class="form-button" (click)="saveParameters()">Save</button>
                     </div>
                 </ng-container>
-                <ng-container *ngIf="showPopup && !selectedServiceNumberRecord && selectedFormulaRecord && !newService.dontUseFormula">
+                <ng-container
+                    *ngIf="showPopup && !selectedServiceNumberRecord && selectedFormulaRecord && !newService.dontUseFormula">
                     <div class="popup">
                         <h3>Enter Parameters</h3>
                         <div *ngFor="let parameterId of selectedFormulaRecord.parameterIds">
                             <label class="form-label">{{ parameterId }}:</label>
-                            <input class="form-input" type="number" [min]="0" [(ngModel)]="parameterValues[parameterId]">
+                            <input class="form-input" type="number" [min]="0"
+                                [(ngModel)]="parameterValues[parameterId]">
                         </div>
                         <button class="form-button" (click)="saveParameters()">Save</button>
                     </div>
-                </ng-container>  
+                </ng-container>
                 <ng-container *ngIf="selectedServiceNumberRecord && newService.dontUseFormula">
                     <h5>No Parameters</h5>
                 </ng-container>
-               
+
             </td>
             <td>
                 <input name="dontUseFormula" type="checkbox" [(ngModel)]="newService.dontUseFormula">
@@ -762,7 +784,7 @@
 
             </td>
             <td>
-                <button pButton type="button" icon="pi pi-plus" class="ui-button-info" label="Add"
+                <button pButton type="button" icon="pi pi-plus" class="ui-button-info" label="Save Line"
                     [disabled]="!selectedServiceNumberRecord && !selectedUnitOfMeasure" (click)="addRow()">
                 </button>
             </td>
@@ -775,41 +797,68 @@
 
 
 <div class="card flex justify-content-center">
-    <p-dialog header="Model Details" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="true" [maximizable]="true">
+    <p-dialog header="Model Details" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }"
+        [draggable]="false" [resizable]="true" [maximizable]="true">
         <ng-template pTemplate="header">
             <div class="inline-flex align-items-center justify-content-center gap-2">
                 <span class="font-bold white-space-nowrap">Model Details</span>
             </div>
         </ng-template>
         <div class="m-0">
-            <div class="fs-6 mb-1"><span class="text-danger">ModelSpecDetailsCode:</span> {{selectedDetailsForDisplay?.modelSpecDetailsCode}}</div>
-            <div class="fs-6 mb-1"> <span class="text-danger">Deletion Indicator:</span>  {{selectedDetailsForDisplay?.deletionIndicator}}</div>
-            <div class="fs-6 mb-1"> <span class="text-danger">Service Number:</span>  {{selectedDetailsForDisplay?.serviceNumberCode}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">shortText: </span> {{selectedDetailsForDisplay?.shortText}}</div>
-            <div class="fs-6 mb-1"> <span class="text-danger">Quantity:</span> {{selectedDetailsForDisplay?.quantity}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">UnitOfMeasurement:</span> {{selectedDetailsForDisplay?.unitOfMeasurementCode}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">Gross Price:</span> {{selectedDetailsForDisplay?.grossPrice}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">ModelSpecDetailsCode:</span>
+                {{selectedDetailsForDisplay?.modelSpecDetailsCode}}</div>
+            <div class="fs-6 mb-1"> <span class="text-danger">Deletion Indicator:</span>
+                {{selectedDetailsForDisplay?.deletionIndicator}}</div>
+            <div class="fs-6 mb-1"> <span class="text-danger">Service Number:</span>
+                {{selectedDetailsForDisplay?.serviceNumberCode}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">shortText: </span> {{selectedDetailsForDisplay?.shortText}}
+            </div>
+            <div class="fs-6 mb-1"> <span class="text-danger">Quantity:</span> {{selectedDetailsForDisplay?.quantity}}
+            </div>
+            <div class="fs-6 mb-1"><span class="text-danger">UnitOfMeasurement:</span>
+                {{selectedDetailsForDisplay?.unitOfMeasurementCode}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">Gross Price:</span>
+                {{selectedDetailsForDisplay?.grossPrice}}</div>
             <div class="fs-6 mb-1"><span class="text-danger">Currency:</span> {{currency?.code}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">OverFulfilmentPercentage:</span> {{selectedDetailsForDisplay?.overFulfilmentPercentage}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">PriceChangedAllowed:</span> {{selectedDetailsForDisplay?.priceChangedAllowed}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">UnlimitedOverFulfillment: </span> {{selectedDetailsForDisplay?.unlimitedOverFulfillment}} </div>
-            <div class="fs-6 mb-1"><span class="text-danger">PricePerUnitOfMeasurement:</span> {{selectedDetailsForDisplay?.pricePerUnitOfMeasurement}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">MaterialGroupCode: </span>{{selectedDetailsForDisplay?.materialGroupCode}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">ServiceTypeCode:</span> {{selectedDetailsForDisplay?.serviceTypeCode}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">External ServiceNumber:</span> {{selectedDetailsForDisplay?.externalServiceNumber}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">Net Value:</span> {{selectedDetailsForDisplay?.netValue}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">Service Text:</span> {{selectedDetailsForDisplay?.serviceText}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">Line Text:</span> {{selectedDetailsForDisplay?.lineText}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">Personnel Number:</span> {{selectedDetailsForDisplay?.personnelNumberCode}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">Line Type:</span> {{selectedDetailsForDisplay?.lineTypeCode}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">Formula:</span> {{selectedDetailsForDisplay?.formulaCode}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">DontUseFormula:</span> {{selectedDetailsForDisplay?.dontUseFormula}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">Line Number:</span> {{selectedDetailsForDisplay?.lineNumber}} </div>
-            <div class="fs-6 mb-1"><span class="text-danger">Alternatives:</span> {{selectedDetailsForDisplay?.alternatives}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">Bidder's Line:</span> {{selectedDetailsForDisplay?.biddersLine}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">Supplementary Line:</span> {{selectedDetailsForDisplay?.supplementaryLine}}</div>
-            <div class="fs-6 mb-1"><span class="text-danger">LotSizeForCostingIsOne:</span> {{selectedDetailsForDisplay?.lotSizeForCostingIsOne}}</div>
-          
+            <div class="fs-6 mb-1"><span class="text-danger">OverFulfilmentPercentage:</span>
+                {{selectedDetailsForDisplay?.overFulfilmentPercentage}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">PriceChangedAllowed:</span>
+                {{selectedDetailsForDisplay?.priceChangedAllowed}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">UnlimitedOverFulfillment: </span>
+                {{selectedDetailsForDisplay?.unlimitedOverFulfillment}} </div>
+            <div class="fs-6 mb-1"><span class="text-danger">PricePerUnitOfMeasurement:</span>
+                {{selectedDetailsForDisplay?.pricePerUnitOfMeasurement}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">MaterialGroupCode:
+                </span>{{selectedDetailsForDisplay?.materialGroupCode}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">ServiceTypeCode:</span>
+                {{selectedDetailsForDisplay?.serviceTypeCode}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">External ServiceNumber:</span>
+                {{selectedDetailsForDisplay?.externalServiceNumber}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">Net Value:</span> {{selectedDetailsForDisplay?.netValue}}
+            </div>
+            <div class="fs-6 mb-1"><span class="text-danger">Service Text:</span>
+                {{selectedDetailsForDisplay?.serviceText}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">Line Text:</span> {{selectedDetailsForDisplay?.lineText}}
+            </div>
+            <div class="fs-6 mb-1"><span class="text-danger">Personnel Number:</span>
+                {{selectedDetailsForDisplay?.personnelNumberCode}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">Line Type:</span>
+                {{selectedDetailsForDisplay?.lineTypeCode}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">Formula:</span> {{selectedDetailsForDisplay?.formulaCode}}
+            </div>
+            <div class="fs-6 mb-1"><span class="text-danger">DontUseFormula:</span>
+                {{selectedDetailsForDisplay?.dontUseFormula}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">Line Number:</span>
+                {{selectedDetailsForDisplay?.lineNumber}} </div>
+            <div class="fs-6 mb-1"><span class="text-danger">Alternatives:</span>
+                {{selectedDetailsForDisplay?.alternatives}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">Bidder's Line:</span>
+                {{selectedDetailsForDisplay?.biddersLine}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">Supplementary Line:</span>
+                {{selectedDetailsForDisplay?.supplementaryLine}}</div>
+            <div class="fs-6 mb-1"><span class="text-danger">LotSizeForCostingIsOne:</span>
+                {{selectedDetailsForDisplay?.lotSizeForCostingIsOne}}</div>
+
         </div>
         <ng-template pTemplate="footer">
             <p-button icon="pi pi-check" (click)="visible = false" label="Ok" pAutoFocus [autofocus]="true"></p-button>
