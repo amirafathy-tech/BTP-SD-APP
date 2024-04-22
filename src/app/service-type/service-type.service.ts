@@ -46,7 +46,6 @@ export class ServiceTypeService {
     })
     
   }
-
   updateRecord(index: number, newRecord: ServiceType) {
     this.apiService.put<ServiceType>('servicetypes', index, newRecord).subscribe(response => {
       console.log('modelspecs updated:',response);

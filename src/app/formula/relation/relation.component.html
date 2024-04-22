@@ -4,26 +4,6 @@
         <textarea #formulaLogic="ngModel" id="formulaLogic" type="text" [(ngModel)]="relationInformation.formulaLogic"
             id="float-input" rows="5" pInputTextarea
             class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full"></textarea>
-            <!-- <div class="row">
-                <p>Parameters You Entered:</p>
-                <ul class="list-group w-3">
-                    <a class="list-group-item" style="cursor: pointer" *ngFor="let record of passedParamInfo; " 
-                   
-                       >
-                        {{ record.paramID}} 
-                        
-                    </a>
-                </ul>
-                <p>Operations:</p>
-                <ul class="list-group w-3">
-                    <a class="list-group-item" style="cursor: pointer" *ngFor="let record of operations; " 
-                   
-                       >
-                        {{ record}} 
-                        
-                    </a>
-                </ul>
-            </div> -->
            
             <div class="row">
                 <div class="list-container">
@@ -46,16 +26,10 @@
                   </ul>
                 </div>
               </div>
-
-         
     </ng-template>
     <ng-template pTemplate="footer">
         <div class="flex justify-content-end flex-wrap">
             <p-button label="Next Step" (onClick)="nextPage()" icon="pi pi-angle-right" iconPos="right"></p-button>
         </div>
-        <!-- <div class="grid grid-nogutter justify-content-between">
-            <p-button label="Save" (onClick)="prevPage()" ></p-button>
-            <p-button label="Next Step" (onClick)="nextPage()" icon="pi pi-angle-right" iconPos="right"></p-button>
-        </div> -->
     </ng-template>
 </p-card>

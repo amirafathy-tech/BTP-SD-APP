@@ -38,7 +38,6 @@ export class ModelComponent implements OnInit {
   }
 
   editMode = false;
-
   clonedRecords: { [s: number]: ModelEntity; } = {};
 
   onRowEditInit(record: ModelEntity) {
@@ -66,9 +65,6 @@ export class ModelComponent implements OnInit {
     this.records[index] = this.clonedRecords[record.modelSpecCode];
     delete this.clonedRecords[record.modelSpecCode];
   }
-
- 
-
   constructor(private apiService: ApiService, private modelService: ModelService, private messageService: MessageService, private confirmationService: ConfirmationService, private modalService: NgbModal, private fb: FormBuilder,
     private router: Router) {
   }
@@ -113,14 +109,6 @@ export class ModelComponent implements OnInit {
       this.recordsCurrency = response;
       console.log(this.recordsCurrency);
     });
-    // this.records = this.modelService.getRecords();
-    // this.editForm = this.fb.group({
-    //   projectCode: [''],
-    //   projectId: [''],
-    //   projectDescription: [''],
-    //   validFrom: [''],
-    //   profit: [''],
-    // })
   }
 }
 

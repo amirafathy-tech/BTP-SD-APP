@@ -21,7 +21,7 @@ export class ServiceMasterAddComponent implements OnInit {
   selectedRecord: ServiceMaster = {
     serviceNumberCode: 0, searchTerm: '', description: '', serviceText: '', shortTextChangeAllowed: false, deletionIndicator: false,
     numberToBeConverted: 0, convertedNumber: 0, mainItem: false,
-    formulaCode: 0,
+   // formulaCode: 0,
     //unitOfMeasurementCode:0,
     serviceTypeCode: '', materialGroupCode: 0,
     lastChangeDate: Instant.now(), baseUnitOfMeasurement: '', toBeConvertedUnitOfMeasurement: '', defaultUnitOfMeasurement: ''
@@ -46,19 +46,11 @@ export class ServiceMasterAddComponent implements OnInit {
   selectedToBeConvertedMeasure!: string;
   selectedConvertedMeasure!: string;
 
-  recordsFormula!: any[];
-  selectedFormula!: number;
   recordsMaterialGrp!: any[];
   selectedMaterialGrp!: number;
 
 
   ngOnInit() {
-    this.apiService.get<any[]>('formulas').subscribe(response => {
-      console.log(response);
-      this.recordsFormula = response;
-      console.log(this.recordsFormula);
-
-    });
     this.apiService.get<any[]>('servicetypes').subscribe(response => {
       console.log(response);
       this.recordsServiceType = response;
@@ -100,32 +92,17 @@ export class ServiceMasterAddComponent implements OnInit {
     }
   }
 
-  // onBaseMeasureSelection(event: any) {
-  //   const selectedRecord = this.recordsMeasure.find(record => record.unitOfMeasurementCode === this.selectedBaseMeasure);
-  //   console.log(selectedRecord);
-
-  //   if (selectedRecord) {
-  //     this.baseUnitOfMeasurement = selectedRecord.code
-  //   }
-  //   else {
-  //     console.log("no UnitOfMeasurement");
-  //     this.baseUnitOfMeasurement='';
-  //   }
-  // }
-
   onSubmit(form: NgForm) {
     const value = form.value;
     console.log(this.selectedServiceType);
     console.log(this.selectedRecord);
-
-
     if (this.editMode) {
       const updatedRecord = {
         serviceNumberCode: this.selectedRecord.serviceNumberCode, searchTerm: value.searchTerm, description: value.description
         , serviceText: value.serviceText, shortTextChangeAllowed: value.shortTextChangeAllowed, deletionIndicator: value.deletionIndicator,
         mainItem: value.mainItem, numberToBeConverted: value.numberToBeConverted,
         convertedNumber: value.convertedNumber,
-        formulaCode: this.selectedRecord.formulaCode,
+       // formulaCode: this.selectedRecord.formulaCode,
         serviceTypeCode: this.selectedRecord.serviceTypeCode,
         materialGroupCode: this.selectedRecord.materialGroupCode,
         //   formulaCode: this.selectedFormula,
@@ -174,7 +151,7 @@ export class ServiceMasterAddComponent implements OnInit {
         value.deletionIndicator, value.mainItem, value.numberToBeConverted,
         value.convertedNumber,
         //this.selectedFormula,
-        this.selectedRecord.formulaCode,
+       // this.selectedRecord.formulaCode,
         //this.selectedBaseMeasure,
         // this.selectedServiceType,this.selectedMaterialGrp,
         this.selectedRecord.serviceTypeCode, this.selectedRecord.materialGroupCode,
@@ -214,16 +191,12 @@ export class ServiceMasterAddComponent implements OnInit {
               reject: () => {
               }
             });
-
-           // this.messageService.add({ severity: 'success', summary: 'Success', detail:  `ServiceMaster ${response.serviceNumberCode} Added Successfully`,life:4000 });
-           
           }
           this.isSaving = true;
           this.serviceMasterService.getRecords();
           this.savedRecord = response
           console.log(this.savedRecord);
         });
-        //this.addMessage = true;
       }
     }
   }

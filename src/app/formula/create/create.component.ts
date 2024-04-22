@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { FormulaService } from '../formula.service';
-import { UnitOfMeasure } from 'src/app/models/unitOfMeasure.model';
 import { ApiService } from 'src/app/ApiService.service';
 
 @Component({
@@ -13,13 +12,8 @@ import { ApiService } from 'src/app/ApiService.service';
 export class CreateComponent implements OnInit {
 
   createInformation: any;
-
   submitted: boolean = false;
   isNumberOfParametersValid = true;
-
-  
-  // recordsUnitOfMeasure!: UnitOfMeasure[];
-  // selectedUnitOfMeasure!: number;
 
   validateNumberOfParameters() {
     this.isNumberOfParametersValid = this.createInformation.numberOfParameters >= 0;
@@ -29,15 +23,9 @@ export class CreateComponent implements OnInit {
 
   ngOnInit() {
     this.createInformation = this.formulaService.getFormulaInformation().createInformation;
-    // this.apiService.get<UnitOfMeasure[]>('measurements').subscribe(response => {
-    //   console.log(response);
-    //   this.recordsUnitOfMeasure = response;
-    //   console.log(this.recordsUnitOfMeasure);
-    // });
   }
   nextPage() {
     if (this.createInformation.formula && this.createInformation.description && this.createInformation.numberOfParameters 
-      //&& this.createInformation.unitOfMeasurementCode
       ) {
       this.formulaService.formulaInformation.createInformation = this.createInformation;
       const navigationExtras: NavigationExtras = {

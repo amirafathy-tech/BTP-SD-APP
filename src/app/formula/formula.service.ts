@@ -8,7 +8,6 @@ export class FormulaService {
             formula: '',
             description: '',
             numberOfParameters: null,
-           // unitOfMeasurementCode:null
         },
         parameterInformation: {
             parameters: [] as { paramID: [], paramDescription: [] }[]
@@ -23,6 +22,7 @@ export class FormulaService {
     getFormulaInformation() {
         return this.formulaInformation;
     }
+    
     addApiRecord(row: {}) {
         this.apiService.post<any>('formulas', row).subscribe((response) => {
             console.log('formula created:', response);
@@ -31,9 +31,9 @@ export class FormulaService {
     }
 
     setFormulaformation(formulaInformation: {
-        createInformation: { formula: string; description: string; numberOfParameters: null;
-           // unitOfMeasurementCode: null
-         };
+        createInformation: {
+            formula: string; description: string; numberOfParameters: null;
+        };
         parameterInformation: {
             parameters: { paramID: []; paramDescription: [] }[];
         };

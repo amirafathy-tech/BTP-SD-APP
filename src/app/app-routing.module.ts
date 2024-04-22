@@ -23,14 +23,10 @@ const routes: Routes = [
   { path: 'add-model', component: AddModelComponent },
   { path: 'service', component: ServiceComponent },
   { path: 'modelSpecDetails', component: ModelDetailsComponent },
-  
   { path: 'servicetype', component: ServiceTypeComponent },
-  
   { path: 'servicemaster', component: ServiceMasterComponent },
   { path: 'add-servicemaster', component: ServiceMasterAddComponent },
-  
   { path: 'detail-servicemaster', component: ServiceMasterDetailComponent },
-  
   { path: 'formulas', component: FormulasComponent },
 //   {
 //     path: 'servicemaster', component: ServiceMasterComponent,
@@ -48,8 +44,7 @@ const routes: Routes = [
         { path: 'relation', component: RelationComponent },
         { path: 'test', component: TestComponent },
     ]
-},
-  
+}, 
 ];
 
 @NgModule({

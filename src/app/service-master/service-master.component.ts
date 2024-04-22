@@ -30,41 +30,41 @@ export class ServiceMasterComponent implements OnInit {
     selectedRecord: ServiceMaster | null = null;
 
     editMode = false;
-     // Array to store selected records
+    // Array to store selected records
     selectedRecords: any[] = [];
 
     onRecordSelectionChange(event: any, record: any) {
-      if (event.checked) {
-        console.log(record);
-        this.selectedRecord = record
-        // Add the record to the selectedRecords array if it's not already present
-        if (!this.selectedRecords.includes(record)) {
-          this.selectedRecords.push(record);
-          console.log(this.selectedRecords);
+        if (event.checked) {
+            console.log(record);
+            this.selectedRecord = record
+            // Add the record to the selectedRecords array if it's not already present
+            if (!this.selectedRecords.includes(record)) {
+                this.selectedRecords.push(record);
+                console.log(this.selectedRecords);
+            }
+        } else {
+            // Remove the record from the selectedRecords array
+            const index = this.selectedRecords.indexOf(record);
+            console.log(index)
+            if (index !== -1) {
+                this.selectedRecords.splice(index, 1);
+                console.log(this.selectedRecords);
+            }
         }
-      } else {
-        // Remove the record from the selectedRecords array
-        const index = this.selectedRecords.indexOf(record);
-        console.log(index)
-        if (index !== -1) {
-          this.selectedRecords.splice(index, 1);
-          console.log(this.selectedRecords);
-        }
-      }
     }
 
     submitted: boolean = false;
 
-    constructor(private apiService: ApiService,private serviceMasterService: ServiceMasterService, private messageService: MessageService,
+    constructor(private apiService: ApiService, private serviceMasterService: ServiceMasterService, private messageService: MessageService,
         private confirmationService: ConfirmationService, private router: Router, private cd: ChangeDetectorRef) { }
 
     ngOnInit() {
         this.serviceMasterService.getRecords();
         this.subscription = this.serviceMasterService.recordsChanged.subscribe((records: ServiceMaster[]) => {
-          this.serviceRecords = records;
-          this.filteredRecords =  records.sort((a, b) => b.serviceNumberCode - a.serviceNumberCode);
-          console.log(this.serviceRecords);
-          console.log(this.filteredRecords);
+            this.serviceRecords = records;
+            this.filteredRecords = records.sort((a, b) => b.serviceNumberCode - a.serviceNumberCode);
+            console.log(this.serviceRecords);
+            console.log(this.filteredRecords);
         });
         //this.serviceRecords = this.serviceMasterService.getRecords();
         //console.log(this.serviceRecords);
@@ -81,22 +81,22 @@ export class ServiceMasterComponent implements OnInit {
         this.selectedColumns = this.cols;
     }
 
-     // To handle Search Input 
-  searchValue: string = '';
-  filteredRecords: ServiceMaster[] = this.serviceRecords;
-  onSearchInputChange(): void {
-    const keyword = this.searchValue
-    if (keyword !== '') {
-      this.apiService.get<ServiceMaster[]>('servicenumbers/search',keyword).subscribe(response => {
-        console.log(response);
-        this.filteredRecords = response
-        console.log(this.filteredRecords);
-      });
+    // To handle Search Input 
+    searchValue: string = '';
+    filteredRecords: ServiceMaster[] = this.serviceRecords;
+    onSearchInputChange(): void {
+        const keyword = this.searchValue
+        if (keyword !== '') {
+            this.apiService.get<ServiceMaster[]>('servicenumbers/search', keyword).subscribe(response => {
+                console.log(response);
+                this.filteredRecords = response
+                console.log(this.filteredRecords);
+            });
+        }
+        else {
+            this.filteredRecords = this.serviceRecords;
+        }
     }
-    else{
-        this.filteredRecords = this.serviceRecords;
-    }
-  }
 
     onColumnSelectionChange() {
         // Update the selected columns when the selection changes
@@ -146,14 +146,6 @@ export class ServiceMasterComponent implements OnInit {
     }
 
     // Export Data to Excel Sheet
-    // exportExcel() {
-    //     import('xlsx').then((xlsx) => {
-    //         const worksheet = xlsx.utils.json_to_sheet(this.serviceRecords);
-    //         const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-    //         const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-    //         this.saveAsExcelFile(excelBuffer, 'services');
-    //     });
-    // }
     exportExcel() {
         import('xlsx').then((xlsx) => {
             console.log(this.selectedRecords.length);
@@ -165,16 +157,6 @@ export class ServiceMasterComponent implements OnInit {
             this.saveAsExcelFile(excelBuffer, 'services');
         });
     }
-    // exportExcel() {
-    //     import('xlsx').then((xlsx) => {
-    //       const checkedRowsExist = Object.values(this.selectedRecordMap).some((value) => value === true);
-    //       const selectedRows = checkedRowsExist ? this.selectedRecords.filter((record) => this.selectedRecordMap[record.id]) : this.serviceRecords;
-    //       const worksheet = xlsx.utils.json_to_sheet(selectedRows);
-    //       const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-    //       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-    //       this.saveAsExcelFile(excelBuffer, 'services');
-    //     });
-    //   }
     saveAsExcelFile(buffer: any, fileName: string): void {
         let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
         let EXCEL_EXTENSION = '.xlsx';

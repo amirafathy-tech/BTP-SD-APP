@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
 import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
 import { ApiService } from '../ApiService.service';
@@ -14,9 +13,7 @@ import { ApiService } from '../ApiService.service';
 export class FormulaComponent implements OnInit {
 
   isFormValid = false;
-
   items!: MenuItem[];
-
   subscription!: Subscription;
 
   constructor(public messageService: MessageService,private apiService: ApiService) {}

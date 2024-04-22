@@ -18,13 +18,7 @@ export class ServiceMasterService {
       this.recordsApi = response;
       this.recordsChanged.next(this.recordsApi);
     });
-
   }
-
-  // getRecord(index: number) {
-  //   return this.records[index];
-  // }
- 
 
   addRecord(record: ServiceMaster) {
     this.apiService.post<ServiceMaster>('servicenumbers', record).subscribe((response: ServiceMaster) => {
@@ -33,6 +27,7 @@ export class ServiceMasterService {
       return response
     });
   }
+  
   updateRecord(index: number, newRecord: ServiceMaster) {
     this.apiService.put<ServiceMaster>('servicenumbers', index, newRecord).subscribe(response => {
       console.log('service master updated:',response);

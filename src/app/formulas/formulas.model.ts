@@ -7,6 +7,5 @@ export class Formula {
     ) {
         this.formula = formula;
       this.description=description;
-    //  this.numberOfParameters = numberOfParameters;
     }
 }

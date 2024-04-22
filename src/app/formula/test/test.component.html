@@ -6,8 +6,6 @@
             <input [id]="variable" type="number" required pInputNumber [(ngModel)]="testInformation.variables[variable]"
                 class=" text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary" />
         </div>
-
-       
         <div class="flex justify-content-center flex-wrap">
         <p-button label="Show Result" (onClick)="nextPage()" ></p-button>
         </div>
@@ -20,9 +18,7 @@
         </div>
     </ng-template>
 </p-card>
-
 <p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
-
 <p-dialog header="Test Result" [(visible)]="visible" [breakpoints]="{ '960px': '75vw' }" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false">
    <p> The Result is {{result}}</p>
 </p-dialog>

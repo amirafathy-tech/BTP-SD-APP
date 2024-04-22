@@ -1,9 +1,8 @@
-<!-- <p-button (click)="showDialog()" icon="pi pi-external-link" label="Add New Service"></p-button> -->
-<p-toast></p-toast>
-<p-toolbar class="m-2">
 
+<p-toast></p-toast>
+
+<p-toolbar class="m-2">
     <div class="p-toolbar-group-start ">
-        <!-- <button pButton > Model Details</button> -->
         <h5>Models:</h5>
     </div>
     <div class="p-toolbar-group-end">
@@ -12,21 +11,18 @@
 </p-toolbar>
 
 <div class="card">
-    <p-table [value]="records" [(selection)]="selectedRecords" dataKey="modelSpecCode" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+    <p-table [value]="records" [(selection)]="selectedRecords" dataKey="modelSpecCode" 
+    editMode="row" [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" scrollHeight="400px">
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 4rem">
-                    <!-- <p-tableHeaderCheckbox></p-tableHeaderCheckbox> -->
                 </th>
-                <!-- <th fd-table-cell>ID </th> -->
                 <th fd-table-cell>modelServ.Spec</th>
                 <th fd-table-cell>blockingIndicator</th>
                 <th fd-table-cell>ServiceSelection</th>
                 <th fd-table-cell>Description</th>
                 <th fd-table-cell>SearchTerm</th>
                 <th fd-table-cell>Currency</th>
-                <!-- <th fd-table-cell>PurchaseOrgnization</th>
-                <th fd-table-cell>Contract</th> -->
                 <th fd-table-cell>Services</th>
                 <th fd-table-cell>Actions</th>
             </tr>
@@ -34,20 +30,7 @@
         <ng-template pTemplate="body" let-record let-editing="editing" let-ri="rowIndex">
             <tr [pEditableRow]="record">
                 <td>
-                    <!-- <p-tableCheckbox [value]="record"></p-tableCheckbox> -->
                 </td>
-
-                <!-- <td>
-                    <p-cellEditor>
-                        <ng-template pTemplate="input">
-                            {{record.modelSpecCode}}
-                        </ng-template>
-                        <ng-template pTemplate="output">
-                            {{record.modelSpecCode}}
-                        </ng-template>
-                    </p-cellEditor>
-                </td> -->
-
                 <td>
                     <p-cellEditor>
                         <ng-template pTemplate="input">

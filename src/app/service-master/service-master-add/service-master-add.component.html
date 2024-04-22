@@ -31,16 +31,12 @@
     </div>
     <div class="row m-2">
         <div class="field col-12 md:col-4">
-            <label for="shortTextChangeAllowed">Short Text Change Allowed:</label>
-            <div class="input-group">
+            <label for="shortTextChangeAllowed" class="mr-1">Short Text Change Allowed:</label>
                 <input id="shortTextChangeAllowed" name="shortTextChangeAllowed" type="checkbox" [(ngModel)]="selectedRecord.shortTextChangeAllowed" ngModel  >
-            </div>
         </div>
         <div class="field col-12 md:col-4">
-            <label for="deletionIndicator">Deletion Indicator:</label>
-            <div class="input-group">
+            <label for="deletionIndicator" class="mr-1">Deletion Indicator:</label>
                 <input id="deletionIndicator" name="deletionIndicator" type="checkbox" [(ngModel)]="selectedRecord.deletionIndicator" ngModel  >
-            </div>
         </div>
     </div>
 
@@ -79,14 +75,13 @@
     <div class="row m-2">
         <label for="numberToBeConverted">Conversion:</label>
         <div class="field col-12 md:col-2">
-
             <input id="numberToBeConverted" name="numberToBeConverted"  type="number" [(ngModel)]="selectedRecord.numberToBeConverted" ngModel  
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
         </div>
-        <div class="field col-12 md:col-3">
+        <div class="field col-12 md:col-4">
             <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.toBeConvertedUnitOfMeasurement"  [ngModelOptions]="{standalone: true}"
             optionValue="code" optionLabel="code"
-                [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select an UnitOfMeasure">
+                [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select ToBeConverted UnitOfMeasure">
                 <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">
                         <div>{{ record.code }}::{{ record.description }}</div>
@@ -98,7 +93,7 @@
             <input id="convertedNumber" name="convertedNumber"  type="number" [(ngModel)]="selectedRecord.convertedNumber" ngModel 
                 class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-full">
         </div>
-        <div class="field col-12 md:col-3">
+        <div class="field col-12 md:col-4">
             <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.defaultUnitOfMeasurement"  [ngModelOptions]="{standalone: true}"
             optionValue="code" optionLabel="code"
                 [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select Converted UnitOfMeasure">
@@ -112,26 +107,10 @@
     </div>
     <div class="row m-2">
         <div class="field col-12 md:col-4">
-            <label for="mainItem" >Main Item:</label>
-            <div class="input-group">
+            <label for="mainItem" class="mr-1" >Main Item:</label>
                 <input id="mainItem" name="mainItem" type="checkbox" [(ngModel)]="selectedRecord.mainItem" ngModel >
-            </div>
-        </div>
-    </div>
-    <div class="row m-2">
-        <div class="field col-12 md:col-4">
-            <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedRecord.formulaCode"  [ngModelOptions]="{standalone: true}"
-            optionValue="formulaCode" optionLabel="formula"
-                [filter]="true" [filterFields]="['formula','description']" [showClear]="true" placeholder="Select Formula">
-                <ng-template let-record pTemplate="item">
-                    <div class="flex align-items-center gap-2">
-                        <div>{{ record.formula }}::{{ record.description }}</div>
-                    </div>
-                </ng-template>
-            </p-dropdown>
         </div>
         <div class="field col-12 md:col-4">
-
             <p-dropdown [options]="recordsMaterialGrp" [(ngModel)]="selectedRecord.materialGroupCode"  [ngModelOptions]="{standalone: true}" 
             optionValue="materialGroupCode" optionLabel="code"
                 [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select Material/Service Grp">
@@ -143,11 +122,7 @@
             </p-dropdown>
         </div>
     </div>
-    <!-- <p-messages position="top-left" *ngIf="addMessage" [(value)]="messageAdd" [enableService]="false"></p-messages> -->
-    
-    <!-- <p-messages position="top-left" *ngIf="updateMessage" [(value)]="messageUpdate" [enableService]="false"></p-messages> -->
     <div class=" text-center m-3">
-        <!-- <button pButton data-dismiss="modal" icon="pi pi-save" [disabled]="!f.valid">Save</button> -->
         <button pButton [disabled]="!f.valid">{{ editMode ?
             'Update' : 'Add' }}
         </button>

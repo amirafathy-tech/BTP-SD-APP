@@ -17,7 +17,7 @@ export class ServiceMasterDetailComponent {
   selectedRecord: ServiceMaster = {
     serviceNumberCode: 0, searchTerm: '', description: '', serviceText: '', shortTextChangeAllowed: false, deletionIndicator: false,
     numberToBeConverted: 0, convertedNumber: 0, mainItem: false,
-    formulaCode: 0,
+    // formulaCode: 0,
     //unitOfMeasurementCode:0,
     serviceTypeCode: '', materialGroupCode: 0,
     lastChangeDate: Instant.now(), baseUnitOfMeasurement: '', toBeConvertedUnitOfMeasurement: '', defaultUnitOfMeasurement: ''

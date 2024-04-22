@@ -15,13 +15,8 @@ export class ParameterComponent implements OnInit {
   numberOfParameters!: number;
   passedCreateInfo: any;
   passedParamInfo: any;
-
   parameterInformation: any;
   parameterInformationIterator: any[] = [];
-
-  // recordsUnitOfMeasure!: UnitOfMeasure[];
-  // selectedUnitOfMeasure!: number;
-
   submitted: boolean = false;
 
   constructor(private apiService: ApiService,private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,) {
@@ -36,13 +31,7 @@ export class ParameterComponent implements OnInit {
     this.parameterInformation = this.formulaService.getFormulaInformation().parameterInformation;
     for (let i = 0; i < this.numberOfParameters; i++) {
       this.parameterInformationIterator.push({ paramID: '', paramDescription: '' });
-
     }
-    // this.apiService.get<UnitOfMeasure[]>('measurements').subscribe(response => {
-    //   console.log(response);
-    //   this.recordsUnitOfMeasure = response;
-    //   console.log(this.recordsUnitOfMeasure);
-    // });
   }
 
   nextPage() {

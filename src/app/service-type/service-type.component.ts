@@ -21,9 +21,7 @@ export class ServiceTypeComponent {
     this.serviceTypeService.getApiRecords();
     this.subscription = this.serviceTypeService.recordsChanged.subscribe((records: ServiceType[]) => {
      // this.records = records;
-     
-    // Sort the records based on lastChangeDate
-   // this.records = records.sort((a, b) => new Date(b.lastChangeDate).getTime() - new Date(a.lastChangeDate).getTime());
+    // Sort the records 
    this.records = records.sort((a, b) => b.serviceTypeCode - a.serviceTypeCode);
       console.log(this.records);
     });
@@ -34,8 +32,6 @@ export class ServiceTypeComponent {
   ngOnDestroy() {
     this.subscription.unsubscribe();
   }
-
-
   editMode = false;
   clonedRecords: { [s: number]: ServiceType; } = {};
 
@@ -46,13 +42,11 @@ export class ServiceTypeComponent {
   onRowEditSave(index: number, record: ServiceType) {
     console.log(index);
     console.log(record);
-
     this.serviceTypeService.updateRecord(index, record);
     this.ngOnInit(); //reload the table
     this.editMode = false;
     delete this.clonedRecords[record.serviceTypeCode];
     this.messageService.add({ severity: 'success', summary: 'Success', detail: `ServiceType Updated Successfully` });
-
   }
 
   onRowEditCancel(record: ServiceType, index: number) {
@@ -81,7 +75,6 @@ export class ServiceTypeComponent {
       }
     });
   }
-
   newServiceType: ServiceType = {
     serviceTypeCode: 0,
     serviceId: '',

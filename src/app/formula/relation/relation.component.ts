@@ -14,10 +14,8 @@ export class RelationComponent implements OnInit {
   passedParamInfo: any;
   relationInformation: any;
   submitted: boolean = false;
-
   parameterIds: string[] = [];
   parameterDescriptions: string[] = []
-
   operations: string[] = ['+', '-', '*', '/', '%', 'π', '^']
 
   constructor(private apiService: ApiService, private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,) {
@@ -30,33 +28,19 @@ export class RelationComponent implements OnInit {
     this.parameterDescriptions = this.passedParamInfo.map((item: { paramDescription: any; }) => item.paramDescription);
     console.log(this.parameterIds);
     console.log(this.parameterDescriptions);
-
   }
 
   paramClick(param: string) {
-
     this.relationInformation.formulaLogic += param;
     console.log(this.relationInformation.formulaLogic);
-
     console.log(param);
-
   }
   operationClick(operation: string) {
-    // if(operation=='π (22/7)'){
-    //   this.relationInformation.formulaLogic +='22/7'
-    // }
-    // else if(operation=='^'){
-    //   this.relationInformation.formulaLogic +='**'
-    // }
-    // else{
     this.relationInformation.formulaLogic += operation;
-    //}
-
     console.log(this.relationInformation.formulaLogic);
-
     console.log(operation);
-
   }
+
   ngOnInit() {
     this.relationInformation = this.formulaService.getFormulaInformation().relationInformation;
   }
@@ -81,13 +65,12 @@ export class RelationComponent implements OnInit {
           passedParamInfo: this.passedParamInfo
         }
       };
-
       this.router.navigate(['formula/test'], navigationExtras);
-
       return;
     }
     this.submitted = true;
   }
+
   prevPage() {
     const formulaObject1: any = {
       formula: this.passedCreateInfo.formula,
@@ -99,16 +82,9 @@ export class RelationComponent implements OnInit {
       formulaLogic: this.relationInformation.formulaLogic,
       // testParameters: valuesOnly
     };
-
     console.log(formulaObject1);
-
-
-
     this.apiService.post<any>('formulas', formulaObject1).subscribe((response) => {
       console.log('formula created:', response);
-      // this.result = response.result;
-      // this.visible = true;
     });
-    //this.router.navigate(['formula/parameter']);
   }
 }
