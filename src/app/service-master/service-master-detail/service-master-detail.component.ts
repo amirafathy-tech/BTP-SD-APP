@@ -19,8 +19,8 @@ export class ServiceMasterDetailComponent {
     numberToBeConverted: 0, convertedNumber: 0, mainItem: false,
     // formulaCode: 0,
     //unitOfMeasurementCode:0,
-    serviceTypeCode: '', materialGroupCode: 0,
-    lastChangeDate: Instant.now(), baseUnitOfMeasurement: '', toBeConvertedUnitOfMeasurement: '', defaultUnitOfMeasurement: ''
+    serviceTypeCode: '', materialGroupCode: '',
+     baseUnitOfMeasurement: '', toBeConvertedUnitOfMeasurement: '', defaultUnitOfMeasurement: ''
   };
 
   constructor(private apiService: ApiService, private serviceMasterService: ServiceMasterService

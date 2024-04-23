@@ -56,13 +56,13 @@
         <div class="field col-12 md:col-4">
 
             <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.baseUnitOfMeasurement"  [ngModelOptions]="{standalone: true}"
-            optionValue="code" optionLabel="code" 
-                [filter]="true" [filterFields]="['code','description']" [showClear]="true"
+            optionValue="UnitOfMeasureLongName" optionLabel="UnitOfMeasureLongName" 
+                [filter]="true" [filterFields]="['UnitOfMeasureLongName','UnitOfMeasureName']" [showClear]="true"
                  placeholder="Select Base UnitOfMeasure"
                  >
                 <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">
-                        <div>{{ record.code }}::{{ record.description }}</div>
+                        <div>{{ record.UnitOfMeasureLongName }}::{{ record.UnitOfMeasureName }}</div>
                     </div>
                 </ng-template>
             </p-dropdown>
@@ -112,7 +112,7 @@
         </div>
         <div class="field col-12 md:col-4">
             <p-dropdown [options]="recordsMaterialGrp" [(ngModel)]="selectedRecord.materialGroupCode"  [ngModelOptions]="{standalone: true}" 
-            optionValue="materialGroupCode" optionLabel="code"
+            optionValue="code" optionLabel="code"
                 [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select Material/Service Grp">
                 <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">

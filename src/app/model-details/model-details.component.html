@@ -13,9 +13,9 @@
             <div class="inline-element border border-1 border-black">
                 {{totalValue}}
             </div>
-            <ng-container *ngIf="currency">
+            <ng-container *ngIf="modelSpecRecord">
                 <div class="inline-element border border-1 border-black">
-                    {{ currency.code }}
+                    {{ modelSpecRecord.currencyCode}}
                 </div>
             </ng-container>
         </div>
@@ -159,8 +159,10 @@
             <td pEditableColumn>
                 <p-cellEditor>
                     <ng-template pTemplate="input">
+                        <ng-container *ngIf="record.formulaCode">
+                            {{record.formulaCode}}
                         <p-dropdown [options]="recordsFormula" [(ngModel)]="record.formulaCode"
-                            [ngModelOptions]="{standalone: true}" optionValue="formulaCode" optionLabel="formula"
+                            [ngModelOptions]="{standalone: true}" optionValue="formula" optionLabel="formula"
                             [filter]="true" [filterFields]="['formula','description']" [showClear]="true"
                             [appendTo]="'body'" placeholder="Select Formula" (onChange)="onFormulaUpdateSelect($event)">
                             <ng-template let-record pTemplate="item">
@@ -169,6 +171,19 @@
                                 </div>
                             </ng-template>
                         </p-dropdown>
+                        </ng-container>
+                        <ng-container *ngIf="!record.formulaCode">
+                        <p-dropdown [options]="recordsFormula" [(ngModel)]="record.formulaCode"
+                            [ngModelOptions]="{standalone: true}" optionValue="formula" optionLabel="formula"
+                            [filter]="true" [filterFields]="['formula','description']" [showClear]="true"
+                            [appendTo]="'body'" placeholder="Select Formula" (onChange)="onFormulaUpdateSelect($event)">
+                            <ng-template let-record pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <div>{{ record.formula }}::{{ record.description }}</div>
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
+                        </ng-container>
                     </ng-template>
                     <ng-template pTemplate="output">
                         {{record.formulaCode }}
@@ -246,8 +261,8 @@
             </td>
 
             <td>
-                <ng-container *ngIf="currency">
-                    {{ currency.code }}
+                <ng-container *ngIf="modelSpecRecord">
+                    {{ modelSpecRecord.currencyCode }}
                 </ng-container>
             </td>
             <td>
@@ -294,12 +309,12 @@
             <td pEditableColumn>
                 <p-cellEditor>
                     <ng-template pTemplate="input">
-                        <ng-container *ngIf="updateSelectedServiceNumberRecord && updateRetrievedMatGrp">
-                            {{ updateRetrievedMatGrp.code }}
+                        <ng-container *ngIf="updateSelectedServiceNumberRecord">
+                            {{ updateSelectedServiceNumberRecord.materialGroupCode }}
                         </ng-container>
                         <ng-container *ngIf="!updateSelectedServiceNumberRecord">
                             <p-dropdown [options]="recordsMatGrp" [(ngModel)]="record.materialGroupCode"
-                                [ngModelOptions]="{standalone: true}" optionValue="materialGroupCode" optionLabel="code"
+                                [ngModelOptions]="{standalone: true}" optionValue="code" optionLabel="code"
                                 [filter]="true" [filterFields]="['code','description']" [showClear]="true"
                                 [virtualScroll]="true" placeholder="Select MatGrp" [appendTo]="'body'">
                                 <ng-template let-record pTemplate="item">
@@ -324,7 +339,7 @@
                         </ng-container>
                         <ng-container *ngIf="!updateSelectedServiceNumberRecord">
                             <p-dropdown [options]="recordsServiceType" [(ngModel)]="record.serviceTypeCode"
-                                [ngModelOptions]="{standalone: true}" optionValue="serviceTypeCode"
+                                [ngModelOptions]="{standalone: true}" optionValue="serviceId"
                                 optionLabel="serviceId" [filter]="true" [filterFields]="['serviceId','description']"
                                 [showClear]="true" [virtualScroll]="true" [virtualScrollItemSize]="38"
                                 placeholder="Select ServiceType" [appendTo]="'body'">
@@ -381,7 +396,7 @@
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="recordsPersonnelNumber" [(ngModel)]="record.personnelNumberCode"
-                            [ngModelOptions]="{standalone: true}" optionValue="personnelNumberCode" optionLabel="code"
+                            [ngModelOptions]="{standalone: true}" optionValue="code" optionLabel="code"
                             [filter]="true" [filterFields]="['code','description']" [showClear]="true"
                             placeholder="Select PersonnelNumber" [appendTo]="'body'">
                             <ng-template let-record pTemplate="item">
@@ -400,7 +415,7 @@
                 <p-cellEditor>
                     <ng-template pTemplate="input">
                         <p-dropdown [options]="recordsLineType" [(ngModel)]="record.lineTypeCode"
-                            [ngModelOptions]="{standalone: true}" optionValue="lineTypeCode" optionLabel="code"
+                            [ngModelOptions]="{standalone: true}" optionValue="code" optionLabel="code"
                             [filter]="true" [filterFields]="['code','description']" [showClear]="true"
                             placeholder="Select LineType" [appendTo]="'body'">
                             <ng-template let-record pTemplate="item">
@@ -533,7 +548,7 @@
 
             <td>
                 <p-dropdown [options]="recordsFormula" [(ngModel)]="selectedFormula"
-                    [ngModelOptions]="{standalone: true}" optionValue="formulaCode" optionLabel="formula"
+                    [ngModelOptions]="{standalone: true}" optionValue="formula" optionLabel="formula"
                     [filter]="true" [filterFields]="['formula','description']" [showClear]="true"
                     placeholder="Select Formula" [required]="true" (onChange)="onFormulaSelect($event)"
                     [appendTo]="'body'">
@@ -598,8 +613,8 @@
             </td>
 
             <td>
-                <ng-container *ngIf="currency">
-                    {{ currency.code }}
+                <ng-container *ngIf="modelSpecRecord">
+                    {{ modelSpecRecord.currencyCode }}
                 </ng-container>
             </td>
 
@@ -631,13 +646,13 @@
                         </div>
                     </ng-template>
                 </p-dropdown> -->
-                <ng-container *ngIf="selectedServiceNumberRecord && retrievedMatGrp">
+                <ng-container *ngIf="selectedServiceNumberRecord">
                     <!-- {{ selectedServiceNumberRecord.materialGroupCode }} -->
-                    {{ retrievedMatGrp.code }}
+                    {{ selectedServiceNumberRecord.materialGroupCode }}
                 </ng-container>
                 <ng-container *ngIf="!selectedServiceNumberRecord">
                     <p-dropdown [options]="recordsMatGrp" [(ngModel)]="selectedMatGrp"
-                        [ngModelOptions]="{standalone: true}" optionValue="materialGroupCode" optionLabel="code"
+                        [ngModelOptions]="{standalone: true}" optionValue="code" optionLabel="code"
                         [filter]="true" [filterFields]="['code','description']" [showClear]="true"
                         placeholder="Select MatGrp" [required]="true" [appendTo]="'body'">
                         <ng-template let-record pTemplate="item">
@@ -656,7 +671,7 @@
                 <ng-container *ngIf="!selectedServiceNumberRecord">
 
                     <p-dropdown [options]="recordsServiceType" [(ngModel)]="selectedServiceType"
-                        [ngModelOptions]="{standalone: true}" optionValue="serviceTypeCode" optionLabel="serviceId"
+                        [ngModelOptions]="{standalone: true}" optionValue="serviceId" optionLabel="serviceId"
                         [filter]="true" [filterFields]="['serviceId','description']" [showClear]="true"
                         placeholder="Select ServiceType" [appendTo]="'body'">
                         <ng-template let-record pTemplate="item">
@@ -688,7 +703,7 @@
 
             <td>
                 <p-dropdown [options]="recordsPersonnelNumber" [(ngModel)]="selectedPersonnelNumber"
-                    [ngModelOptions]="{standalone: true}" optionValue="personnelNumberCode" optionLabel="code"
+                    [ngModelOptions]="{standalone: true}" optionValue="code" optionLabel="code"
                     [filter]="true" [filterFields]="['code','description']" [showClear]="true"
                     placeholder="Select PersonnelNumber" [appendTo]="'body'">
                     <ng-template let-record pTemplate="item">
@@ -701,7 +716,7 @@
 
             <td>
                 <p-dropdown [options]="recordsLineType" [(ngModel)]="selectedLineType"
-                    [ngModelOptions]="{standalone: true}" optionValue="lineTypeCode" optionLabel="code" [filter]="true"
+                    [ngModelOptions]="{standalone: true}" optionValue="code" optionLabel="code" [filter]="true"
                     [filterFields]="['code','description']" [showClear]="true" placeholder="Select LineType"
                     [appendTo]="'body'">
                     <ng-template let-record pTemplate="item">

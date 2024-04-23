@@ -3,6 +3,7 @@ import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { FormulaService } from '../formula.service';
 import { ApiService } from 'src/app/ApiService.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-test',
@@ -96,13 +97,26 @@ export class TestComponent implements OnInit {
         testParameters: valuesOnly
       };
       console.log(formulaObject1);
-      this.apiService.post<any>('formulas', formulaObject1).subscribe((response) => {
-        console.log('formula created:', response.result);
-        this.result = response.result
-        //+this.resultUnitOfMeasurement.code;
-        console.log(this.result);
-        this.visible = true;
-      });
+      // this.apiService.post<any>('formulas', formulaObject1).subscribe((response) => {
+      //   console.log('formula created:', response.result);
+      //   this.result = response.result
+      //   //+this.resultUnitOfMeasurement.code;
+      //   console.log(this.result);
+      //   this.visible = true;
+      // });
+      this.apiService.post<any>('formulas', formulaObject1).subscribe(
+        (response) => {
+          console.log('formula created:', response.result);
+          this.result = response.result;
+          //+this.resultUnitOfMeasurement.code;
+          console.log(this.result);
+          this.visible = true;
+        },
+        (error: HttpErrorResponse) => {
+          console.error('An error occurred:', error);
+          this.messageService.add({ severity: 'error', summary: 'Code Conflict', detail: 'This Formula Code already exists', life: 10000 });
+        }
+      );
       // this.router.navigate(['formula/test'], navigationExtras);
       return;
     }

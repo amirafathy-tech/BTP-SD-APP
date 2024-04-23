@@ -1,13 +1,13 @@
 export class ModelSpecDetails {
     public modelSpecDetailsCode!: number;
     public serviceNumberCode: number;
-    public lineTypeCode: number;
+    public lineTypeCode: string;
     public unitOfMeasurementCode: string;// will be mandatory if service number could be empty
     public currencyCode: number;
-    public personnelNumberCode: number;
-    public serviceTypeCode: number;
-    public materialGroupCode: number;
-    public formulaCode: number;
+    public personnelNumberCode: string;
+    public serviceTypeCode: string;
+    public materialGroupCode: string;
+    public formulaCode: string;
 
     public selectionCheckbox!: boolean;
 
@@ -31,56 +31,15 @@ export class ModelSpecDetails {
     public biddersLine:boolean;
     public supplementaryLine:boolean;
     public lotSizeForCostingIsOne:boolean;
-    public dontUseFormula:boolean;
     
-    // constructor(serviceNumberCode: number,lineTypeCode: number,unitOfMeasurementCode: number,currencyCode: number,
-    //     personnelNumberCode: number,serviceTypeCode: number,materialGroupCode: number,formulaCode: number,
-    //     selectionCheckbox:boolean,lineIndex: number,deletionIndicator: boolean,shortText: string,
-    //     quantity: number,grossPrice:number,overFulfilmentPercentage:number,priceChangedAllowed: boolean,
-    //     unlimitedOverFulfillment:boolean,pricePerUnitOfMeasurement:number,externalServiceNumber: string,
-    //     netValue:number,serviceText: string,lineText: string, formula: string, lineNumber: string,
-    //     alternatives: string,biddersLine:boolean,supplementaryLine:boolean,lotSizeForCostingIsOne:boolean,dontUseFormula:boolean
-    // ) {
-    //    // this.id = id;
-    //    this.serviceNumberCode=serviceNumberCode;
-    //    this.lineTypeCode=lineTypeCode;
-    //    this.unitOfMeasurementCode=unitOfMeasurementCode;
-    //    this.currencyCode=currencyCode;
-    //    this.personnelNumberCode = personnelNumberCode; 
-    //    this.serviceTypeCode=serviceTypeCode;
-    //    this.materialGroupCode=materialGroupCode;
-    //    this.formulaCode=formulaCode;
 
-    //   this.selectionCheckbox=selectionCheckbox;
-    //   this.lineIndex=lineIndex;
-    //   this.deletionIndicator=deletionIndicator; 
-    //   this.shortText=shortText;
-    //   this.quantity=quantity;
-    //   this.grossPrice=grossPrice;
-    //   this.overFulfilmentPercentage=overFulfilmentPercentage;
-    //   this.priceChangedAllowed=priceChangedAllowed;
-    //   this.unlimitedOverFulfillment=unlimitedOverFulfillment;
-    //   this.pricePerUnitOfMeasurement=pricePerUnitOfMeasurement;
-    //   this.externalServiceNumber=externalServiceNumber;
-    //   this.netValue=netValue;
-    //   this.serviceText=serviceText;
-    //   this.lineText=lineText;
-    //   this.formula=formula;
-    //   this.lineNumber=lineNumber;
-    //   this.alternatives=alternatives;
-    //   this.biddersLine=biddersLine; 
-    //   this.supplementaryLine=supplementaryLine;
-    //   this.lotSizeForCostingIsOne=lotSizeForCostingIsOne;
-    //   this.dontUseFormula=dontUseFormula;
-    // }
-
-    constructor(serviceNumberCode: number,lineTypeCode: number,unitOfMeasurementCode: string,currencyCode: number,
-        personnelNumberCode: number,serviceTypeCode: number,materialGroupCode: number,formulaCode: number,
+    constructor(serviceNumberCode: number,lineTypeCode: string,unitOfMeasurementCode: string,currencyCode: number,
+        personnelNumberCode: string,serviceTypeCode: string,materialGroupCode: string,formulaCode: string,
         deletionIndicator: boolean,shortText: string,
         quantity: number,grossPrice:number,overFulfilmentPercentage:number,priceChangedAllowed: boolean,
         unlimitedOverFulfillment:boolean,pricePerUnitOfMeasurement:number,externalServiceNumber: string,
         netValue:number,serviceText: string,lineText: string, lineNumber: string,
-        alternatives: string,biddersLine:boolean,supplementaryLine:boolean,lotSizeForCostingIsOne:boolean,dontUseFormula:boolean
+        alternatives: string,biddersLine:boolean,supplementaryLine:boolean,lotSizeForCostingIsOne:boolean
     ) {
        // this.id = id;
        this.serviceNumberCode=serviceNumberCode;
@@ -111,7 +70,6 @@ export class ModelSpecDetails {
       this.biddersLine=biddersLine; 
       this.supplementaryLine=supplementaryLine;
       this.lotSizeForCostingIsOne=lotSizeForCostingIsOne;
-      this.dontUseFormula=dontUseFormula;
     }
 
    

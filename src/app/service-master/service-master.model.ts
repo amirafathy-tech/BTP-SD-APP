@@ -13,8 +13,8 @@ import { Instant } from "js-joda";
    // public formulaCode: number;
    // public unitOfMeasurementCode:number;
     public serviceTypeCode: string;
-    public materialGroupCode: number;
-    public lastChangeDate:Instant;
+    public materialGroupCode: string;
+    //public lastChangeDate:Date;
     public baseUnitOfMeasurement:string;
     public toBeConvertedUnitOfMeasurement:string
     public defaultUnitOfMeasurement:string;
@@ -24,8 +24,9 @@ import { Instant } from "js-joda";
         convertedNumber: number,
         //formulaCode: number,
         //unitOfMeasurementCode:number,
-        serviceTypeCode: string,materialGroupCode: number,
-        lastChangeDate:Instant,baseUnitOfMeasurement:string,toBeConvertedUnitOfMeasurement:string,
+        serviceTypeCode: string,materialGroupCode: string,
+        //lastChangeDate:Date,
+       baseUnitOfMeasurement:string,toBeConvertedUnitOfMeasurement:string,
         defaultUnitOfMeasurement:string
     ) {
      //this.serviceNumberCode = serviceNumberCode;
@@ -41,7 +42,7 @@ import { Instant } from "js-joda";
     // this.unitOfMeasurementCode=unitOfMeasurementCode;
       this.serviceTypeCode=serviceTypeCode;
       this.materialGroupCode=materialGroupCode;
-      this.lastChangeDate=lastChangeDate;
+      //this.lastChangeDate=lastChangeDate;
       this.baseUnitOfMeasurement=baseUnitOfMeasurement;
       this.toBeConvertedUnitOfMeasurement=toBeConvertedUnitOfMeasurement;
       this.defaultUnitOfMeasurement=defaultUnitOfMeasurement;

@@ -23,8 +23,8 @@ export class ServiceMasterAddComponent implements OnInit {
     numberToBeConverted: 0, convertedNumber: 0, mainItem: false,
    // formulaCode: 0,
     //unitOfMeasurementCode:0,
-    serviceTypeCode: '', materialGroupCode: 0,
-    lastChangeDate: Instant.now(), baseUnitOfMeasurement: '', toBeConvertedUnitOfMeasurement: '', defaultUnitOfMeasurement: ''
+    serviceTypeCode: '', materialGroupCode: '',
+     baseUnitOfMeasurement: '', toBeConvertedUnitOfMeasurement: '', defaultUnitOfMeasurement: ''
   };
 
   messageAdd!: Message[];
@@ -109,7 +109,7 @@ export class ServiceMasterAddComponent implements OnInit {
         //  // unitOfMeasurementCode: this.selectedBaseMeasure,
         //   serviceTypeCode: this.selectedServiceType,
         //   materialGroupCode:this.selectedMaterialGrp,
-        lastChangeDate: Instant.now(),
+        //lastChangeDate: new Date(),
         baseUnitOfMeasurement: this.selectedRecord.baseUnitOfMeasurement,
         toBeConvertedUnitOfMeasurement: this.selectedRecord.toBeConvertedUnitOfMeasurement,
         defaultUnitOfMeasurement: this.selectedRecord.defaultUnitOfMeasurement
@@ -155,7 +155,7 @@ export class ServiceMasterAddComponent implements OnInit {
         //this.selectedBaseMeasure,
         // this.selectedServiceType,this.selectedMaterialGrp,
         this.selectedRecord.serviceTypeCode, this.selectedRecord.materialGroupCode,
-        Instant.now(),
+        //new Date(),
         //this.baseUnitOfMeasurement,this.selectedToBeConvertedMeasure,this.selectedConvertedMeasure
         this.selectedRecord.baseUnitOfMeasurement, this.selectedRecord.toBeConvertedUnitOfMeasurement, this.selectedRecord.defaultUnitOfMeasurement);
       console.log(newRecord);

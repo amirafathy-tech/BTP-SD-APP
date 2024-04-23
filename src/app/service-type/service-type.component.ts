@@ -4,6 +4,7 @@ import { ServiceType } from './service-type.model';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ApiService } from '../ApiService.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-service-type',
@@ -94,17 +95,40 @@ export class ServiceTypeComponent {
       })
     );
     console.log(filteredRecord);
-    this.apiService.post<ServiceType>('servicetypes', filteredRecord).subscribe((response: ServiceType) => {
-      console.log('ServiceType created:', response);
-      if (response) {
-        this.resetNewService();
-        
-        this.messageService.add({ severity: 'success', summary: 'Success', detail:  `ServiceType Added Successfully` });
-        console.log(this.newServiceType);
+    // this.apiService.post<ServiceType>('servicetypes', filteredRecord).subscribe((response: ServiceType) => {
+    //   console.log('ServiceType created:', response);
+    //   if (response) {
+    //     this.resetNewService();
+    //     this.messageService.add({ severity: 'success', summary: 'Success', detail:  `ServiceType Added Successfully` });
+    //     console.log(this.newServiceType);
 
+    //   }
+    //   this.ngOnInit()
+    // })
+    this.apiService.post<ServiceType>('servicetypes', filteredRecord).subscribe(
+      (response: ServiceType) => {
+        console.log('ServiceType created:', response);
+        if (response) {
+          this.resetNewService();
+          this.messageService.add({ severity: 'success', summary: 'Success', detail:  `ServiceType Added Successfully` });
+          console.log(this.newServiceType);
+        }
+        this.ngOnInit();
+      },
+      (error: HttpErrorResponse) => {
+        if (error.status === 409) {
+          // Handle conflict error
+          console.log('Conflict error:', error);
+          this.messageService.add({ severity: 'error', summary: 'Code Conflict', detail: 'This Code already exists', life: 10000 });
+          this.ngOnInit();
+          // Add your custom error handling logic here
+        } else {
+          // Handle other errors
+          console.error('An error occurred:', error);
+          // Add your custom error handling logic here
+        }
       }
-      this.ngOnInit()
-    })
+    );
 
   }
   resetNewService() {
