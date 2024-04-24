@@ -49,6 +49,8 @@
     <div class="row m-2">
         <div class="field col-12 md:col-4">
             <ng-container *ngIf="editMode">
+                <span class="p-float-label">
+
                 <p-dropdown [options]="recordsServiceType" [required]=true [(ngModel)]="selectedRecord.serviceTypeCode"
                 [ngModelOptions]="{standalone: true}" optionValue="serviceId" optionLabel="serviceId" [filter]="true"
                 [filterFields]="['serviceId','description']" [showClear]="true" placeholder={{selectedRecord.serviceTypeCode}}
@@ -59,9 +61,12 @@
                     </div>
                 </ng-template>
             </p-dropdown>
+            <label for="float-label">Select ServiceType</label>
+            </span>
             <span style="color: red;margin: 5px;">*</span>
             </ng-container>
             <ng-container *ngIf="!editMode">
+                <!-- <span class="p-float-label"> -->
             <p-dropdown [options]="recordsServiceType" [required]=true [(ngModel)]="selectedRecord.serviceTypeCode"
                 [ngModelOptions]="{standalone: true}" optionValue="serviceId" optionLabel="serviceId" [filter]="true"
                 [filterFields]="['serviceId','description']" [showClear]="true" placeholder="Select a ServiceType"
@@ -72,10 +77,13 @@
                     </div>
                 </ng-template>
             </p-dropdown>
+            <!-- <label for="float-label">Select ServiceType</label>
+            </span> -->
             <span style="color: red;margin: 5px;">*</span>
         </ng-container>
         </div>
         <div class="field col-12 md:col-4">
+            <!-- <span class="p-float-label"> -->
             <!-- <cdk-virtual-scroll-viewport itemSize="40" class="dropdown-viewport" (scrolledIndexChange)="updateVisibleRecords($event)"> -->
             <p-dropdown [options]="recordsMeasure" [(ngModel)]="selectedRecord.baseUnitOfMeasurement"
                 [ngModelOptions]="{standalone: true}" optionValue="UnitOfMeasureLongName"
@@ -88,6 +96,9 @@
                     </div>
                 </ng-template>
             </p-dropdown>
+            <!-- <label for="float-label">Select UnitOfMeasurement</label>
+            </span> -->
+            
             <!-- </cdk-virtual-scroll-viewport> -->
             <span style="color: red;margin: 5px;">*</span>
         </div>
