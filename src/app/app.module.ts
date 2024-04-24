@@ -80,6 +80,9 @@ import { ServiceMasterDetailComponent } from './service-master/service-master-de
     HttpClientModule,
     CommonModule,
 
+
+
+
     ButtonModule,
     TableModule,
     DropdownModule,

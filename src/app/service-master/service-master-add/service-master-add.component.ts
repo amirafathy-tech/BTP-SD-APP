@@ -4,8 +4,8 @@ import { ServiceMasterService } from '../service-master.service';
 import { NgForm } from '@angular/forms';
 import { ApiService } from 'src/app/ApiService.service';
 import { ServiceMaster } from '../service-master.model';
-import { Instant } from 'js-joda';
 import { ActivatedRoute, Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-service-master-add',
@@ -38,8 +38,9 @@ export class ServiceMasterAddComponent implements OnInit {
   // Fields of Dropdowns:
   recordsServiceType!: any[];
   selectedServiceType!: number;
-  recordsMeasure!: any[];
 
+  recordsMeasure!: any[];
+  
   selectedBaseMeasure!: number;
 
   baseUnitOfMeasurement!: string;
@@ -61,6 +62,10 @@ export class ServiceMasterAddComponent implements OnInit {
       this.recordsMeasure = response;
       console.log(this.recordsMeasure);
     });
+    
+    
+
+
     this.apiService.get<any[]>('materialgroups').subscribe(response => {
       console.log(response);
       this.recordsMaterialGrp = response;
@@ -70,6 +75,9 @@ export class ServiceMasterAddComponent implements OnInit {
     this.messageAdd = [{ severity: 'success', summary: 'Success', detail: 'Added Successfully' }];
     this.messageUpdate = [{ severity: 'success', summary: 'Success', detail: 'Updated Successfully' }];
   }
+
+   
+  
 
   constructor(private apiService: ApiService, private serviceMasterService: ServiceMasterService
     , private messageService: MessageService, private router: Router,private confirmationService: ConfirmationService, private route: ActivatedRoute) {

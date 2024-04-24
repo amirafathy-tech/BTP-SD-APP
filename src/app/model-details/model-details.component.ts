@@ -133,11 +133,8 @@ export class ModelDetailsComponent {
     }
   }
   retrievedUOM!: UnitOfMeasure
-  //retrievedMatGrp !: any
-  //retrievedFormula: any
 
   updateRetrievedUOM!: UnitOfMeasure
- // updateRetrievedMatGrp !: any
   updateRetrievedFormula: any
   dontSelectServiceNumber: boolean = true
 
@@ -408,6 +405,10 @@ export class ModelDetailsComponent {
       });
     }
     if (this.updateSelectedServiceNumberRecord && this.updatedFormulaRecord && this.resultAfterTestUpdate) {
+      console.log(record);
+      console.log(this.updateSelectedServiceNumberRecord);
+      
+      
       const newRecord: ModelSpecDetails = {
         ...record, // Copy all properties from the original record
         // Modify specific attributes
@@ -456,7 +457,7 @@ export class ModelDetailsComponent {
         console.log(this.totalValue)
       });
     }
-    else {
+    if (!this.updateSelectedServiceNumberRecord && !this.updatedFormulaRecord && !this.resultAfterTestUpdate)  {
       this.apiService.put<ModelSpecDetails>('modelspecdetails', index, record).subscribe(response => {
         console.log('modelspecDetail updated:', response);
         if (response) {
@@ -481,7 +482,7 @@ export class ModelDetailsComponent {
     serviceNumberCode: 0,
     lineTypeCode: '',
     unitOfMeasurementCode: '',
-    currencyCode: 0,
+    currencyCode: '',
     personnelNumberCode: '',
     serviceTypeCode: '',
     materialGroupCode: '',
@@ -602,7 +603,7 @@ export class ModelDetailsComponent {
         supplementaryLine: this.newService.supplementaryLine,
         lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
       }
-      if (this.newService.quantity === 0 || this.newService.grossPrice === 0) {
+      if (this.resultAfterTest === 0 || this.newService.grossPrice === 0) {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -622,6 +623,75 @@ export class ModelDetailsComponent {
         console.log('modelspecdetails created:', response);
         if (response) {
           this.resetNewService();
+          this.selectedFormulaRecord=undefined
+          console.log(this.newService);
+
+          const newDetail = response;
+          if (this.modelSpecRecord) {
+            this.modelSpecRecord.modelSpecDetailsCode.push(newDetail.modelSpecDetailsCode);
+            this.apiService.put<ModelEntity>('modelspecs', this.modelSpecRecord.modelSpecCode, this.modelSpecRecord).subscribe(updatedModel => {
+              console.log('Model updated:', updatedModel);
+            });
+          }
+        }
+        console.log(response);
+        this.totalValue = 0;
+        //this.modelSpecDetailsService.getRecords();
+        this.ngOnInit()
+      });
+    }
+    else if (this.selectedServiceNumberRecord && !this.selectedFormulaRecord && !this.resultAfterTest) { // if user didn't select serviceNumber && select formula
+      const newRecord = {
+        serviceNumberCode: this.selectedServiceNumber,
+        lineTypeCode: this.selectedLineType,
+        unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
+        currencyCode: this.modelSpecRecord?.currencyCode,
+        personnelNumberCode: this.selectedPersonnelNumber,
+        serviceTypeCode: this.selectedServiceNumberRecord.serviceTypeCode,
+        materialGroupCode: this.selectedServiceNumberRecord.materialGroupCode,
+        formulaCode: this.selectedFormula,
+        deletionIndicator: this.newService.deletionIndicator,
+        shortText: this.selectedServiceNumberRecord.description,
+        // quantity: this.selectedFormulaRecord.result,
+        quantity: this.newService.quantity,
+        grossPrice: this.newService.grossPrice,
+        overFulfilmentPercentage: this.newService.overFulfilmentPercentage,
+        priceChangedAllowed: this.newService.priceChangedAllowed,
+        unlimitedOverFulfillment: this.newService.unlimitedOverFulfillment,
+        pricePerUnitOfMeasurement: this.newService.pricePerUnitOfMeasurement,
+        externalServiceNumber: this.newService.externalServiceNumber,
+        netValue: this.newService.netValue,
+       // netValue: this.resultAfterTest * this.newService.grossPrice,
+        serviceText: this.selectedServiceNumberRecord.serviceText,
+        lineText: this.newService.lineText,
+        lineNumber: this.newService.lineNumber,
+        alternatives: this.newService.alternatives,
+        biddersLine: this.newService.biddersLine,
+        supplementaryLine: this.newService.supplementaryLine,
+        lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
+      }
+      if ( this.newService.quantity === 0 || this.newService.grossPrice === 0) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Quantity and GrossPrice are required',
+          life: 3000
+        });
+      }
+      console.log(newRecord);
+      // Remove properties with empty or default values
+      const filteredRecord = Object.fromEntries(
+        Object.entries(newRecord).filter(([_, value]) => {
+          return value !== '' && value !== 0 && value !== undefined && value !== null;
+        })
+      );
+      console.log(filteredRecord);
+      this.apiService.post<ModelSpecDetails>('modelspecdetails', filteredRecord).subscribe((response: ModelSpecDetails) => {
+        console.log('modelspecdetails created:', response);
+        if (response) {
+          this.resetNewService();
+          this.selectedFormulaRecord=undefined
+          this.selectedServiceNumberRecord=undefined
           console.log(this.newService);
 
           const newDetail = response;
@@ -643,8 +713,7 @@ export class ModelDetailsComponent {
         serviceNumberCode: this.selectedServiceNumber,
         lineTypeCode: this.selectedLineType,
         unitOfMeasurementCode: this.selectedServiceNumberRecord.baseUnitOfMeasurement,
-        // will be updated after next deployment
-       // currencyCode: this.modelSpecRecord?.currencyCode,
+        currencyCode: this.modelSpecRecord?.currencyCode,
         personnelNumberCode: this.selectedPersonnelNumber,
         serviceTypeCode: this.selectedServiceNumberRecord.serviceTypeCode,
         materialGroupCode: this.selectedServiceNumberRecord.materialGroupCode,
@@ -669,7 +738,7 @@ export class ModelDetailsComponent {
         supplementaryLine: this.newService.supplementaryLine,
         lotSizeForCostingIsOne: this.newService.lotSizeForCostingIsOne,
       }
-      if (this.newService.quantity === 0 || this.newService.grossPrice === 0) {
+      if ( this.resultAfterTest === 0 || this.newService.grossPrice === 0) {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
@@ -689,6 +758,8 @@ export class ModelDetailsComponent {
         console.log('modelspecdetails created:', response);
         if (response) {
           this.resetNewService();
+          this.selectedFormulaRecord=undefined
+          this.selectedServiceNumberRecord=undefined
           console.log(this.newService);
 
           const newDetail = response;
@@ -972,7 +1043,7 @@ export class ModelDetailsComponent {
       serviceNumberCode: 0,
       lineTypeCode: '',
       unitOfMeasurementCode: '',
-      currencyCode: 0,
+      currencyCode: '',
       personnelNumberCode: '',
       serviceTypeCode: '',
       materialGroupCode: '',
@@ -998,6 +1069,12 @@ export class ModelDetailsComponent {
       lotSizeForCostingIsOne: false,
       modelSpecDetailsCode: 0
     };
+     this.selectedUnitOfMeasure='';
+     this.selectedPersonnelNumber='';
+     this.selectedLineType='';
+     this.selectedServiceType='';
+     this.selectedMatGrp='';
+    this.selectedFormula='';
   }
   // handle Formula Parameters Entrance
   showPopup: boolean = false;

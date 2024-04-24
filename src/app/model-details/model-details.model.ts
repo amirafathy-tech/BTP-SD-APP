@@ -3,7 +3,7 @@ export class ModelSpecDetails {
     public serviceNumberCode: number;
     public lineTypeCode: string;
     public unitOfMeasurementCode: string;// will be mandatory if service number could be empty
-    public currencyCode: number;
+    public currencyCode: string;
     public personnelNumberCode: string;
     public serviceTypeCode: string;
     public materialGroupCode: string;
@@ -33,7 +33,7 @@ export class ModelSpecDetails {
     public lotSizeForCostingIsOne:boolean;
     
 
-    constructor(serviceNumberCode: number,lineTypeCode: string,unitOfMeasurementCode: string,currencyCode: number,
+    constructor(serviceNumberCode: number,lineTypeCode: string,unitOfMeasurementCode: string,currencyCode: string,
         personnelNumberCode: string,serviceTypeCode: string,materialGroupCode: string,formulaCode: string,
         deletionIndicator: boolean,shortText: string,
         quantity: number,grossPrice:number,overFulfilmentPercentage:number,priceChangedAllowed: boolean,
