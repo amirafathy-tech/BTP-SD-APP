@@ -24,7 +24,7 @@
         <div class="field grid col">
           <label for="numberOfParameters">NumberOfParams:<span class="required-indicator"
               style="color:red">*</span></label>
-          <input #numberOfParameters="ngModel" id="numberOfParameters" type="number" required pInputText
+          <input #numberOfParameters="ngModel" id="numberOfParameters" type="number" required pInputNumber
             [(ngModel)]="createInformation.numberOfParameters"
             class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary "
             [ngClass]="{ 'ng-dirty': (numberOfParameters.invalid && submitted) || (numberOfParameters.dirty && numberOfParameters.invalid) }"
@@ -33,10 +33,10 @@
           <small
             *ngIf="(numberOfParameters.invalid && submitted) || (numberOfParameters.dirty && numberOfParameters.invalid)"
             class="p-error">
-            <ng-container *ngIf="createInformation.numberOfParameters < 0">
+            <!-- <ng-container *ngIf="createInformation.numberOfParameters < 0">
               NumberOfParameters is invalid.
-            </ng-container>
-            <ng-container *ngIf="createInformation.numberOfParameters >= 0">
+            </ng-container> -->
+            <ng-container *ngIf="createInformation.numberOfParameters <= 0 && createInformation.numberOfParameters === undefined">
               NumberOfParameters is required.
             </ng-container>
           </small>

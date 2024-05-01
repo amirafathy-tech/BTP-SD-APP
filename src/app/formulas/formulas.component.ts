@@ -47,4 +47,11 @@ export class FormulasComponent {
   navigateAddFormula(){
     this.router.navigate(['/formula']);
   }
+  selectedDetailsForDisplay?: Formula
+  visible: boolean = false;
+  showDialog(record: Formula) {
+    this.visible = true;
+    this.selectedDetailsForDisplay = record
+    console.log(this.selectedDetailsForDisplay);
+  }
 }

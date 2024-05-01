@@ -41,7 +41,7 @@
         <div class="field grid">
             <label for="currency" class="col-12 mb-2 md:col-2 md:mb-0">Currency:</label>
             <p-dropdown [options]="recordsCurrency" [(ngModel)]="selectedCurrency"  [ngModelOptions]="{standalone: true}"
-            optionValue="currencyCode" optionLabel="code"
+            optionValue="code" optionLabel="code"
                 [filter]="true" [filterFields]="['code','description']" [showClear]="true" placeholder="Select Currency">
                 <ng-template let-record pTemplate="item">
                     <div class="flex align-items-center gap-2">

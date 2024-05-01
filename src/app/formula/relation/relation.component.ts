@@ -19,15 +19,15 @@ export class RelationComponent implements OnInit {
   operations: string[] = ['+', '-', '*', '/', '%', 'π', '^']
 
   constructor(private apiService: ApiService, private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,) {
-    this.passedCreateInfo = this.router.getCurrentNavigation()?.extras.state?.['passedCreateInfo'];
-    this.passedParamInfo = this.router.getCurrentNavigation()?.extras.state?.['passedParamInfo'];
-    console.log(this.passedCreateInfo);
-    console.log(this.passedParamInfo);
+    // this.passedCreateInfo = this.router.getCurrentNavigation()?.extras.state?.['passedCreateInfo'];
+    // this.passedParamInfo = this.router.getCurrentNavigation()?.extras.state?.['passedParamInfo'];
+    // console.log(this.passedCreateInfo);
+    // console.log(this.passedParamInfo);
 
-    this.parameterIds = this.passedParamInfo.map((item: { paramID: any; }) => item.paramID);
-    this.parameterDescriptions = this.passedParamInfo.map((item: { paramDescription: any; }) => item.paramDescription);
-    console.log(this.parameterIds);
-    console.log(this.parameterDescriptions);
+    // this.parameterIds = this.passedParamInfo.map((item: { paramID: any; }) => item.paramID);
+    // this.parameterDescriptions = this.passedParamInfo.map((item: { paramDescription: any; }) => item.paramDescription);
+    // console.log(this.parameterIds);
+    // console.log(this.parameterDescriptions);
   }
 
   paramClick(param: string) {
@@ -42,7 +42,31 @@ export class RelationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.relationInformation = this.formulaService.getFormulaInformation().relationInformation;
+
+    // hold data from previous page:
+    this.passedCreateInfo = history.state.passedCreateInfo;
+    this.passedParamInfo = history.state.passedParamInfo;
+    console.log(this.passedCreateInfo);
+    console.log(this.passedParamInfo);
+
+    this.parameterIds = this.passedParamInfo.map((item: { paramID: any; }) => item.paramID);
+    this.parameterDescriptions = this.passedParamInfo.map((item: { paramDescription: any; }) => item.paramDescription);
+    console.log(this.parameterIds);
+    console.log(this.parameterDescriptions);
+
+    // if user press Back Button 
+    if (localStorage.getItem('formulaLogic') !== null) {
+      console.log(localStorage.getItem('formulaLogic'));
+
+      this.relationInformation = this.formulaService.getFormulaInformation().relationInformation;
+      console.log(this.relationInformation);
+
+      this.relationInformation.formulaLogic = localStorage.getItem('formulaLogic');
+      console.log(this.relationInformation.formulaLogic);
+    }
+    else {
+      this.relationInformation = this.formulaService.getFormulaInformation().relationInformation;
+    }
   }
 
   nextPage() {
@@ -58,6 +82,9 @@ export class RelationComponent implements OnInit {
       console.log(this.formulaService.formulaInformation);
       console.log(this.formulaService.formulaInformation.relationInformation);
 
+// save relation info in local storage 
+      localStorage.setItem('formulaLogic', String(this.relationInformation.formulaLogic));
+
       const navigationExtras: NavigationExtras = {
         state: {
           formulaLogic: this.relationInformation.formulaLogic,
@@ -72,19 +99,14 @@ export class RelationComponent implements OnInit {
   }
 
   prevPage() {
-    const formulaObject1: any = {
-      formula: this.passedCreateInfo.formula,
-      description: this.passedCreateInfo.description,
-      numberOfParameters: this.passedCreateInfo.numberOfParameters,
-      unitOfMeasurementCode: this.passedCreateInfo.unitOfMeasurementCode,
-      parameterIds: this.parameterIds,
-      parameterDescriptions: this.parameterDescriptions,
-      formulaLogic: this.relationInformation.formulaLogic,
-      // testParameters: valuesOnly
+    const navigationExtras: NavigationExtras = {
+      state: {
+        passedParamInfo: this.passedParamInfo
+      }
     };
-    console.log(formulaObject1);
-    this.apiService.post<any>('formulas', formulaObject1).subscribe((response) => {
-      console.log('formula created:', response);
-    });
+    console.log(navigationExtras);
+
+    this.router.navigate(['formula/parameter'], navigationExtras);
+
   }
 }
