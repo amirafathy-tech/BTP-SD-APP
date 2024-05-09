@@ -35,15 +35,20 @@ export class ParameterComponent implements OnInit {
   }
 
   ngOnInit() {
-           
+
     // if user press Back Button 
     if (JSON.parse(String(localStorage.getItem('passedParamInfo'))) !== null) {
       this.parameterInformation = JSON.parse(String(localStorage.getItem('passedParamInfo'))) ? JSON.parse(String(localStorage.getItem('passedParamInfo')))! : [];
       console.log(this.parameterInformation);
+      console.log(Number(localStorage.getItem('numberOfParameters')));
+
       for (let i = 0; i < Number(localStorage.getItem('numberOfParameters')); i++) {
-        console.log(this.parameterInformation[i].paramID);
-        console.log(this.parameterInformation[i].paramDescription);
-        this.parameterInformationIterator.push({ paramID: this.parameterInformation[i].paramID, paramDescription: this.parameterInformation[i].paramDescription });
+        console.log(this.parameterInformation[i]?.paramID ||'');
+        console.log(this.parameterInformation[i]?.paramDescription ||'');
+        this.parameterInformationIterator.push({
+          paramID: this.parameterInformation[i]?.paramID || '',
+          paramDescription: this.parameterInformation[i]?.paramDescription || ''
+        });
       }
       console.log(this.parameterInformationIterator);
     }

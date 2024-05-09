@@ -28,6 +28,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { AnimateModule } from 'primeng/animate';
 import { CardModule } from 'primeng/card';
 import { FieldsetModule } from 'primeng/fieldset';
+// import { InputGroupModule } from 'primeng';
+// import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 
 
@@ -99,6 +101,9 @@ import { ServiceMasterDetailComponent } from './service-master/service-master-de
     MultiSelectModule,
     CheckboxModule,
     FieldsetModule,
+    // InputGroupModule,
+    // InputGroupAddonModule,
+
 
     NgHttpLoaderModule.forRoot(),
   ],
