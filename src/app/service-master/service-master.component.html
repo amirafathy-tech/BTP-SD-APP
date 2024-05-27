@@ -53,7 +53,6 @@
                         <p-checkbox [value]="record" (onChange)="onRecordSelectionChange($event, record)"></p-checkbox>
                     </td>
                     <td *ngFor="let col of columns">
-                        <!-- {{record[col.field]}} -->
                         <ng-container *ngIf="col.field === 'serviceNumberCode'">
                             {{ 'S' + record[col.field]  }}
                           </ng-container>

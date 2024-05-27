@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ServiceType } from './service-type.model';
 import { HttpClient } from '@angular/common/http';
-import { ApiService } from '../ApiService.service';
+import { ApiService } from '../shared/ApiService.service';
 
 @Injectable()
 export class ServiceTypeService {
@@ -25,7 +25,6 @@ export class ServiceTypeService {
       console.log('ServiceType created:', response);
       this.getApiRecords();
     });
-    
     return this.apiService.post<ServiceType>('servicetypes', record);
   }
   updateApiRecord(id:number,record: any) {

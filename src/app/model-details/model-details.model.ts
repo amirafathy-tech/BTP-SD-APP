@@ -2,17 +2,14 @@ export class ModelSpecDetails {
     public modelSpecDetailsCode!: number;
     public serviceNumberCode: number;
     public lineTypeCode: string;
-    public unitOfMeasurementCode: string;// will be mandatory if service number could be empty
+    public unitOfMeasurementCode: string;
     public currencyCode: string;
     public personnelNumberCode: string;
     public serviceTypeCode: string;
     public materialGroupCode: string;
     public formulaCode: string;
-
     public selectionCheckbox!: boolean;
-
     public lineIndex!: number;
-    
     public deletionIndicator: boolean;
     public shortText: string;
     public quantity: number;
@@ -25,7 +22,6 @@ export class ModelSpecDetails {
     public netValue:number;
     public serviceText: string;
     public lineText: string;
-    //public formula: string;
     public lineNumber: string;
     public alternatives: string;
     public biddersLine:boolean;
@@ -41,7 +37,6 @@ export class ModelSpecDetails {
         netValue:number,serviceText: string,lineText: string, lineNumber: string,
         alternatives: string,biddersLine:boolean,supplementaryLine:boolean,lotSizeForCostingIsOne:boolean
     ) {
-       // this.id = id;
        this.serviceNumberCode=serviceNumberCode;
        this.lineTypeCode=lineTypeCode;
        this.unitOfMeasurementCode=unitOfMeasurementCode;
@@ -51,7 +46,6 @@ export class ModelSpecDetails {
        this.materialGroupCode=materialGroupCode;
        this.formulaCode=formulaCode;
 
-     
       this.deletionIndicator=deletionIndicator; 
       this.shortText=shortText;
       this.quantity=quantity;
@@ -64,18 +58,10 @@ export class ModelSpecDetails {
       this.netValue=netValue;
       this.serviceText=serviceText;
       this.lineText=lineText;
-     // this.formula=formula;
       this.lineNumber=lineNumber;
       this.alternatives=alternatives;
       this.biddersLine=biddersLine; 
       this.supplementaryLine=supplementaryLine;
       this.lotSizeForCostingIsOne=lotSizeForCostingIsOne;
     }
-
-   
-    
-    
-    
-
-   
 }

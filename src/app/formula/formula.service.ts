@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ApiService } from '../ApiService.service';
+import { ApiService } from '../shared/ApiService.service';
 @Injectable()
 export class FormulaService {
     constructor(private apiService: ApiService) { }

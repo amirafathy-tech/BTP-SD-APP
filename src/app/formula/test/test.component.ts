@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import {NavigationExtras, Router } from '@angular/router';
 import { FormulaService } from '../formula.service';
-import { ApiService } from 'src/app/ApiService.service';
+import { ApiService } from 'src/app/shared/ApiService.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { HttpErrorResponse } from '@angular/common/http';
 
@@ -12,58 +12,33 @@ import { HttpErrorResponse } from '@angular/common/http';
   providers: [FormulaService, ApiService, MessageService, ConfirmationService]
 })
 export class TestComponent implements OnInit {
+
   result: number = 0;
   visible: boolean = false;
-  formulaObject: any = {
-    formula: '',
-    description: '',
-    numberOfParameters: 0,
-    parameterIds: [],
-    parameterDescriptions: [],
-    formulaLogic: '',
-    testParameters: []
-  };
-  variableValues: number[] = [];
   parameterIds: string[] = [];
   parameterDescriptions: string[] = []
   testInformation: any;
-  submitted: boolean = false;
   formulaLogic!: string;
   passedCreateInfo: any;
   passedParamInfo: any;
-  passedTestInfo: any;
-
-  constructor(private router: Router, private route: ActivatedRoute, public formulaService: FormulaService,
+ 
+  constructor(private router: Router,public formulaService: FormulaService,
     private apiService: ApiService, private messageService: MessageService, private confirmationService: ConfirmationService) {
-    // this.formulaLogic = this.router.getCurrentNavigation()?.extras.state?.['formulaLogic'];
-    // this.passedCreateInfo = this.router.getCurrentNavigation()?.extras.state?.['passedCreateInfo'];
-    // this.passedParamInfo = this.router.getCurrentNavigation()?.extras.state?.['passedParamInfo'];
-    // this.parameterIds = this.passedParamInfo.map((item: { paramID: any; }) => item.paramID);
-    // this.parameterDescriptions = this.passedParamInfo.map((item: { paramDescription: any; }) => item.paramDescription);
-
-    // console.log(this.parameterIds);
-    // console.log(this.parameterDescriptions);
-    // console.log(this.passedCreateInfo);
-    // console.log(this.passedParamInfo);
-    // console.log(this.formulaLogic);
   }
 
   ngOnInit() {
     this.testInformation = this.formulaService.getFormulaInformation().testInformation;
-    console.log("heree");
-    console.log(this.formulaService.formulaInformation);
     // hold data from previous page:
     this.formulaLogic = history.state.formulaLogic;
     this.passedCreateInfo = history.state.passedCreateInfo;
     this.passedParamInfo = history.state.passedParamInfo;
     this.parameterIds = this.passedParamInfo.map((item: { paramID: any; }) => item.paramID);
     this.parameterDescriptions = this.passedParamInfo.map((item: { paramDescription: any; }) => item.paramDescription);
-    console.log(this.parameterIds);
-    console.log(this.parameterDescriptions);
-    console.log(this.passedCreateInfo);
-    console.log(this.passedParamInfo);
-    console.log(this.formulaLogic);
-
+    // console.log(this.parameterIds);
+    // console.log(this.parameterDescriptions);
+    // console.log(this.passedCreateInfo);
+    // console.log(this.passedParamInfo);
+    // console.log(this.formulaLogic);
   }
 
   getVariables(formulaLogic: string): string[] {
@@ -82,34 +57,26 @@ export class TestComponent implements OnInit {
       }
     };
     console.log(navigationExtras);
-    this.router.navigate(['formula/relation'], navigationExtras);
+    this.router.navigate(['formula/relation'],navigationExtras);
   }
-
   formulaObject1?: any
   valuesTestParam?: number[]
 
   showResult() {
     if (this.testInformation.variables) {
-      console.log(this.testInformation.variables);
       const valuesOnly = Object.values(this.testInformation.variables)
         .filter(value => typeof value === 'number') as number[];
 
       this.valuesTestParam = valuesOnly
-      console.log(this.valuesTestParam);
-      console.log(valuesOnly);
-      console.log(this.testInformation.variables);
-
       this.formulaService.formulaInformation.testInformation = this.testInformation;
-      console.log(this.formulaService.formulaInformation);
-      
+
       this.formulaObject1 = {
         formula: this.passedCreateInfo.formula,
         //formula: localStorage.getItem('formula'),
-         description: this.passedCreateInfo.description,
-       // description: localStorage.getItem('description'),
-         numberOfParameters: this.passedCreateInfo.numberOfParameters,
-       // numberOfParameters: localStorage.getItem('numberOfParameters'),
-
+        description: this.passedCreateInfo.description,
+        // description: localStorage.getItem('description'),
+        numberOfParameters: this.passedCreateInfo.numberOfParameters,
+        // numberOfParameters: localStorage.getItem('numberOfParameters'),
         parameterIds: this.parameterIds,
         parameterDescriptions: this.parameterDescriptions,
         formulaLogic: this.formulaLogic,
@@ -120,7 +87,6 @@ export class TestComponent implements OnInit {
       const numberOfParameters = this.formulaObject1.numberOfParameters;
       const parameterIds = this.formulaObject1.parameterIds;
       const testParameters = this.formulaObject1.testParameters;
-
       // Substitute parameter values in the formula logic string
       let formulaLogicWithValues = formulaLogic;
       for (let i = 0; i < numberOfParameters; i++) {
@@ -132,64 +98,11 @@ export class TestComponent implements OnInit {
       // Evaluate the formula logic string to get the result
       this.result = eval(formulaLogicWithValues);
       console.log(this.result);
-      this.visible = true;
-
-      // this.apiService.post<any>('formulas', formulaObject1).subscribe(
-      //   (response) => {
-      //     console.log('formula created:', response.result);
-      //     this.formulaResponseID = response.formulaCode
-      //     console.log(this.formulaResponseID);
-
-      //     this.result = response.result;
-      //     //+this.resultUnitOfMeasurement.code;
-      //     console.log(this.result);
-      //     this.visible = true;
-      //   },
-      //   (error: HttpErrorResponse) => {
-      //     console.error('An error occurred:', error);
-      //     console.log(error.status);
-      //     if(error.status === 409){
-      //       this.formulaStatusCode= error.status
-      //       this.apiService.put<any>('formulas',this.formulaResponseID ,formulaObject1).subscribe(
-      //         (response) => {
-      //           console.log('formula Updated:', response.result);
-      //           this.formulaResponseID = response.formulaCode
-      //           console.log(this.formulaResponseID);
-      //           this.result = response.result;
-      //           //+this.resultUnitOfMeasurement.code;
-      //           console.log(this.result);
-      //           this.visible = true;
-      //         },
-      //       )
-      //     }
-      //     // this.messageService.add({ severity: 'error', summary: 'Code Conflict', detail: 'This Formula Code already exists', life: 10000 });
-      //   }
-      // );
-      // this.router.navigate(['formula/test'], navigationExtras);
-      // return;
+      this.visible = true;     
     }
   }
 
   saveFormula() {
-    console.log(this.result);
-    // if (this.result != 0) {
-    //   this.confirmationService.confirm({
-    //     message: 'Formula Created successfully. Click Accept to go to the Formulas Page.',
-    //     header: 'Added Successfully',
-    //     icon: 'pi pi-check',
-    //     accept: () => {
-    //       this.router.navigate(['/formulas']);
-    //     },
-    //     reject: () => {
-    //     }
-    //   });
-    // }
-    // if (this.formulaStatusCode === 409) {
-    //   this.messageService.add({ severity: 'error', summary: 'Code Conflict', detail: 'This Formula Code already exists', life: 10000 });
-    // }
-    // else {
-
-
     const formulaObject1: any = {
       formula: this.passedCreateInfo.formula,
       description: this.passedCreateInfo.description,
@@ -204,7 +117,6 @@ export class TestComponent implements OnInit {
       (response) => {
         console.log('formula created:', response);
         this.result = response.result
-        console.log(this.result);//Nan
         this.confirmationService.confirm({
           message: 'Formula Created successfully. Click Accept to go to the Formulas Page.',
           header: 'Added Successfully',

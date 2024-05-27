@@ -5,7 +5,7 @@ import { ModelService } from '../model.service';
 import { ModelEntity } from '../model.model';
 import { ConfirmationService, Message } from 'primeng/api';
 import { MessageService } from 'primeng/api';
-import { ApiService } from 'src/app/ApiService.service';
+import { ApiService } from 'src/app/shared/ApiService.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -15,35 +15,23 @@ import { HttpErrorResponse } from '@angular/common/http';
   providers: [ModelService, MessageService, ConfirmationService]
 })
 export class AddModelComponent implements OnInit {
-  messages!: Message[];
-  successMessage: boolean = false;
 
   @ViewChild('f', { static: false })
   slForm!: NgForm;
-
   recordsCurrency!: any[];
   selectedCurrency!: number;
-
-  ngOnInit() {
-    this.apiService.get<any[]>('currencies').subscribe(response => {
-      console.log(response);
-      this.recordsCurrency = response;
-      console.log(this.recordsCurrency);
-    });
-    this.messages = [{ severity: 'success', summary: 'Success', detail: 'Added Successfully' }];
-  }
 
   constructor(private modelService: ModelService, private apiService: ApiService, private messageService: MessageService, private confirmationService: ConfirmationService, private router: Router,) {
   }
 
-  showSuccess() {
-    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Added Successfully' });
+  ngOnInit() {
+    this.apiService.get<any[]>('currencies').subscribe(response => {
+      this.recordsCurrency = response;
+    });
   }
 
   onSubmit(form: NgForm) {
     const value = form.value;
-    console.log(value)
-
     const newRecord = new ModelEntity(this.selectedCurrency, value.modelServSpec, value.blockingIndicator, value.serviceSelection, value.description,
       value.searchTerm);
       

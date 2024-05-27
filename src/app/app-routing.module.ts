@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { ModelComponent } from './model/model.component';
 import { AddModelComponent } from './model/add-model/add-model.component';
-import { ServiceComponent } from './service/service.component';
 import { ModelDetailsComponent } from './model-details/model-details.component';
 import { ServiceTypeComponent } from './service-type/service-type.component';
 import { FormulaComponent } from './formula/formula.component';
@@ -15,26 +14,28 @@ import { ServiceMasterComponent } from './service-master/service-master.componen
 import { ServiceMasterAddComponent } from './service-master/service-master-add/service-master-add.component';
 import { FormulasComponent } from './formulas/formulas.component';
 import { ServiceMasterDetailComponent } from './service-master/service-master-detail/service-master-detail.component';
+import { FsComponent } from './fs/fs.component';
+import { AuthComponent } from './auth/auth.component';
+import { AuthGuard } from './auth/auth.guard';
+//import { LoginComponent } from './auth-folder/login/login.component';
+//import { RegisterComponent } from './auth-folder/register/register.component';
 
 
 const routes: Routes = [
   { path: '', component: AppComponent },
-  { path: 'model', component: ModelComponent },
+  { path: 'model',component: ModelComponent },
   { path: 'add-model', component: AddModelComponent },
-  { path: 'service', component: ServiceComponent },
   { path: 'modelSpecDetails', component: ModelDetailsComponent },
   { path: 'servicetype', component: ServiceTypeComponent },
   { path: 'servicemaster', component: ServiceMasterComponent },
   { path: 'add-servicemaster', component: ServiceMasterAddComponent },
   { path: 'detail-servicemaster', component: ServiceMasterDetailComponent },
   { path: 'formulas', component: FormulasComponent },
-//   {
-//     path: 'servicemaster', component: ServiceMasterComponent,
-//     children: [
-//       { path: '', component: ServiceMasterComponent },
-//       { path: 'add', component: ServiceMasterAddComponent },
-//     ]
-// },
+  { path: 'auth', component: AuthComponent },
+  //{ path: 'fs', component: FsComponent },
+  // { path: 'login', component: LoginComponent },
+  // { path: 'register', component: RegisterComponent },
+
   {
     path: 'formula', component: FormulaComponent,
     children: [

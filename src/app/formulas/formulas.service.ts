@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Formula } from './formulas.model';
 import { HttpClient } from '@angular/common/http';
-import { ApiService } from '../ApiService.service';
+import { ApiService } from '../shared/ApiService.service';
 
 @Injectable()
 export class FormulasService {

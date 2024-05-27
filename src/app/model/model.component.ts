@@ -6,7 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NavigationExtras, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ApiService } from '../ApiService.service';
+import { ApiService } from '../shared/ApiService.service';
 
 @Component({
   selector: 'app-model',
@@ -17,7 +17,6 @@ import { ApiService } from '../ApiService.service';
 export class ModelComponent implements OnInit {
 
   records!: ModelEntity[];
-  selectedRecords!: ModelEntity;
   @ViewChild('f', { static: false })
   slForm!: NgForm;
 
@@ -27,10 +26,25 @@ export class ModelComponent implements OnInit {
   recordsCurrency!: any[];
   selectedCurrency!: number;
 
+  constructor(private apiService: ApiService, private modelService: ModelService, private messageService: MessageService, private confirmationService: ConfirmationService, private modalService: NgbModal, private fb: FormBuilder,
+    private router: Router) {
+  }
+
+  ngOnInit() {
+    this.modelService.getRecords();
+    this.subscription = this.modelService.recordsChanged.subscribe((records: ModelEntity[]) => {
+      this.records = records.sort((a, b) => b.modelSpecCode - a.modelSpecCode);
+    });
+
+    this.apiService.get<any[]>('currencies').subscribe(response => {
+      this.recordsCurrency = response;
+    });
+  }
+
   navigateModelAdd() {
-    //this.modalVisible = true;
     this.router.navigate(['/add-model']);
   }
+  
   deleteDialog: boolean = false;
 
   showDeleteDialog() {
@@ -45,17 +59,8 @@ export class ModelComponent implements OnInit {
   }
 
   onRowEditSave(index: number, record: ModelEntity) {
-    console.log(index);
-    console.log(record);
-    // this.apiService.put<ModelEntity>('modelspecs', index, record).subscribe(response => {
-    //   console.log('modelspecs updated:', response);
-    //   if (response) {
-    //     this.messageService.add({ severity: 'success', summary: 'Success', detail: `Model ${response.modelSpecCode} Updated Successfully` });
-    //   }
-    //   this.modelService.getRecords();
-    // });
     this.modelService.updateRecord(index, record);
-    this.ngOnInit(); //reload the table
+    this.ngOnInit(); 
     this.editMode = false;
     delete this.clonedRecords[record.modelSpecCode];
     this.messageService.add({ severity: 'success', summary: 'Success', detail: `Model ${record.modelSpecCode} Updated Successfully` });
@@ -65,11 +70,8 @@ export class ModelComponent implements OnInit {
     this.records[index] = this.clonedRecords[record.modelSpecCode];
     delete this.clonedRecords[record.modelSpecCode];
   }
-  constructor(private apiService: ApiService, private modelService: ModelService, private messageService: MessageService, private confirmationService: ConfirmationService, private modalService: NgbModal, private fb: FormBuilder,
-    private router: Router) {
-  }
+
   navigateServices(record: ModelEntity) {
-    console.log(record);
     const navigationExtras: NavigationExtras = {
       state: {
         Record: record
@@ -84,31 +86,14 @@ export class ModelComponent implements OnInit {
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
       accept: () => {
-        // for (const record of this.selectedAllRecords) {
         this.apiService.delete<ModelEntity>('modelspecs', record.modelSpecCode).subscribe(response => {
           console.log('model spec deleted:', response);
           this.modelService.getRecords();
         });
-        // }
         this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
-        //this.selectedAllRecords = [];
       }
     });
   }
 
-  ngOnInit() {
-    this.modelService.getRecords();
-    this.subscription = this.modelService.recordsChanged.subscribe((records: ModelEntity[]) => {
-      // this.records = records;
-      this.records = records.sort((a, b) => b.modelSpecCode - a.modelSpecCode);
-      console.log(this.records);
-    });
-
-    this.apiService.get<any[]>('currencies').subscribe(response => {
-      console.log(response);
-      this.recordsCurrency = response;
-      console.log(this.recordsCurrency);
-    });
-  }
 }
 

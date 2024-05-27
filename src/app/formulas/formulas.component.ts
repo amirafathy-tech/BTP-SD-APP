@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormulasService } from './formulas.service';
 import { Formula } from './formulas.model';
 import { Subscription } from 'rxjs';
-import { ApiService } from '../ApiService.service';
+import { ApiService } from '../shared/ApiService.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 
@@ -23,7 +23,6 @@ export class FormulasComponent {
     console.log(this.formulasService.getApiRecords());
     this.formulasService.getApiRecords();
     this.subscription = this.formulasService.recordsChanged.subscribe((records: Formula[]) => {
-      // this.records = records;
       this.records =  records.sort((a, b) => b.formulaCode - a.formulaCode);
       console.log(this.records);
     });

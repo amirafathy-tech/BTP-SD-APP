@@ -5,12 +5,13 @@ import * as FileSaver from 'file-saver';
 import { ServiceMaster } from './service-master.model';
 import { ServiceMasterService } from './service-master.service';
 import { Subscription } from 'rxjs';
-import { ApiService } from '../ApiService.service';
+import { ApiService } from '../shared/ApiService.service';
 
 interface Column {
     field: string;
     header: string;
 }
+
 @Component({
     selector: 'app-service-master',
     templateUrl: './service-master.component.html',
@@ -21,59 +22,29 @@ interface Column {
 export class ServiceMasterComponent implements OnInit {
 
     subscription!: Subscription;
-    serviceRecords!: ServiceMaster[];
-
+    serviceMasterRecords!: ServiceMaster[];
+    filteredRecords: ServiceMaster[] = this.serviceMasterRecords;
     // to change Columns View 
     cols!: Column[];
     selectedColumns!: Column[];
     // to handel checkbox selection:
     selectedRecord: ServiceMaster | null = null;
-
-    editMode = false;
-    // Array to store selected records
     selectedRecords: any[] = [];
+    editMode = false;
 
-    onRecordSelectionChange(event: any, record: any) {
-        if (event.checked) {
-            console.log(record);
-            this.selectedRecord = record
-            // Add the record to the selectedRecords array if it's not already present
-            if (!this.selectedRecords.includes(record)) {
-                this.selectedRecords.push(record);
-                console.log(this.selectedRecords);
-            }
-        } else {
-            // Remove the record from the selectedRecords array
-            const index = this.selectedRecords.indexOf(record);
-            console.log(index)
-            if (index !== -1) {
-                this.selectedRecords.splice(index, 1);
-                console.log(this.selectedRecords);
-            }
-        }
-    }
-
-    submitted: boolean = false;
-
-    constructor(private apiService: ApiService, private serviceMasterService: ServiceMasterService, private messageService: MessageService,
-        private confirmationService: ConfirmationService, private router: Router, private cd: ChangeDetectorRef) { }
+    constructor(private apiService: ApiService, private serviceMasterService: ServiceMasterService,
+        private router: Router, private cd: ChangeDetectorRef) { }
 
     ngOnInit() {
         this.serviceMasterService.getRecords();
         this.subscription = this.serviceMasterService.recordsChanged.subscribe((records: ServiceMaster[]) => {
-            this.serviceRecords = records;
+            this.serviceMasterRecords = records;
             this.filteredRecords = records.sort((a, b) => b.serviceNumberCode - a.serviceNumberCode);
-            console.log(this.serviceRecords);
-            console.log(this.filteredRecords);
         });
-        //this.serviceRecords = this.serviceMasterService.getRecords();
-        //console.log(this.serviceRecords);
         this.cd.markForCheck();
-
         this.cols = [
             { field: 'serviceNumberCode', header: 'Service Master Code' },
             { field: 'searchTerm', header: 'Search Term' },
-            // { field: 'unitOfMeasure', header: 'Unit Of Measure' },
             { field: 'description', header: 'Description' },
             { field: 'lastChangeDate', header: 'Last Change Date' },
             { field: 'serviceTypeCode', header: 'Service Type' }
@@ -81,41 +52,50 @@ export class ServiceMasterComponent implements OnInit {
         this.selectedColumns = this.cols;
     }
 
+    onRecordSelectionChange(event: any, record: any) {
+        if (event.checked) {
+            this.selectedRecord = record
+            // Add the record to the selectedRecords array if it's not already present
+            if (!this.selectedRecords.includes(record)) {
+                this.selectedRecords.push(record);
+            }
+        } else {
+            // Remove the record from the selectedRecords array
+            const index = this.selectedRecords.indexOf(record);
+            if (index !== -1) {
+                this.selectedRecords.splice(index, 1);
+            }
+        }
+    }
     // To handle Search Input 
     searchValue: string = '';
-    filteredRecords: ServiceMaster[] = this.serviceRecords;
     onSearchInputChange(): void {
         const keyword = this.searchValue
         if (keyword !== '') {
             this.apiService.get<ServiceMaster[]>('servicenumbers/search', keyword).subscribe(response => {
                 console.log(response);
                 this.filteredRecords = response
-                console.log(this.filteredRecords);
             });
         }
         else {
-            this.filteredRecords = this.serviceRecords;
+            this.filteredRecords = this.serviceMasterRecords;
         }
     }
 
     onColumnSelectionChange() {
-        // Update the selected columns when the selection changes
         this.selectedColumns = this.cols.filter(col => this.selectedColumns.includes(col));
     }
-    // Service Master 
+
     navigateEditService() {
         const navigationExtras: NavigationExtras = {
             state: {
                 Record: this.selectedRecord,
             }
         };
-        console.log(this.selectedRecord);
-        console.log(navigationExtras);
         if (this.selectedRecords.length > 0) {
             this.router.navigate(['/add-servicemaster'], navigationExtras);
         }
     }
-
     navigateCopyService() {
         const navigationExtras: NavigationExtras = {
             state: {
@@ -123,12 +103,10 @@ export class ServiceMasterComponent implements OnInit {
                 Copy: true
             }
         };
-        console.log(navigationExtras);
         if (this.selectedRecords.length > 0) {
             this.router.navigate(['/add-servicemaster'], navigationExtras);
         }
     }
-
     navigateAddServices() {
         this.router.navigate(['/add-servicemaster']);
     }
@@ -138,19 +116,14 @@ export class ServiceMasterComponent implements OnInit {
                 RecordDetails: this.selectedRecord,
             }
         };
-        console.log(this.selectedRecord);
-        console.log(navigationExtras);
         if (this.selectedRecords.length > 0) {
             this.router.navigate(['/detail-servicemaster'], navigationExtras);
         }
     }
-
-    // Export Data to Excel Sheet
+    // Export Service Master Data to Excel Sheet
     exportExcel() {
         import('xlsx').then((xlsx) => {
-            console.log(this.selectedRecords.length);
-            console.log(this.selectedRecords);
-            const selectedRows = this.selectedRecords.length > 0 ? this.selectedRecords : this.serviceRecords;
+            const selectedRows = this.selectedRecords.length > 0 ? this.selectedRecords : this.serviceMasterRecords;
             const worksheet = xlsx.utils.json_to_sheet(selectedRows);
             const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
             const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });

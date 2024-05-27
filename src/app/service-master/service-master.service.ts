@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-
 import { Subject } from 'rxjs';
 import { ServiceMaster } from './service-master.model';
-import { Instant } from 'js-joda';
-import { ApiService } from '../ApiService.service';
+import { ApiService } from '../shared/ApiService.service';
 
 @Injectable()
 export class ServiceMasterService {
@@ -27,19 +25,11 @@ export class ServiceMasterService {
       return response
     });
   }
-  
+
   updateRecord(index: number, newRecord: ServiceMaster) {
     this.apiService.put<ServiceMaster>('servicenumbers', index, newRecord).subscribe(response => {
       console.log('service master updated:',response);
       this.getRecords()
     });
   }
-
-  // deleteRecord(index: number) {
-  //   this.records.splice(index, 1);
-  //   console.log(this.records);
-  //   this.recordsChanged.next(this.records.slice());
-  //   console.log(this.recordsChanged);
-  // }
-
 }

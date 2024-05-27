@@ -1,6 +1,5 @@
 
 <p-toast></p-toast>
-
 <p-toolbar class="m-2">
     <div class="p-toolbar-group-start ">
         <h5>Models:</h5>
@@ -11,7 +10,7 @@
 </p-toolbar>
 
 <div class="card">
-    <p-table [value]="records" [(selection)]="selectedRecords" dataKey="modelSpecCode" 
+    <p-table [value]="records"  dataKey="modelSpecCode" 
     editMode="row" [tableStyle]="{'min-width': '50rem'}" [scrollable]="true" scrollHeight="400px">
         <ng-template pTemplate="header">
             <tr>

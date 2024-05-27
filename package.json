@@ -29,6 +29,7 @@
     "font-awesome": "^4.7.0",
     "jquery": "^3.7.1",
     "js-joda": "^1.11.0",
+    "jwt-decode": "^4.0.0",
     "ng-http-loader": "^15.0.0",
     "ngx-spinner": "^16.0.2",
     "popper.js": "^1.16.1",

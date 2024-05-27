@@ -33,9 +33,6 @@
           <small
             *ngIf="(numberOfParameters.invalid && submitted) || (numberOfParameters.dirty && numberOfParameters.invalid)"
             class="p-error">
-            <!-- <ng-container *ngIf="createInformation.numberOfParameters < 0">
-              NumberOfParameters is invalid.
-            </ng-container> -->
             <ng-container *ngIf="createInformation.numberOfParameters <= 0 && createInformation.numberOfParameters === undefined">
               NumberOfParameters is required.
             </ng-container>

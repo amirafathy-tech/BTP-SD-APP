@@ -1,12 +1,15 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiService {
-  private baseUrl = 'https://sd-dev.a14a95a.kyma.ondemand.com';
+
+ private baseUrl = environment.apiUrl
 
   constructor(private http: HttpClient) { }
 
@@ -28,22 +31,19 @@ export class ApiService {
   }
 
   post<T>(url: string, body: any, headers?: HttpHeaders): Observable<T> {
-   // const options = { headers };
+   
     return this.http.post<T>(`${this.baseUrl}/${url}`, body);
   }
 
   put<T>(url: string, id: number, body: any, headers?: HttpHeaders): Observable<T> {
-   // const options = { headers };
     return this.http.put<T>(`${this.baseUrl}/${url}/${id}`, body);
   }
 
   patch<T>(url: string, body: any, headers?: HttpHeaders): Observable<T> {
-    //const options = { headers };
     return this.http.patch<T>(`${this.baseUrl}/${url}`, body);
   }
 
   delete<T>(url: string, id: any, headers?: HttpHeaders): Observable<T> {
-    //const options = { headers };
     return this.http.delete<T>(`${this.baseUrl}/${url}/${id}`);
   }
 }

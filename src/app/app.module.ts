@@ -28,9 +28,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { AnimateModule } from 'primeng/animate';
 import { CardModule } from 'primeng/card';
 import { FieldsetModule } from 'primeng/fieldset';
-// import { InputGroupModule } from 'primeng';
-// import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-
+import { TreeTableModule } from 'primeng/treetable';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -38,7 +36,6 @@ import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { ModelComponent } from './model/model.component';
 import { AddModelComponent } from './model/add-model/add-model.component';
-import { ServiceComponent } from './service/service.component';
 import { ModelDetailsComponent } from './model-details/model-details.component';
 import { ServiceTypeComponent } from './service-type/service-type.component';
 import { FormulaComponent } from './formula/formula.component';
@@ -50,6 +47,12 @@ import { ServiceMasterComponent } from './service-master/service-master.componen
 import { ServiceMasterAddComponent } from './service-master/service-master-add/service-master-add.component';
 import { FormulasComponent } from './formulas/formulas.component';
 import { ServiceMasterDetailComponent } from './service-master/service-master-detail/service-master-detail.component';
+import { FsComponent } from './fs/fs.component';
+import { AuthModule } from './auth/auth.module';
+import { AuthInterceptorService } from './auth/auth-interceptor.service';
+import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
+//import { NewAuthModule } from './auth-folder/new-auth.module';
+
 
 @NgModule({
   declarations: [
@@ -57,7 +60,6 @@ import { ServiceMasterDetailComponent } from './service-master/service-master-de
     HeaderComponent,
     ModelComponent,
     AddModelComponent,
-    ServiceComponent,
     ModelDetailsComponent,
     ServiceTypeComponent,
     FormulaComponent,
@@ -69,6 +71,9 @@ import { ServiceMasterDetailComponent } from './service-master/service-master-de
     ServiceMasterAddComponent,
     FormulasComponent,
     ServiceMasterDetailComponent,
+    FsComponent,
+    LoadingSpinnerComponent,
+
   ],
   imports: [
     FundamentalNgxCoreModule,
@@ -80,6 +85,8 @@ import { ServiceMasterDetailComponent } from './service-master/service-master-de
     ReactiveFormsModule,
     HttpClientModule,
     CommonModule,
+    AuthModule,
+    //NewAuthModule,
 
 
 
@@ -101,13 +108,19 @@ import { ServiceMasterDetailComponent } from './service-master/service-master-de
     MultiSelectModule,
     CheckboxModule,
     FieldsetModule,
-    // InputGroupModule,
-    // InputGroupAddonModule,
-
-
+    TreeTableModule,
+  
     NgHttpLoaderModule.forRoot(),
   ],
-  providers: [],
+ // providers: [],
+ providers: [
+  provideClientHydration(),
+  {
+    provide:HTTP_INTERCEPTORS,
+    useClass:AuthInterceptorService,
+    multi:true
+  }
+],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

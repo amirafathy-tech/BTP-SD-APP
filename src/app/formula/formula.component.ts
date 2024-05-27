@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem, MessageService } from 'primeng/api';
 import { Subscription } from 'rxjs';
-import { ApiService } from '../ApiService.service';
+import { ApiService } from '../shared/ApiService.service';
 
 
 @Component({
@@ -44,6 +44,7 @@ export class FormulaComponent implements OnInit {
           this.subscription.unsubscribe();
       }
   }
+  
   getApiRecords() {
     this.apiService.get<any>('formulas').subscribe(response => {
       console.log(response);

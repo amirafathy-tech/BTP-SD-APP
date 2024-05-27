@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { ServiceMaster } from '../service-master.model';
-import { Instant } from 'js-joda';
-import { ApiService } from 'src/app/ApiService.service';
+import { ApiService } from 'src/app/shared/ApiService.service';
 import { ServiceMasterService } from '../service-master.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 @Component({
@@ -17,20 +16,13 @@ export class ServiceMasterDetailComponent {
   selectedRecord: ServiceMaster = {
     serviceNumberCode: 0, searchTerm: '', description: '', serviceText: '', shortTextChangeAllowed: false, deletionIndicator: false,
     numberToBeConverted: 0, convertedNumber: 0, mainItem: false,
-    // formulaCode: 0,
-    //unitOfMeasurementCode:0,
     serviceTypeCode: '', materialGroupCode: '',
      baseUnitOfMeasurement: '', toBeConvertedUnitOfMeasurement: '', defaultUnitOfMeasurement: ''
   };
 
-  constructor(private apiService: ApiService, private serviceMasterService: ServiceMasterService
-    ,  private router: Router,private confirmationService: ConfirmationService, private route: ActivatedRoute) {
-
+  constructor( private router: Router,) {
     if (this.router.getCurrentNavigation()?.extras.state) {
       const state = this.router.getCurrentNavigation()?.extras.state?.['RecordDetails'];
-      //const copyFlag = this.router.getCurrentNavigation()?.extras.state?.['Copy'];
-      console.log(state);
-     
       if (state) {
         this.selectedRecord = state;
         console.log(this.selectedRecord);

@@ -28,12 +28,33 @@
                   <li class="nav-item" >
                     <a class="nav-link active" aria-current="page" routerLink="/formulas">Formula</a>
                   </li>
+                  <!-- <li class="nav-item" >
+                    <a class="nav-link active" aria-current="page" routerLink="/fs">FS</a>
+                  </li> -->
               </ul>
               <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+ 
+                <!-- <ng-container *ngIf="isAuthenticated; else loginLink">
+                  <li class="nav-item">
+                    <a class="nav-link" style="cursor: pointer;" (click)="onLogout()">Logout</a>
+                  </li>
+                </ng-container>
+                <ng-template #loginLink>
+                  <li class="nav-item">
+                    <a class="nav-link" routerLink="/auth">Login</a>
+                  </li>
+                </ng-template> -->
+
                 <li class="nav-item" >
                   <a class="nav-link active" aria-current="page" routerLink="/servicetype">Exit</a>
                 </li>
               </ul> 
+
+              <!-- <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                  <li class="nav-item">
+                    <a class="nav-link" routerLink="/login">NewLogin</a>
+                  </li>
+              </ul>  -->
             </div>
           </div>
         </div>
