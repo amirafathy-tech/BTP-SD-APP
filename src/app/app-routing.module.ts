@@ -17,33 +17,29 @@ import { ServiceMasterDetailComponent } from './service-master/service-master-de
 import { FsComponent } from './fs/fs.component';
 import { AuthComponent } from './auth/auth.component';
 import { AuthGuard } from './auth/auth.guard';
-//import { LoginComponent } from './auth-folder/login/login.component';
-//import { RegisterComponent } from './auth-folder/register/register.component';
 
 
 const routes: Routes = [
   { path: '', component: AppComponent },
-  { path: 'model',component: ModelComponent },
-  { path: 'add-model', component: AddModelComponent },
-  { path: 'modelSpecDetails', component: ModelDetailsComponent },
-  { path: 'servicetype', component: ServiceTypeComponent },
-  { path: 'servicemaster', component: ServiceMasterComponent },
-  { path: 'add-servicemaster', component: ServiceMasterAddComponent },
-  { path: 'detail-servicemaster', component: ServiceMasterDetailComponent },
-  { path: 'formulas', component: FormulasComponent },
-  { path: 'auth', component: AuthComponent },
+  { path: 'model',canActivate: [AuthGuard],data: { role: 'Admin' },component: ModelComponent },
+  { path: 'add-model',canActivate: [AuthGuard], component: AddModelComponent },
+  { path: 'modelSpecDetails',canActivate: [AuthGuard], component: ModelDetailsComponent },
+  { path: 'servicetype',canActivate: [AuthGuard], component: ServiceTypeComponent },
+  { path: 'servicemaster',canActivate: [AuthGuard], component: ServiceMasterComponent },
+  { path: 'add-servicemaster',canActivate: [AuthGuard], component: ServiceMasterAddComponent },
+  { path: 'detail-servicemaster',canActivate: [AuthGuard], component: ServiceMasterDetailComponent },
+  { path: 'formulas',canActivate: [AuthGuard], component: FormulasComponent },
+  { path: 'login', component: AuthComponent },
   //{ path: 'fs', component: FsComponent },
-  // { path: 'login', component: LoginComponent },
-  // { path: 'register', component: RegisterComponent },
 
   {
-    path: 'formula', component: FormulaComponent,
+    path: 'formula',canActivate: [AuthGuard], component: FormulaComponent,
     children: [
-      { path: '', component: CreateComponent },
-        { path: 'create', component: CreateComponent },
-        { path: 'parameter', component: ParameterComponent },
-        { path: 'relation', component: RelationComponent },
-        { path: 'test', component: TestComponent },
+      { path: '',canActivate: [AuthGuard], component: CreateComponent },
+        { path: 'create',canActivate: [AuthGuard], component: CreateComponent },
+        { path: 'parameter',canActivate: [AuthGuard], component: ParameterComponent },
+        { path: 'relation',canActivate: [AuthGuard], component: RelationComponent },
+        { path: 'test',canActivate: [AuthGuard], component: TestComponent },
     ]
 }, 
 ];

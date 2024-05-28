@@ -51,8 +51,7 @@ import { FsComponent } from './fs/fs.component';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
-//import { NewAuthModule } from './auth-folder/new-auth.module';
-
+import { AlertComponent } from './shared/alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -73,6 +72,7 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
     ServiceMasterDetailComponent,
     FsComponent,
     LoadingSpinnerComponent,
+    //AlertComponent,
 
   ],
   imports: [
@@ -86,10 +86,6 @@ import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinne
     HttpClientModule,
     CommonModule,
     AuthModule,
-    //NewAuthModule,
-
-
-
 
     ButtonModule,
     TableModule,
