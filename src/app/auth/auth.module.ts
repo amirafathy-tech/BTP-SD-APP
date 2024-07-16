@@ -8,6 +8,7 @@ import { AuthInterceptorService } from './auth-interceptor.service';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { AlertComponent } from '../shared/alert/alert.component';
+import { provideClientHydration } from '@angular/platform-browser';
 
 @NgModule({
     declarations: [AuthComponent, LoginComponent, RegisterComponent,AlertComponent,],
@@ -21,6 +22,14 @@ import { AlertComponent } from '../shared/alert/alert.component';
         { path: 'login', component: LoginComponent }
         ]),
     ],
+    // providers: [
+    //     provideClientHydration(),
+    //     {
+    //       provide:HTTP_INTERCEPTORS,
+    //       useClass:AuthInterceptorService,
+    //       multi:true
+    //     }
+    //   ],
    
 })
 export class AuthModule {}

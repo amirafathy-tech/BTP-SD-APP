@@ -52,6 +52,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
 import { AlertComponent } from './shared/alert/alert.component';
+import { InvoiceComponent } from './invoice/invoice.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { AlertComponent } from './shared/alert/alert.component';
     ServiceMasterDetailComponent,
     FsComponent,
     LoadingSpinnerComponent,
+    InvoiceComponent,
     //AlertComponent,
 
   ],

@@ -20,6 +20,8 @@ export class AuthService {
   private clientID = environment.clientID
   private clientSecret = environment.clientSecret
 
+  private  proxyurl = "https://cors-anywhere.herokuapp.com/";
+
   loggedInUser = new BehaviorSubject<AuthUser | null>(null);
   private tokenExpirationTimer: any;
 
@@ -76,7 +78,13 @@ export class AuthService {
       'Authorization': 'Basic ' + btoa(`${this.clientID}:${this.clientSecret}`),
       //'Authorization': `${this.clientID}:${this.clientSecret}`,
       'Content-Type': 'application/x-www-form-urlencoded',
-      //'Accept': 'application/json'
+      //'Origin': 'http://localhost:4200'
+      //'Content-Type': 'application/scim+json',
+      //'Content-Type': 'application/json',
+      //'Access-Control-Allow-Origin': '*',
+      //'Access-Control-Allow-Credentials': 'true'
+      //'Accept': 'application/json',
+     // 'Access-Control-Allow-Origin':'http://localhost:4200'
       //'Access-Control-Allow-Origin': '*'
     });
 
@@ -92,7 +100,9 @@ export class AuthService {
     return this.http
       .post<AuthResponseBackend>(
         //https://cors-anywhere.herokuapp.com/
-        'https://cors-anywhere.herokuapp.com/https://amwftwpkt.trial-accounts.ondemand.com/oauth2/token',
+        //${this.proxyurl}
+        `${this.proxyurl}https://anjbwp8zl.trial-accounts.ondemand.com/oauth2/token`,
+        //, withCredentials: true
         data.toString(), { headers }
       ).pipe(tap(resData => {
         console.log(resData.id_token)

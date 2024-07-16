@@ -31,7 +31,6 @@
               "node_modules/primeng/resources/primeng.min.css",
               "node_modules/primeicons/primeicons.css",
               "node_modules/primeflex/primeflex.css",
-
               "src/styles.css"
             ],
             "scripts": [
@@ -46,7 +45,6 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ],
-      
               "budgets": [
                 {
                   "type": "initial",
@@ -80,6 +78,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "BTP-SD-APP:build",
+            "proxyConfig": "src/proxy.conf.json"
+          },
           "configurations": {
             "production": {
               "browserTarget": "BTP-SD-APP:build:production"
@@ -128,5 +130,4 @@
   "cli": {
     "analytics": "6217ced6-9c49-4912-8703-f040d688b782"
   }
- 
 }

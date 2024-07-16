@@ -18,19 +18,19 @@ export class ServiceTypeComponent {
   private subscription!: Subscription;
   editMode = false;
 
-  constructor(private apiService: ApiService, private serviceTypeService: ServiceTypeService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
+  constructor(private apiService: ApiService, private _ServiceTypeService: ServiceTypeService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
 
   ngOnInit() {
 
-    this.serviceTypeService.getApiRecords();
-    this.subscription = this.serviceTypeService.recordsChanged.subscribe((records: ServiceType[]) => {
+    this._ServiceTypeService.getApiRecords();
+    this.subscription = this._ServiceTypeService.recordsChanged.subscribe((records: ServiceType[]) => {
       // Sort the records 
       this.records = records.sort((a, b) => b.serviceTypeCode - a.serviceTypeCode);
     });
   }
 
   onEditItem(index: number) {
-    this.serviceTypeService.startedEditing.next(index);
+    this._ServiceTypeService.startedEditing.next(index);
   }
   
   clonedRecords: { [s: number]: ServiceType; } = {};
@@ -40,7 +40,7 @@ export class ServiceTypeComponent {
   }
 
   onRowEditSave(index: number, record: ServiceType) {
-    this.serviceTypeService.updateRecord(index, record);
+    this._ServiceTypeService.updateRecord(index, record);
     this.ngOnInit(); //reload the table
     this.editMode = false;
     delete this.clonedRecords[record.serviceTypeCode];
@@ -60,7 +60,7 @@ export class ServiceTypeComponent {
       accept: () => {
         this.apiService.delete<ServiceType>('servicetypes', record.serviceTypeCode).subscribe(response => {
           console.log('service type deleted:', response);
-          this.serviceTypeService.getApiRecords();
+          this._ServiceTypeService.getApiRecords();
         });
         this.messageService.add({ severity: 'success', summary: 'Successfully', detail: 'Deleted', life: 3000 });
       }

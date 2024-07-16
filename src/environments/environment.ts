@@ -1,7 +1,7 @@
 export const environment = {
   production: false,
   // apiUrl: 'https://sd-dev.c-878bd9e.kyma.ondemand.com',
-  apiUrl: 'https://security.c-878bd9e.kyma.ondemand.com',
-  clientID: "f9e604a6-ab80-4d43-b9a2-3e20205ffb34",
-  clientSecret: "wwe[=6l7w0ww/nDCg3VJWH]dAH]yvPM"
+  apiUrl: 'https://security.c-62fc472.kyma.ondemand.com',
+  clientID: "dea3e179-a06c-42ea-ade3-1ed65f3bcd08",
+  clientSecret: "iKF@Q-_1iqk.G3@lJJeLxQNOI@YmuhX"
 };
