@@ -72,10 +72,15 @@
                         class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary " />
                 </span>
     
-                <div class="p-inputgroup ml-3">
+                <!-- <div class="p-inputgroup ml-3">
                     <input type="number" pInputNumber placeholder="Profit Margin" />
                     <button type="button" pButton styleClass="p-button-warn">Apply</button>
-                </div>
+                </div> -->
+                <div class="p-inputgroup ml-3">
+    <input type="number" pInputNumber placeholder="Profit Margin" [(ngModel)]="profitMarginValue" />
+    <button type="button" pButton styleClass="p-button-warn" (click)="updateProfitMargin(profitMarginValue)">Apply</button>
+</div>
+
             </div>
             <p-button label="Expand All" icon="pi pi-plus" (onClick)="expandAll()" />
             <p-button label="Collapse All" icon="pi pi-minus" (onClick)="collapseAll()" />

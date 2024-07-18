@@ -34,20 +34,6 @@ import { TreeTableModule } from 'primeng/treetable';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
-import { ModelComponent } from './model/model.component';
-import { AddModelComponent } from './model/add-model/add-model.component';
-import { ModelDetailsComponent } from './model-details/model-details.component';
-import { ServiceTypeComponent } from './service-type/service-type.component';
-import { FormulaComponent } from './formula/formula.component';
-import { CreateComponent } from './formula/create/create.component';
-import { ParameterComponent } from './formula/parameter/parameter.component';
-import { RelationComponent } from './formula/relation/relation.component';
-import { TestComponent } from './formula/test/test.component';
-import { ServiceMasterComponent } from './service-master/service-master.component';
-import { ServiceMasterAddComponent } from './service-master/service-master-add/service-master-add.component';
-import { FormulasComponent } from './formulas/formulas.component';
-import { ServiceMasterDetailComponent } from './service-master/service-master-detail/service-master-detail.component';
-import { FsComponent } from './fs/fs.component';
 import { AuthModule } from './auth/auth.module';
 import { AuthInterceptorService } from './auth/auth-interceptor.service';
 import { LoadingSpinnerComponent } from './shared/loading-spinner/loading-spinner.component';
@@ -58,23 +44,8 @@ import { InvoiceComponent } from './invoice/invoice.component';
   declarations: [
     AppComponent,
     HeaderComponent,
-    ModelComponent,
-    AddModelComponent,
-    ModelDetailsComponent,
-    ServiceTypeComponent,
-    FormulaComponent,
-    CreateComponent,
-    ParameterComponent,
-    RelationComponent,
-    TestComponent,
-    ServiceMasterComponent,
-    ServiceMasterAddComponent,
-    FormulasComponent,
-    ServiceMasterDetailComponent,
-    FsComponent,
     LoadingSpinnerComponent,
     InvoiceComponent,
-    //AlertComponent,
 
   ],
   imports: [
