@@ -609,15 +609,15 @@ export class InvoiceComponent {
         profitMargin: this.newMainItem.profitMargin,
         totalWithProfit: this.newMainItem.totalWithProfit
       }
-      if (this.resultAfterTest === 0 || this.newMainItem.description === "" || this.selectedServiceNumberRecord.description === "" || this.newMainItem.currencyCode === "" ) {
-        // || this.newMainItem.unitOfMeasurementCode === ""  // till retrieved from cloud correctly
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: 'Description & Quantity & Currency and UnitOfMeasurement are required',
-          life: 3000
-        });
-      }
+      // if (this.resultAfterTest === 0 || this.newMainItem.description === "" || this.selectedServiceNumberRecord.description === "" || this.newMainItem.currencyCode === "" ) {
+      //   // || this.newMainItem.unitOfMeasurementCode === ""  // till retrieved from cloud correctly
+      //   this.messageService.add({
+      //     severity: 'error',
+      //     summary: 'Error',
+      //     detail: 'Description & Quantity & Currency and UnitOfMeasurement are required',
+      //     life: 3000
+      //   });
+      // }
       console.log(newRecord);
       // Remove properties with empty or default values
       const filteredRecord = Object.fromEntries(
