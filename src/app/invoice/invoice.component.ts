@@ -6,9 +6,9 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { InvoiceService } from './invoice.service';
 import { MainItem, SubItem } from './invoice.model';
 import { ApiService } from '../shared/ApiService.service';
-import { ServiceMaster } from '../service-master/service-master.model';
+import { ServiceMaster } from '../models/service-master.model';
 import { UnitOfMeasure } from '../models/unitOfMeasure.model';
-import { Formula } from '../formulas/formulas.model';
+import { Formula } from '../models/formulas.model';
 
 @Component({
   selector: 'app-invoice-test',
@@ -43,10 +43,43 @@ export class InvoiceComponent {
   recordsCurrency!: any[];
   selectedCurrency!: string;
   //
+  selectedRowsForProfit: MainItem[] = []; // Array to store selected rows
+  profitMarginValue: number = 0;
+
   public rowIndex = 0;
   expandedRows: { [key: number]: boolean } = {};
   mainItemsRecords: MainItem[] = [];
   subItemsRecords: SubItem[] = [];
+
+  updateProfitMargin(value: number) {
+    for (const row of this.selectedRowsForProfit) {
+      row.profitMargin = value;
+      const { mainItemCode, total, totalWithProfit, ...mainItemWithoutMainItemCode } = row;
+      const updatedMainItem = this.removePropertiesFrom(mainItemWithoutMainItemCode, ['mainItemCode', 'subItemCode']);
+      console.log(updatedMainItem);
+
+      const newRecord: MainItem = {
+        ...updatedMainItem, // Copy all properties from the original record
+        // Modify specific attributes
+        subItems: (row?.subItems ?? []).map(subItem =>
+          this.removeProperties(subItem, ['mainItemCode', 'subItemCode'])
+        ),
+        profitMargin: value
+
+      };
+      console.log(newRecord);
+      const updatedRecord = this.removeProperties(newRecord, ['selected'])
+
+
+      this._ApiService.patch<MainItem>('mainitems', row.mainItemCode, updatedRecord).subscribe(response => {
+        console.log('mainitem updated :', response);
+        this.totalValue = 0;
+        this.ngOnInit();
+      });
+
+    }
+  }
+
 
   constructor(private _ApiService: ApiService, private _InvoiceService: InvoiceService, private messageService: MessageService, private confirmationService: ConfirmationService) { }
 
@@ -73,7 +106,7 @@ export class InvoiceComponent {
       this.subItemsRecords = response;
     });
   }
-   // Helper Functions:
+  // Helper Functions:
   removePropertiesFrom(obj: any, propertiesToRemove: string[]): any {
     const newObj: any = {};
 
@@ -103,40 +136,52 @@ export class InvoiceComponent {
     });
     return newObj;
   }
-   // to handel checkbox selection:
-   selectedMainItems: MainItem[] = [];
-   selectedSubItems: SubItem[] = [];
-   onMainItemSelection(event: any, mainItem: MainItem) {
-     mainItem.selected = event.checked;
-     this.selectedMainItems = event.checked
-     if (mainItem.selected) {
-       if (mainItem.subItems && mainItem.subItems.length > 0) {
-         mainItem.subItems.forEach(subItem => subItem.selected = !subItem.selected);
-       }
-     }
-     else {
-       // User deselected the record, so we need to deselect all associated subitems
-       if (mainItem.subItems && mainItem.subItems.length > 0) {
-         mainItem.subItems.forEach(subItem => subItem.selected = false)
-         console.log(mainItem.subItems);
-       }
-     }
-   }
-   // to handle All Records Selection / Deselection 
-   selectedAllRecords: MainItem[] = [];
-   onSelectAllRecords(event: any): void {
-     if (Array.isArray(event.checked) && event.checked.length > 0) {
-       this.selectedAllRecords = [...this.mainItemsRecords];
-       console.log(this.selectedAllRecords);
-     } else {
-       this.selectedAllRecords = [];
-     }
-   }
- 
-   onSubItemSelection(event: any, subItem: SubItem) {
-     console.log(subItem);
-     this.selectedSubItems.push(subItem);
-   }
+  // to handel checkbox selection:
+  selectedMainItems: MainItem[] = [];
+  selectedSubItems: SubItem[] = [];
+  onMainItemSelection(event: any, mainItem: MainItem) {
+    mainItem.selected = event.checked;
+    this.selectedMainItems = event.checked
+    if (mainItem.selected) {
+      if (mainItem.subItems && mainItem.subItems.length > 0) {
+        mainItem.subItems.forEach(subItem => subItem.selected = !subItem.selected);
+      }
+    }
+    else {
+      // User deselected the record, so we need to deselect all associated subitems
+      if (mainItem.subItems && mainItem.subItems.length > 0) {
+        mainItem.subItems.forEach(subItem => subItem.selected = false)
+        console.log(mainItem.subItems);
+      }
+    }
+    // For Profit Margin:
+    if (event.checked) {
+      this.selectedRowsForProfit.push(mainItem);
+      console.log(this.selectedRowsForProfit);
+
+    } else {
+      const index = this.selectedRowsForProfit.indexOf(mainItem);
+      if (index !== -1) {
+        this.selectedRowsForProfit.splice(index, 1);
+        console.log(this.selectedRowsForProfit);
+      }
+    }
+  }
+  // to handle All Records Selection / Deselection 
+  selectedAllRecords: MainItem[] = [];
+  onSelectAllRecords(event: any): void {
+    if (Array.isArray(event.checked) && event.checked.length > 0) {
+      this.selectedAllRecords = [...this.mainItemsRecords];
+      console.log(this.selectedAllRecords);
+    } else {
+      this.selectedAllRecords = [];
+    }
+  }
+
+  onSubItemSelection(event: any, subItem: SubItem) {
+    console.log(subItem);
+    this.selectedSubItems.push(subItem);
+  }
   //In Creation to handle shortTextChangeAlowlled Flag 
   onServiceNumberChange(event: any) {
     const selectedRecord = this.recordsServiceNumber.find(record => record.serviceNumberCode === this.selectedServiceNumber);
@@ -404,7 +449,7 @@ export class InvoiceComponent {
     this.subItemsRecords[index] = this.clonedSubItem[row.subItemCode ? row.subItemCode : 0]
     delete this.clonedSubItem[row.subItemCode ? row.subItemCode : 0]
   }
-  
+
   // Delete MainItem || SubItem
   deleteRecord() {
     console.log("delete");
@@ -487,7 +532,7 @@ export class InvoiceComponent {
         profitMargin: this.newMainItem.profitMargin,
         totalWithProfit: this.newMainItem.totalWithProfit
       }
-      if (this.newMainItem.quantity === 0 || this.newMainItem.description === "" || this.newMainItem.currencyCode === "" ) {
+      if (this.newMainItem.quantity === 0 || this.newMainItem.description === "" || this.newMainItem.currencyCode === "") {
         // || this.newMainItem.unitOfMeasurementCode === ""  // till retrieved from cloud correctly
         this.messageService.add({
           severity: 'error',
@@ -496,23 +541,25 @@ export class InvoiceComponent {
           life: 3000
         });
       }
-      console.log(newRecord);
-      // Remove properties with empty or default values
-      const filteredRecord = Object.fromEntries(
-        Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== undefined && value !== null;
-        })
-      );
-      console.log(filteredRecord);
-      this._ApiService.post<MainItem>('mainitems', filteredRecord).subscribe((response: MainItem) => {
-        console.log('mainitem created:', response);
-        if (response) {
-          this.resetNewMainItem();
-        }
-        console.log(response);
-        this.totalValue = 0;
-        this.ngOnInit()
-      });
+      else {
+        console.log(newRecord);
+        // Remove properties with empty or default values
+        const filteredRecord = Object.fromEntries(
+          Object.entries(newRecord).filter(([_, value]) => {
+            return value !== '' && value !== 0 && value !== undefined && value !== null;
+          })
+        );
+        console.log(filteredRecord);
+        this._ApiService.post<MainItem>('mainitems', filteredRecord).subscribe((response: MainItem) => {
+          console.log('mainitem created:', response);
+          if (response) {
+            this.resetNewMainItem();
+          }
+          console.log(response);
+          this.totalValue = 0;
+          this.ngOnInit()
+        });
+      }
     }
     else if (!this.selectedServiceNumberRecord && this.selectedFormulaRecord && this.resultAfterTest) { // if user didn't select serviceNumber && select formula
       const newRecord = {
@@ -526,7 +573,7 @@ export class InvoiceComponent {
         profitMargin: this.newMainItem.profitMargin,
         totalWithProfit: this.newMainItem.totalWithProfit
       }
-      if (this.resultAfterTest === 0 || this.newMainItem.description === "" || this.newMainItem.currencyCode === "" ) {
+      if (this.resultAfterTest === 0 || this.newMainItem.description === "" || this.newMainItem.currencyCode === "") {
         // || this.newMainItem.unitOfMeasurementCode === ""  // till retrieved from cloud correctly
         this.messageService.add({
           severity: 'error',
@@ -535,25 +582,27 @@ export class InvoiceComponent {
           life: 3000
         });
       }
-      console.log(newRecord);
-      // Remove properties with empty or default values
-      const filteredRecord = Object.fromEntries(
-        Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== undefined && value !== null;
-        })
-      );
-      console.log(filteredRecord);
-      this._ApiService.post<MainItem>('mainitems', filteredRecord).subscribe((response: MainItem) => {
-        console.log('mainitem created:', response);
-        if (response) {
-          this.resetNewMainItem();
-          this.selectedFormulaRecord = undefined
-          console.log(this.newMainItem);
-        }
-        console.log(response);
-        this.totalValue = 0;
-        this.ngOnInit()
-      });
+      else {
+        console.log(newRecord);
+        // Remove properties with empty or default values
+        const filteredRecord = Object.fromEntries(
+          Object.entries(newRecord).filter(([_, value]) => {
+            return value !== '' && value !== 0 && value !== undefined && value !== null;
+          })
+        );
+        console.log(filteredRecord);
+        this._ApiService.post<MainItem>('mainitems', filteredRecord).subscribe((response: MainItem) => {
+          console.log('mainitem created:', response);
+          if (response) {
+            this.resetNewMainItem();
+            this.selectedFormulaRecord = undefined
+            console.log(this.newMainItem);
+          }
+          console.log(response);
+          this.totalValue = 0;
+          this.ngOnInit()
+        });
+      }
     }
     else if (this.selectedServiceNumberRecord && !this.selectedFormulaRecord && !this.resultAfterTest) { // if user select serviceNumber && didn't select formula
       const newRecord = {
@@ -567,7 +616,7 @@ export class InvoiceComponent {
         profitMargin: this.newMainItem.profitMargin,
         totalWithProfit: this.newMainItem.totalWithProfit
       }
-      if (this.newMainItem.quantity === 0 || this.newMainItem.description === "" || this.selectedServiceNumberRecord.description === "" || this.newMainItem.currencyCode === "" ) {
+      if (this.newMainItem.quantity === 0 || this.newMainItem.description === "" || this.selectedServiceNumberRecord.description === "" || this.newMainItem.currencyCode === "") {
         // || this.newMainItem.unitOfMeasurementCode === ""  // till retrieved from cloud correctly
         this.messageService.add({
           severity: 'error',
@@ -576,25 +625,27 @@ export class InvoiceComponent {
           life: 3000
         });
       }
-      console.log(newRecord);
-      // Remove properties with empty or default values
-      const filteredRecord = Object.fromEntries(
-        Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== undefined && value !== null;
-        })
-      );
-      console.log(filteredRecord);
-      this._ApiService.post<MainItem>('mainitems', filteredRecord).subscribe((response: MainItem) => {
-        console.log('mainitem created:', response);
-        if (response) {
-          this.resetNewMainItem();
-          this.selectedFormulaRecord = undefined
-          this.selectedServiceNumberRecord = undefined
-        }
-        console.log(response);
-        this.totalValue = 0;
-        this.ngOnInit()
-      });
+      else {
+        console.log(newRecord);
+        // Remove properties with empty or default values
+        const filteredRecord = Object.fromEntries(
+          Object.entries(newRecord).filter(([_, value]) => {
+            return value !== '' && value !== 0 && value !== undefined && value !== null;
+          })
+        );
+        console.log(filteredRecord);
+        this._ApiService.post<MainItem>('mainitems', filteredRecord).subscribe((response: MainItem) => {
+          console.log('mainitem created:', response);
+          if (response) {
+            this.resetNewMainItem();
+            this.selectedFormulaRecord = undefined
+            this.selectedServiceNumberRecord = undefined
+          }
+          console.log(response);
+          this.totalValue = 0;
+          this.ngOnInit()
+        });
+      }
     }
     else if (this.selectedServiceNumberRecord && this.selectedFormulaRecord && this.resultAfterTest) { // if user select serviceNumber && select formula
       const newRecord = {
@@ -609,7 +660,7 @@ export class InvoiceComponent {
         profitMargin: this.newMainItem.profitMargin,
         totalWithProfit: this.newMainItem.totalWithProfit
       }
-      if (this.resultAfterTest === 0 || this.newMainItem.description === "" || this.selectedServiceNumberRecord.description === "" || this.newMainItem.currencyCode === "" ) {
+      if (this.resultAfterTest === 0 || this.selectedServiceNumberRecord.description === "" || this.newMainItem.currencyCode === "") {
         // || this.newMainItem.unitOfMeasurementCode === ""  // till retrieved from cloud correctly
         this.messageService.add({
           severity: 'error',
@@ -618,25 +669,27 @@ export class InvoiceComponent {
           life: 3000
         });
       }
-      console.log(newRecord);
-      // Remove properties with empty or default values
-      const filteredRecord = Object.fromEntries(
-        Object.entries(newRecord).filter(([_, value]) => {
-          return value !== '' && value !== 0 && value !== undefined && value !== null;
-        })
-      );
-      console.log(filteredRecord);
-      this._ApiService.post<MainItem>('mainitems', filteredRecord).subscribe((response: MainItem) => {
-        console.log('mainitem created:', response);
-        if (response) {
-          this.resetNewMainItem();
-          this.selectedFormulaRecord = undefined
-          this.selectedServiceNumberRecord = undefined
-        }
-        console.log(response);
-        this.totalValue = 0;
-        this.ngOnInit()
-      });
+      else {
+        console.log(newRecord);
+        // Remove properties with empty or default values
+        const filteredRecord = Object.fromEntries(
+          Object.entries(newRecord).filter(([_, value]) => {
+            return value !== '' && value !== 0 && value !== undefined && value !== null;
+          })
+        );
+        console.log(filteredRecord);
+        this._ApiService.post<MainItem>('mainitems', filteredRecord).subscribe((response: MainItem) => {
+          console.log('mainitem created:', response);
+          if (response) {
+            this.resetNewMainItem();
+            this.selectedFormulaRecord = undefined
+            this.selectedServiceNumberRecord = undefined
+          }
+          console.log(response);
+          this.totalValue = 0;
+          this.ngOnInit()
+        });
+      }
     }
   }
 

@@ -19,10 +19,8 @@
                     </ng-container>
                 </div> -->
         </div>
-        <div class="p-toolbar-group-center">
+        <!-- <div class="p-toolbar-group-center">
             <span class="p-input-icon-left">
-                <!-- <i class="pi pi-search"></i> -->
-                <!-- <input pInputText placeholder="Search" /> -->
                 <input pInputText type="text" placeholder="Search...."
                     class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary " />
             </span>
@@ -31,7 +29,7 @@
                 <input type="number" pInputNumber placeholder="Profit Margin" />
                 <button type="button" pButton styleClass="p-button-warn">Apply</button>
             </div>
-        </div>
+        </div> -->
         <div class="p-toolbar-group-end">
             <button pButton pRipple icon="pi pi-copy" class="p-button-rounded m-2"></button>
             <button pButton size="small" icon="pi pi-trash" (click)="deleteRecord()" severity="danger"
@@ -64,9 +62,26 @@
 
 <p-table [value]="mainItemsRecords" dataKey="mainItemCode" [resizableColumns]="true" [expandedRowKeys]="expandedRows"
     editMode="row">
-
     <ng-template pTemplate="caption">
-        <div class="flex flex-wrap justify-content-end gap-2">
+        <div class="flex flex-wrap justify-content-center gap-2">
+            <div class="p-toolbar-group-center">
+                <span class="p-input-icon-left">
+                    <!-- <i class="pi pi-search"></i> -->
+                    <!-- <input pInputText placeholder="Search" /> -->
+                    <input pInputText type="text" placeholder="Search...."
+                        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary " />
+                </span>
+    
+                <!-- <div class="p-inputgroup ml-3">
+                    <input type="number" pInputNumber placeholder="Profit Margin" />
+                    <button type="button" pButton styleClass="p-button-warn">Apply</button>
+                </div> -->
+                <div class="p-inputgroup ml-3">
+    <input type="number" pInputNumber placeholder="Profit Margin" [(ngModel)]="profitMarginValue" />
+    <button type="button" pButton styleClass="p-button-warn" (click)="updateProfitMargin(profitMarginValue)">Apply</button>
+</div>
+
+            </div>
             <p-button label="Expand All" icon="pi pi-plus" (onClick)="expandAll()" />
             <p-button label="Collapse All" icon="pi pi-minus" (onClick)="collapseAll()" />
         </div>
@@ -321,12 +336,12 @@
             <td  style="min-width: 10rem;">
                 <p-cellEditor>
                     <ng-template pTemplate="input">
-                        <input pInputNumber name="totalWithProfit" type="number" [min]="0"
-                            [(ngModel)]="mainItem.totalWithProfit">
+                        <input pInputNumber name="amountPerUnitWithProfit" type="number" [min]="0"
+                            [(ngModel)]="mainItem.amountPerUnitWithProfit">
 
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{ mainItem.totalWithProfit }}
+                        {{ mainItem.amountPerUnitWithProfit }}
                     </ng-template>
                 </p-cellEditor>
             </td>
